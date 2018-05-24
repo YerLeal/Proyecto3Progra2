@@ -5,8 +5,6 @@
  */
 package domain;
 
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,8 +17,9 @@ import javafx.scene.paint.Color;
 public class Personaje extends Thread {
 
     private int xPos, yPos, x, y, size;
-    private ArrayList<Block> camino, past;
-    private int direction;
+    private Block currentBlock,nextBlock;
+    private int direction, dirAux;
+    private boolean crash = true;
 
     public Personaje(int size, Block start) {
         xPos = start.getX();
@@ -28,12 +27,9 @@ public class Personaje extends Thread {
         x = xPos * size;
         y = yPos * size;
         this.size = size;
-        this.camino = new ArrayList<>();
-        this.camino.add(start);
-        this.past = new ArrayList<>();
+        this.currentBlock=start;
     }
     Boolean flag = true;
-    int cont = 0;
 
     public int getX() {
         return x;
@@ -55,28 +51,29 @@ public class Personaje extends Thread {
     public void run() {
 
         while (flag) {
-            direction = new Random().nextInt(4);
-            //System.err.println(camino.get(cont).getNext().get(0).getX());
+            if (crash) {
+                direction = (int) (Math.random() * (5 - 1) + 1);
+            }
             if (next(direction)) {
                 try {
                     switch (direction) {
-                        case 0:
-                            while (this.camino.get(cont).in(x, y)) {
+                        case 1:
+                            while (this.currentBlock.in(x, y)) {
                                 y += 1;
                                 Thread.sleep(10);
                             }
-                        case 1:
-                            while (this.camino.get(cont).in(x, y)) {
+                        case 2:
+                            while (this.currentBlock.in(x, y)) {
                                 x += 1;
                                 Thread.sleep(10);
                             }
-                        case 2:
-                            while (this.camino.get(cont).in(x, y)) {
+                        case 3:
+                            while (this.currentBlock.in(x, y)) {
                                 y -= 1;
                                 Thread.sleep(10);
                             }
-                        case 3:
-                            while (this.camino.get(cont).in(x, y)) {
+                        case 4:
+                            while (this.currentBlock.in(x, y)) {
                                 x -= 1;
                                 Thread.sleep(10);
                             }
@@ -85,51 +82,87 @@ public class Personaje extends Thread {
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Personaje.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                this.past.add(this.camino.get(cont));
-                cont++;
+                this.currentBlock=nextBlock;
+            } else {
+                crash = !crash;
             }
         }
     }
 
     public boolean next(int dir) {
+        
+        if (((dir == 1 && dirAux == 3) || (dirAux == 1 && dir == 3))&& !encerrado()) {
+            return false;
+        } else if (((dir == 2 && dirAux == 4) || (dirAux == 2 && dir == 4))&& !encerrado()) {
+            return false;
+        }
         int aux;
-        if (dir == 0 || dir == 1) {
+        if (dir == 1 || dir == 2) {
             aux = 1;
         } else {
             aux = -1;
         }
 
-        if (dir == 0 || dir == 2) {
-            for (int i = 0; i < this.camino.get(cont).getNext().size(); i++) {
-                if (this.camino.get(cont).getNext().get(i).getY() == yPos + aux) {
-                    if (validation(i)) {
-                        this.camino.add(this.camino.get(cont).getNext().get(i));
-                        yPos += aux;
-                        return true;
-                    }
+        if (dir == 1 || dir == 3) {
+            for (int i = 0; i < this.currentBlock.getNext().size(); i++) {
+                if (this.currentBlock.getNext().get(i).getY() == yPos + aux) {
+                    this.nextBlock=this.currentBlock.getNext().get(i);
+                    yPos += aux;
+                    this.dirAux = dir;
+                    return true;
+
                 }
             }
         } else {
-            for (int i = 0; i < this.camino.get(cont).getNext().size(); i++) {
-                if (this.camino.get(cont).getNext().get(i).getX() == xPos + aux) {
-                    if (validation(i)) {
-                        this.camino.add(this.camino.get(cont).getNext().get(i));
-                        xPos += aux;
-                        return true;
-                    }
+            for (int i = 0; i < this.currentBlock.getNext().size(); i++) {
+                if (this.currentBlock.getNext().get(i).getX() == xPos + aux) {
+
+                    this.nextBlock=this.currentBlock.getNext().get(i);
+                    xPos += aux;
+                    this.dirAux = dir;
+                    return true;
+
                 }
             }
         }
+
         return false;
     }
-
-    public boolean validation(int i) {
-        for (int j = 0; j < this.past.size(); j++) {
-            if (this.camino.get(cont).getNext().get(i).getX() == this.past.get(j).getX() && this.camino.get(cont).getNext().get(i).getY() == this.past.get(j).getY()) {
-                return false;
+    public boolean encerrado(){
+        int dir;
+        switch (dirAux) {
+            case 1:
+                dir=3;
+                break;
+            case 2:
+                dir=4;
+                break;
+            case 3:
+                dir=1;
+                break;
+            default:
+                dir=2;
+                break;
+        }
+        int aux;
+        if (dir == 1 || dir == 2) {
+            aux = 1;
+        } else {
+            aux = -1;
+        }
+        
+        if(this.currentBlock.getNext().size()==1){
+            if((dir==1||dir==3)&&this.currentBlock.getNext().get(0).getY()==yPos+aux){
+                direction=dir;
+                System.err.println(dir+"primero:"+direction);
+                return true;
+            }else if((dir==2||dir==4)&&this.currentBlock.getNext().get(0).getX()==xPos+aux){
+                direction=dir;
+                System.err.println(dir+" "+"segundo:"+direction);
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public void draw(GraphicsContext gc) {

@@ -53,7 +53,6 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
     public void init(Stage primaryStage) {
         thread = new Thread(this);
-        thread.start();
 
         if (logica.getDifficulty() == 1) {
             this.width = 1320;
@@ -76,6 +75,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 c2 = new Personaje(logica.getSize(), logica.ini3());
                 c1.start();
                 c2.start();
+                thread.start();
             }
         });
 
@@ -117,7 +117,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         long start;
         long elapsed;
         long wait;
-        int fps = 60;
+        int fps = 20;
         long time = 1000 / fps;
         try {
             while (true) {
@@ -126,9 +126,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 elapsed = System.nanoTime() - start;
                 wait = time - elapsed / 1000000;
 
-                if (bol) {
-                    draw(gc);
-                }
+                draw(gc);
 
                 Thread.sleep(wait);
             }
