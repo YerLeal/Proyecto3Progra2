@@ -1,4 +1,4 @@
-package proyecto3progra2;
+package business;
 
 import domain.Block;
 import file.MazeFile;
@@ -28,7 +28,7 @@ public class Logica {
     
     public Logica() {
         this.difficulty = (int) (Math.random() * (4 - 1) + 1);
-        this.difficulty = 1;
+//        this.difficulty = 3;
         getDificultad();
         this.maze = new Block[WIDTH / size][HEIGHT / size];
     }
@@ -82,23 +82,34 @@ public class Logica {
     }
 
     public void createMaze() {
-//        MazeFile file = new MazeFile();
-//        try {
-//            this.maze = file.getMaze(difficulty-1);
-//        } catch (IOException | ClassNotFoundException ex) {
-//            Logger.getLogger(Logica.class.getName()).log(Level.SEVERE, null, ex);
+//        for(int i=0; i<maze.length; i++){
+//            for(int j=0; j<maze[0].length;j++){
+//                if((i+j)%2==0){
+//                    maze[i][j]= new Block(i, j, size, "wall");
+//                }else{
+//                    maze[i][j]= new Block(i, j, size, "floor");
+//                }
+//            }
 //        }
-//        buscarNuevosCaminos();
+        
+        
+        MazeFile file = new MazeFile();
+        try {
+            this.maze = file.getMaze(difficulty-1);
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Logica.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        buscarNuevosCaminos();
 
-            Maze m = new Maze();
-            this.maze = m.getMaze(difficulty);
-            buscarNuevosCaminos();
+//            Maze m = new Maze();
+//            this.maze = m.getMaze(difficulty);
+//            buscarNuevosCaminos();
     }
 
     private void getDificultad() {
         switch (this.difficulty) {
             case 1:
-                size = 120;
+                size = 80;
                 break;
             case 2:
                 size = 80;

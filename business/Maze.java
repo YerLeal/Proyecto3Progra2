@@ -1,4 +1,4 @@
-package proyecto3progra2;
+package business;
 
 import domain.Block;
 import file.MazeFile;
@@ -35,26 +35,25 @@ public class Maze {
         if (difficulty == 1) {
             this.maze = new Block[11][6];
             this.size = 120;
-//            for (int i = 0; i < m.length; i++) {
-//                for (int j = 0; j < m[0].length; j++) {
-//                    System.out.print(m[i][j].getType() + "  ");
-//                }
-//                System.out.println();
-//            }
-            System.out.println(m[0].length);
+            for (int i = 0; i < m.length; i++) {
+                for (int j = 0; j < m[0].length; j++) {
+                    System.out.print(m[i][j].getType() + "  ");
+                }
+                System.out.println();
+            }
+            System.out.println(maze.length);
             maze= new Block[11][6];
             for (int i = 0; i < maze.length; i++) {
                 for (int j = 0; j < maze[0].length; j++) {
-                    if(i==0){
-                        maze[i][j] = new Block(i, j, size, "wall");
-                    }else{
-                        maze[i][j] = new Block(i, j, size, "floor");
-                    }
+                    maze[i][j] = new Block(i, j, size, "floor");
                 }
+            }
+            for (int i = 0; i < maze[0].length; i++) {
+                maze[0][i] = new Block(0, i, size, "wall");
             }
         }
         
-        return m;
+        return maze;
     }
     
 }

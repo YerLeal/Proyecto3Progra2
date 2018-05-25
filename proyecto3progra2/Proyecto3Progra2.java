@@ -1,5 +1,6 @@
 package proyecto3progra2;
 
+import business.Logica;
 import domain.Block;
 import domain.Personaje;
 import file.MazeFile;
@@ -22,8 +23,9 @@ import javafx.stage.WindowEvent;
 
 public class Proyecto3Progra2 extends Application implements Runnable {
 
-    private int width;
+    private int width = 1360;
     private final int HEIGTH = 720;
+    private int canvasWidth;
     private Canvas canvas;
     private Pane pane;
     private GraphicsContext gc;
@@ -36,9 +38,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
     @Override
     public void start(Stage primaryStage) {
-        this.mazeFile = new MazeFile();
-        logica = new Logica();
-        primaryStage.setTitle("Laberinto");
+        primaryStage.setTitle("The Maze of Threads");
         init(primaryStage);
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -47,20 +47,21 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         });
         primaryStage.resizableProperty().set(false);
-
         primaryStage.show();
     } // start
 
     public void init(Stage primaryStage) {
-        thread = new Thread(this);
-        thread.start();
+        this.mazeFile = new MazeFile();
+        this.logica = new Logica();
+        this.thread = new Thread(this);
+        this.thread.start();
 
-        if (logica.getDifficulty() == 1) {
-            this.width = 1320;
-        } else {
-            this.width = 1360;
-        }
-        canvas = new Canvas(width, HEIGTH);
+//        if (this.logica.getDifficulty() == 1) {
+//            this.canvasWidth = 1100;
+//        } else {
+            this.canvasWidth = 1120;
+//        }
+        this.canvas = new Canvas(canvasWidth, HEIGTH);
 
         Button btRun = new Button("Run");
         Button btSave = new Button("Save");
@@ -84,7 +85,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             public void handle(ActionEvent event) {
                 try {
                     mazeFile.addMaze(logica.getMaze());
-                    System.out.println("Se supone que ya lo guardó !!!!!!!!!!!");
+                    System.out.println("Guardo");
                 } catch (IOException | ClassNotFoundException ex) {
                     Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
                 }
