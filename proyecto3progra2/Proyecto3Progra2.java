@@ -2,7 +2,11 @@ package proyecto3progra2;
 
 import business.Logica;
 import domain.Block;
-import domain.Personaje;
+import domain.Character;
+import domain.FastCharacter;
+import domain.FuriousCharacter;
+import domain.Item;
+import domain.SmartCharacter;
 import file.MazeFile;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -32,12 +36,14 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Logica logica;
     private boolean bol = false;
     private Thread thread;
-    private Personaje c1;
-    Personaje c2;
+    private Character c1, c2, c3;
     private MazeFile mazeFile;
+    private Item i1;
 
     @Override
     public void start(Stage primaryStage) {
+        mazeFile = new MazeFile();
+        logica = new Logica();
         primaryStage.setTitle("The Maze of Threads");
         init(primaryStage);
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -51,15 +57,13 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     } // start
 
     public void init(Stage primaryStage) {
-        this.mazeFile = new MazeFile();
-        this.logica = new Logica();
-        this.thread = new Thread(this);
-        this.thread.start();
+        thread = new Thread(this);
+        thread.start();
 
 //        if (this.logica.getDifficulty() == 1) {
 //            this.canvasWidth = 1100;
 //        } else {
-            this.canvasWidth = 1120;
+        this.canvasWidth = 1120;
 //        }
         this.canvas = new Canvas(canvasWidth, HEIGTH);
 
@@ -72,11 +76,16 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         btRun.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                c1 = new Personaje(logica.getSize(), logica.ini());
-                bol = true;
-                c2 = new Personaje(logica.getSize(), logica.ini3());
+                c1 = new FastCharacter(logica.getSize(), logica.ini());
+                c2 = new FuriousCharacter(logica.getSize(), logica.ini());
+                c3 = new SmartCharacter(logica.getSize(), logica.ini());
+                i1 = new Item(logica.getSize(), logica.ini3());
+                thread.start();
                 c1.start();
                 c2.start();
+                c3.start();
+                i1.start();
+
             }
         });
 
@@ -118,7 +127,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         long start;
         long elapsed;
         long wait;
-        int fps = 60;
+        int fps = 20;
         long time = 1000 / fps;
         try {
             while (true) {
@@ -127,9 +136,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 elapsed = System.nanoTime() - start;
                 wait = time - elapsed / 1000000;
 
-                if (bol) {
-                    draw(gc);
-                }
+                draw(gc);
 
                 Thread.sleep(wait);
             }
@@ -145,6 +152,8 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         logica.drawMaze(gc);
         c1.draw(gc);
         c2.draw(gc);
+        c3.draw(gc);
+        i1.draw(gc);
     }
 
     public static void main(String[] args) {
