@@ -46,7 +46,7 @@ public class Logica {
     }
 
     public Block ini3() {
-        return this.maze[3][0];
+        return this.maze[4][1];
     }
 
     public void cambiarTipo(int x, int y, GraphicsContext gc) {

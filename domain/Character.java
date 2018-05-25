@@ -5,23 +5,20 @@
  */
 package domain;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 /**
  *
  * @author maikel
  */
-public class Personaje extends Thread {
+public abstract class Character extends Thread {
 
-    private int xPos, yPos, x, y, size;
-    private Block currentBlock,nextBlock;
-    private int direction, dirAux;
-    private boolean crash = true;
+    protected int xPos, yPos, x, y, size,speed;
+    protected Block currentBlock,nextBlock;
+    protected int direction, dirAux;
+    protected boolean crash = true;
 
-    public Personaje(int size, Block start) {
+    public Character(int size, Block start) {
         xPos = start.getX();
         yPos = start.getY();
         x = xPos * size;
@@ -47,47 +44,7 @@ public class Personaje extends Thread {
         this.y = y;
     }
 
-    @Override
-    public void run() {
-
-        while (flag) {
-            if (crash) {
-                direction = (int) (Math.random() * (5 - 1) + 1);
-            }
-            if (next(direction)) {
-                try {
-                    switch (direction) {
-                        case 1:
-                            while (this.currentBlock.in(x, y)) {
-                                y += 1;
-                                Thread.sleep(10);
-                            }
-                        case 2:
-                            while (this.currentBlock.in(x, y)) {
-                                x += 1;
-                                Thread.sleep(10);
-                            }
-                        case 3:
-                            while (this.currentBlock.in(x, y)) {
-                                y -= 1;
-                                Thread.sleep(10);
-                            }
-                        case 4:
-                            while (this.currentBlock.in(x, y)) {
-                                x -= 1;
-                                Thread.sleep(10);
-                            }
-
-                    }
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Personaje.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                this.currentBlock=nextBlock;
-            } else {
-                crash = !crash;
-            }
-        }
-    }
+    
 
     public boolean next(int dir) {
         
@@ -154,20 +111,17 @@ public class Personaje extends Thread {
         if(this.currentBlock.getNext().size()==1){
             if((dir==1||dir==3)&&this.currentBlock.getNext().get(0).getY()==yPos+aux){
                 direction=dir;
-                System.err.println(dir+"primero:"+direction);
                 return true;
             }else if((dir==2||dir==4)&&this.currentBlock.getNext().get(0).getX()==xPos+aux){
                 direction=dir;
-                System.err.println(dir+" "+"segundo:"+direction);
                 return true;
             }
         }
         return false;
     }
 
-    public void draw(GraphicsContext gc) {
-        gc.setFill(Color.AQUA);
-        gc.fillRect(x, y, size, size);
-    }
+    public abstract void draw(GraphicsContext gc); 
+
+    
 
 }
