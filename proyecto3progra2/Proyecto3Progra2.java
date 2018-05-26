@@ -13,14 +13,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -39,6 +45,17 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Character c1, c2, c3;
     private MazeFile mazeFile;
     private Item i1;
+    private HBox hbox;
+    private VBox vbox;
+    private javafx.scene.control.Label lblType;
+    private javafx.scene.control.Label lblQuantity;
+    private ObservableList<String> listType, listDifficult;
+    private Button btnSet;
+    private Button btnPause;
+    private Button btnStop;
+    private TextField tfdSize; 
+    private TextField tfdType;
+    private int cantP;
 
     @Override
     public void start(Stage primaryStage) {
@@ -57,8 +74,31 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     } // start
 
     public void init(Stage primaryStage) {
+        this.hbox=new HBox(10);
+        this.vbox=new VBox(10);
+        hbox.setSpacing(10);
+        vbox.setSpacing(10);
+        btnSet=new Button("Start Simulation");
+        btnSet.setDisable(false);
+        
+
+        btnStop=new Button("Stop Threads");
+        btnPause= new Button("Pause Characters");
+        tfdSize= new TextField();
+        tfdType=new TextField();
+        tfdSize=new TextField();
+        this.lblType=new javafx.scene.control.Label();
+        this.lblQuantity=new javafx.scene.control.Label("Choose the quantity of characters");
+        listType=FXCollections.observableArrayList();//para el combobox
+        listType.addAll("Fast", "Furious", "Smart");//opciones del combobox
+        ComboBox<String> cbx = new ComboBox<>(listType);//
+        cbx.setPromptText("Choose the type of character");
+        listDifficult=FXCollections.observableArrayList();//para el combobox
+        listDifficult.addAll("Easy", "Medium", "Hard");//opciones del combobox
+        ComboBox<String> cbxD = new ComboBox<>(listDifficult);//
+        cbxD.setPromptText("Choose the Difficult");
         thread = new Thread(this);
-        thread.start();
+        //thread.start();
 
 //        if (this.logica.getDifficulty() == 1) {
 //            this.canvasWidth = 1100;
@@ -79,12 +119,12 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 c1 = new FastCharacter(logica.getSize(), logica.ini());
                 c2 = new FuriousCharacter(logica.getSize(), logica.ini());
                 c3 = new SmartCharacter(logica.getSize(), logica.ini());
-                i1 = new Item(logica.getSize(), logica.ini3());
+                //i1 = new Item(logica.getSize(), logica.ini3());
                 thread.start();
                 c1.start();
                 c2.start();
                 c3.start();
-                i1.start();
+                //i1.start();
 
             }
         });
@@ -100,6 +140,50 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 }
             }
         });
+        btnSet.setOnAction((ActionEvent t) -> {
+        });
+        btnStop.setOnAction((ActionEvent t) -> {
+            try {
+                thread.wait();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        cbx.setOnAction((ActionEvent e) -> { 
+
+            if(cbx.getValue().equalsIgnoreCase("Fast")){
+                this.lblType.setText("Fast");
+            }
+            else if(cbx.getValue().equalsIgnoreCase("Furious")){
+                this.lblType.setText("Furious");
+            } else{
+                this.lblType.setText("Smart");
+            }
+
+            if(cantP==Integer.parseInt(tfdSize.getText())){
+                //btnSet.setVisible(true);
+                btnSet.setDisable(true);
+            }
+            cantP++;
+        });
+        cbxD.setOnAction((ActionEvent e) -> { 
+
+            if(cbxD.getValue().equalsIgnoreCase("Easy")){
+                this.lblType.setText("Easy");
+            }
+            else if(cbx.getValue().equalsIgnoreCase("Medium")){
+                this.lblType.setText("Medium");
+            } else{
+                this.lblType.setText("Hard");
+            }
+
+            if(cantP==Integer.parseInt(tfdSize.getText())){
+                //btnSet.setVisible(true);
+                btnSet.setDisable(true);
+            }
+            cantP++;
+        });
+
 
         gc = canvas.getGraphicsContext2D();
         pane = new Pane(canvas);
@@ -107,6 +191,9 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         pane.getChildren().add(btSave);
         logica.createMaze();
         logica.drawMaze(gc);
+        this.vbox.getChildren().addAll(this.lblQuantity, tfdSize, cbx, cbxD, this.lblType, this.btnSet, this.btnStop);
+        this.hbox.getChildren().add(pane);
+        this.hbox.getChildren().add(vbox);
 
         this.canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -118,7 +205,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         });
 
-        Scene scene = new Scene(pane, width, HEIGTH);
+        Scene scene = new Scene(hbox, width, HEIGTH);
         primaryStage.setScene(scene);
     } // init
 
@@ -148,12 +235,12 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     }
 
     public void draw(GraphicsContext gc) throws InterruptedException {
-        gc.clearRect(0, 0, width, HEIGTH);
+        gc.clearRect(0, 0,canvasWidth, HEIGTH);
         logica.drawMaze(gc);
         c1.draw(gc);
         c2.draw(gc);
         c3.draw(gc);
-        i1.draw(gc);
+        //i1.draw(gc);
     }
 
     public static void main(String[] args) {
