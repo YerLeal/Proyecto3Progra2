@@ -129,17 +129,18 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         });
 
-        btSave.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    mazeFile.addMaze(logica.getMaze());
-                    System.out.println("Guardo");
-                } catch (IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
+//        btSave.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                try {
+//                    mazeFile.addMaze(logica.getMaze());
+//                    System.out.println("Guardo");
+//                } catch (IOException | ClassNotFoundException ex) {
+//                    Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        });
+
         btnSet.setOnAction((ActionEvent t) -> {
         });
         btnStop.setOnAction((ActionEvent t) -> {
@@ -188,7 +189,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         gc = canvas.getGraphicsContext2D();
         pane = new Pane(canvas);
         pane.getChildren().add(btRun);
-        pane.getChildren().add(btSave);
+//        pane.getChildren().add(btSave);
         logica.createMaze();
         logica.drawMaze(gc);
         this.vbox.getChildren().addAll(this.lblQuantity, tfdSize, cbx, cbxD, this.lblType, this.btnSet, this.btnStop);

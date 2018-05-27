@@ -25,19 +25,18 @@ public class Logica {
     private int size;
     int difficulty;
     private Block maze[][];
-    
+
     public Logica() {
         this.difficulty = (int) (Math.random() * (4 - 1) + 1);
-//        this.difficulty = 3;
         getDificultad();
         this.maze = new Block[WIDTH / size][HEIGHT / size];
     }
-    
-    public int getDifficulty(){
+
+    public int getDifficulty() {
         return this.difficulty;
     }
-    
-    public Block[][] getMaze(){
+
+    public Block[][] getMaze() {
         return this.maze;
     }
 
@@ -58,7 +57,6 @@ public class Logica {
                     } else {
                         this.maze[i][j].setType("wall");
                     }
-
                     break;
                 }
             }
@@ -82,29 +80,10 @@ public class Logica {
     }
 
     public void createMaze() {
-//        for(int i=0; i<maze.length; i++){
-//            for(int j=0; j<maze[0].length;j++){
-//                if((i+j)%2==0){
-//                    maze[i][j]= new Block(i, j, size, "wall");
-//                }else{
-//                    maze[i][j]= new Block(i, j, size, "floor");
-//                }
-//            }
-//        }
-        
-        
-        MazeFile file = new MazeFile();
-        try {
-            this.maze = file.getMaze(difficulty-1);
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Logica.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Maze maze = new Maze();
+        this.maze = maze.getMaze(difficulty);
         buscarNuevosCaminos();
-
-//            Maze m = new Maze();
-//            this.maze = m.getMaze(difficulty);
-//            buscarNuevosCaminos();
-    }
+    } // createMaze
 
     private void getDificultad() {
         switch (this.difficulty) {
@@ -123,42 +102,33 @@ public class Logica {
     }
 
     public void drawMaze(GraphicsContext gc) {
-
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
                 if (maze[i][j].getType().equals("wall")) {
                     gc.setFill(Color.BLACK);
                     gc.fillRect(i * size, j * size, size, size);
-
                 } else {
                     gc.setFill(Color.WHITE);
                     gc.fillRect(i * size, j * size, size, size);
                 }
-
             }
         }
-
     }
 
     private ArrayList<Block> caminos(int x, int y) {
         ArrayList<Block> next = new ArrayList<>();
         if (x + 1 < maze.length && maze[x + 1][y].getType().equals("floor")) {
-
             next.add(maze[x + 1][y]);
         }
         if (x - 1 >= 0 && maze[x - 1][y].getType().equals("floor")) {
-
             next.add(maze[x - 1][y]);
         }
         if (y + 1 < maze[0].length && maze[x][y + 1].getType().equals("floor")) {
-
             next.add(maze[x][y + 1]);
         }
         if (y - 1 >= 0 && maze[x][y - 1].getType().equals("floor")) {
-
             next.add(maze[x][y - 1]);
         }
-
         return next;
     }
 
@@ -169,5 +139,5 @@ public class Logica {
             }
         }
     }
-    
-}
+
+} // end class

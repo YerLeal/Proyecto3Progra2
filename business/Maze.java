@@ -1,10 +1,6 @@
 package business;
 
 import domain.Block;
-import file.MazeFile;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,43 +13,73 @@ import java.util.logging.Logger;
  */
 public class Maze {
 
-    private MazeFile file;
-    private Block[][] maze;
-    private Block[][] m;
+    private Logica logica;
     private int size;
 
     public Maze() {
-        try {
-            file = new MazeFile();
-            m = file.getMaze(0);
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(Maze.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+        this.logica = new Logica();
+        this.size = this.logica.getSize();
+    } // constructor
 
     public Block[][] getMaze(int difficulty) {
-        if (difficulty == 1) {
-            this.maze = new Block[11][6];
-            this.size = 120;
-            for (int i = 0; i < m.length; i++) {
-                for (int j = 0; j < m[0].length; j++) {
-                    System.out.print(m[i][j].getType() + "  ");
+        int matrix[][] = getMatrix(difficulty);
+        Block maze[][] = new Block[matrix.length][matrix[0].length];
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[0].length; j++) {
+                if (matrix[i][j] == 1) {
+                    maze[i][j] = new Block(i, j, this.size, "floor");
+                } else {
+                    maze[i][j] = new Block(i, j, this.size, "wall");
                 }
-                System.out.println();
-            }
-            System.out.println(maze.length);
-            maze= new Block[11][6];
-            for (int i = 0; i < maze.length; i++) {
-                for (int j = 0; j < maze[0].length; j++) {
-                    maze[i][j] = new Block(i, j, size, "floor");
-                }
-            }
-            for (int i = 0; i < maze[0].length; i++) {
-                maze[0][i] = new Block(0, i, size, "wall");
             }
         }
-        
         return maze;
-    }
-    
-}
+    } // getMaze
+
+    private int[][] getMatrix(int difficulty) {
+        switch (difficulty) {
+            case 1: {
+                int matrix[][] = {{1, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0},
+                {0, 0, 0, 1, 0, 1, 0, 0, 0}, {0, 1, 0, 1, 0, 1, 1, 1, 1}, {0, 1, 0, 1, 0, 0, 1, 0, 1},
+                {0, 1, 1, 1, 0, 0, 1, 0, 1}, {0, 1, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 1, 1, 1, 0, 0, 1},
+                {0, 1, 0, 1, 0, 1, 0, 1, 1}, {1, 1, 1, 1, 0, 1, 0, 1, 0}, {1, 0, 0, 0, 0, 1, 0, 1, 0},
+                {1, 0, 1, 1, 0, 1, 0, 0, 0}, {1, 1, 1, 0, 0, 1, 1, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {0, 1, 0, 1, 0, 1, 0, 1, 0}, {1, 0, 1, 0, 1, 0, 1, 0, 1}, {0, 1, 0, 1, 0, 1, 0, 1, 0}};
+                return matrix;
+            }
+            case 2: {
+                int matrix[][] = {{1, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 0, 1, 0, 1, 0, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 1, 1, 1}, {1, 0, 1, 1, 1, 0, 1, 0, 1},
+                {1, 0, 1, 0, 0, 0, 1, 0, 1}, {1, 0, 1, 0, 1, 1, 1, 0, 1}, {0, 0, 1, 0, 1, 0, 1, 1, 1},
+                {1, 1, 1, 0, 1, 0, 0, 0, 0}, {1, 0, 0, 0, 0, 0, 1, 1, 1}, {1, 0, 1, 1, 1, 0, 1, 0, 1},
+                {1, 0, 1, 0, 1, 0, 1, 0, 1}, {1, 1, 1, 0, 1, 1, 1, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {0, 1, 0, 1, 0, 1, 0, 1, 0}, {1, 0, 1, 0, 1, 0, 1, 0, 1}, {0, 1, 0, 1, 0, 1, 0, 1, 0}};
+                return matrix;
+            }
+            case 3: {
+                int matrix[][] = {{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0},
+                {1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}, {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0},
+                {1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+                {1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1},
+                {1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}, {1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1},
+                {1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1}, {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+                {1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0}, {0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1},
+                {1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}, {1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0},
+                {1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0}, {1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0},
+                {1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0}, {1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1},
+                {1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1}, {1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+                {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}, {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+                {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}, {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
+                {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}};
+                return matrix;
+            }
+            default:
+                return null;
+        } // switch
+    } // getMatrix
+
+} // end class
