@@ -5,6 +5,7 @@
  */
 package domain;
 
+import business.SharedBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,8 +21,8 @@ public class Item extends Character {
 
     private boolean bandera, cosa;
 
-    public Item(int size, Block start) {
-        super(size, start);
+    public Item(int size, Block start,SharedBuffer buffer,int order) {
+        super(size, start,buffer,order);
         super.speed = 10;
         bandera = true;
         cosa = true;

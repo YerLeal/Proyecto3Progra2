@@ -1,14 +1,14 @@
 package proyecto3progra2;
 
 import business.Logica;
-import domain.Block;
+import business.SharedBuffer;
 import domain.Character;
 import domain.FastCharacter;
 import domain.FuriousCharacter;
 import domain.Item;
 import domain.SmartCharacter;
 import file.MazeFile;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -27,7 +27,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -56,7 +55,23 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private TextField tfdSize; 
     private TextField tfdType;
     private int cantP;
-
+    private SharedBuffer buffer;
+    private ArrayList<Character> lista=new ArrayList<>();
+    private Runnable hilos=new Runnable() {
+        @Override
+        public void run() {
+            for(int i=0;i<lista.size();i++){
+                buffer.getCharacters().add(lista.get(i));
+                lista.get(i).start();    
+                try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+        }
+    };
     @Override
     public void start(Stage primaryStage) {
         mazeFile = new MazeFile();
@@ -69,6 +84,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 System.exit(0);
             }
         });
+        buffer=new SharedBuffer();
         primaryStage.resizableProperty().set(false);
         primaryStage.show();
     } // start
@@ -116,14 +132,28 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         btRun.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                c1 = new FastCharacter(logica.getSize(), logica.ini());
-                c2 = new FuriousCharacter(logica.getSize(), logica.ini());
-                c3 = new SmartCharacter(logica.getSize(), logica.ini());
-                //i1 = new Item(logica.getSize(), logica.ini3());
+                for(int i=0;i<6;i++){
+                    if(i<2){
+                        lista.add(new SmartCharacter(logica.getSize(), logica.ini(),buffer,i));
+                        
+                    }else if(i<4){
+                        lista.add(new FastCharacter(logica.getSize(), logica.ini(),buffer,i));
+                    }else {
+                        lista.add(new FuriousCharacter(logica.getSize(), logica.ini(),buffer,i));
+                    }
+                    
+                }
                 thread.start();
-                c1.start();
-                c2.start();
-                c3.start();
+                new Thread(hilos).start();
+                
+//                c1 = new FastCharacter(logica.getSize(), logica.ini(),buffer,0);
+//                c2 = new FuriousCharacter(logica.getSize(), logica.ini(),buffer,1);
+//                c3 = new SmartCharacter(logica.getSize(), logica.ini(),buffer,2);
+//                //i1 = new Item(logica.getSize(), logica.ini3());
+//                thread.start();
+//                c1.start();
+//                c2.start();
+//                c3.start();
                 //i1.start();
 
             }
@@ -238,9 +268,12 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     public void draw(GraphicsContext gc) throws InterruptedException {
         gc.clearRect(0, 0,canvasWidth, HEIGTH);
         logica.drawMaze(gc);
-        c1.draw(gc);
-        c2.draw(gc);
-        c3.draw(gc);
+        for(int i=0;i<lista.size();i++){
+            lista.get(i).draw(gc);
+        }
+//        c1.draw(gc);
+//        c2.draw(gc);
+//        c3.draw(gc);
         //i1.draw(gc);
     }
 

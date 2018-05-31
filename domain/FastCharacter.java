@@ -5,6 +5,7 @@
  */
 package domain;
 
+import business.SharedBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,11 +20,12 @@ public class FastCharacter extends Character {
     private int cont = 1;
     private int sleep = 1000;
     private boolean state = true;
+    private int speedAux=5000;
     private Runnable timer = new Runnable() {
         @Override
         public void run() {
             while (true) {
-
+//                System.err.println("EntraFast");
                 if (cont <= 2) {
                     cont++;
 
@@ -34,15 +36,19 @@ public class FastCharacter extends Character {
                 if (state) {
                     speed = 2;
                 } else {
-                    state = true;
-                    cont = 1;
-                    speed = 5000;
+                    
+                    speed = speedAux;
                     sleep = speed;
                 }
-                System.err.println("Cont:" + cont + " Sleep:" + sleep + "State:" + state);
+                if(speedAux==1000){
+                    speedAux=5000;
+                    state = true;
+                    cont = 1;
+                }
+//                System.err.println("Cont:" + cont + " Sleep:" + sleep + "State:" + state);
                 try {
-                    Thread.sleep(sleep);
-                    sleep = 1000;
+                    Thread.sleep(1000);
+                    speedAux-=1000;
                 } catch (InterruptedException ex) {
                     Logger.getLogger(FastCharacter.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -50,8 +56,8 @@ public class FastCharacter extends Character {
         }
     };
 
-    public FastCharacter(int size, Block start) {
-        super(size, start);
+    public FastCharacter(int size, Block start, SharedBuffer buffer, int order) {
+        super(size, start, buffer, order);
         super.speed = 2;
     }
 
@@ -59,48 +65,66 @@ public class FastCharacter extends Character {
     public void run() {
         new Thread(timer).start();
         while (flag) {
-            if (crash) {
+           
                 direction = (int) (Math.random() * (5 - 1) + 1);
-            }
+            
             if (next(direction)) {
+                crash = false;
                 try {
                     switch (direction) {
                         case 1:
-                            while (currentBlock.in(x, y)) {
-                                y += 1;
+                            while (currentBlock.in(x, y) && !crash) {
                                 Thread.sleep(speed);
+                                buff.colisionVs(order);
+                                y += movement;
+                                
+                                
                             }
+                            break;
                         case 2:
-                            while (currentBlock.in(x, y)) {
-                                x += 1;
+                            while (currentBlock.in(x, y) && !crash) {
                                 Thread.sleep(speed);
+                                buff.colisionVs(order);
+                                x += movement;
+                                
+                                
                             }
+                            break;
                         case 3:
-                            while (currentBlock.in(x, y)) {
-                                y -= 1;
+                            while (currentBlock.in(x, y) && !crash) {
                                 Thread.sleep(speed);
+                                buff.colisionVs(order);
+                                y -= movement;
+                                
+                                
                             }
+                            break;
                         case 4:
-                            while (currentBlock.in(x, y)) {
-                                x -= 1;
+                            while (currentBlock.in(x, y) && !crash) {
                                 Thread.sleep(speed);
-
+                                buff.colisionVs(order);
+                                x -= movement;
+                                
+                                
                             }
-
+                            break;
                     }
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Character.class
                             .getName()).log(Level.SEVERE, null, ex);
                 }
-                currentBlock = nextBlock;
-            } else {
-                crash = !crash;
+                if (!crash) {
+                    metodoRandom(direction);
+                    currentBlock = nextBlock;
+                }else{
+                    try {
+                        rePos();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FastCharacter.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
-    }
-
-    public void burst() {
-
     }
 
     @Override
