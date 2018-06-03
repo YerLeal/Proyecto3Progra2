@@ -1,6 +1,5 @@
 package domain;
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -9,10 +8,8 @@ public class Block implements Serializable {
     private int x, y, size;
     private String type;
     private ArrayList<Block> next;
-//    private BufferedImage image;
 
     public Block(int x, int y, int size, String type) {
-//        this.image = image;
         this.x = x;
         this.y = y;
         this.size = size;
@@ -50,14 +47,7 @@ public class Block implements Serializable {
     public int getSize() {
         return size;
     }
-    
-//    public BufferedImage getImage() {
-//        return image;
-//    }
-//
-//    public void setImage(BufferedImage image) {
-//        this.image = image;
-//    }
+
     public boolean in(int xMouse, int yMouse) {
 
         return (((xMouse >= this.x * size && xMouse < this.x * size + this.size) || (xMouse + size > this.x * size && xMouse + size < this.x * size + this.size)) && ((yMouse >= this.y * size && yMouse < this.y * size + this.size) || (yMouse + size >= this.y * size && yMouse + size < this.y * size + this.size)));
@@ -75,4 +65,4 @@ public class Block implements Serializable {
         this.type = type;
     }
 
-}
+} // end class

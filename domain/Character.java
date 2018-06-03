@@ -1,26 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package domain;
 
 import business.SharedBuffer;
 import javafx.scene.canvas.GraphicsContext;
 
-/**
- *
- * @author maikel
- */
 public abstract class Character extends Thread {
 
     protected SharedBuffer buff;
-    protected int xPos, yPos, x, y, size, speed,movement, order;
-    protected Block currentBlock, nextBlock,starto;
+    protected int xPos, yPos, x, y, size, speed, movement, order;
+    protected Block currentBlock, nextBlock, starto;
     protected int direction, dirAux;
-    protected boolean crash=false,ini = false;
+    protected boolean crash = false, ini = false;
     protected String tipo;
     private Boolean flag = true;
+
     public Character(int size, SharedBuffer buffer) {
         this.size = size;
         this.buff = buffer;
@@ -31,10 +23,9 @@ public abstract class Character extends Thread {
         yPos = starto.getY();
         x = xPos * size;
         y = yPos * size;
-        this.starto=starto;
+        this.starto = starto;
         this.currentBlock = starto;
     }
-    
 
     public int getOrder() {
         return order;
@@ -55,8 +46,7 @@ public abstract class Character extends Thread {
     public void setIni(boolean ini) {
         this.ini = ini;
     }
-    
-    
+
     public Boolean getFlag() {
         return flag;
     }
@@ -64,7 +54,7 @@ public abstract class Character extends Thread {
     public int getSize() {
         return size;
     }
-    
+
     public void setFlag(Boolean flag) {
         this.flag = flag;
     }
@@ -109,7 +99,6 @@ public abstract class Character extends Thread {
         return currentBlock;
     }
 
-
     public boolean isCrash() {
         return crash;
     }
@@ -118,12 +107,9 @@ public abstract class Character extends Thread {
         this.crash = crash;
     }
 
-
-
     public int getX() {
         return x;
     }
-
 
     public int getY() {
         return y;
@@ -143,7 +129,7 @@ public abstract class Character extends Thread {
         if (crash && dir == dirAux) {
             return false;
         }
-//        System.err.println(currentBlock.getX() + " " + currentBlock.getY() + " " + order);
+
         int aux;
         if (dir == 1 || dir == 2) {
             aux = 1;
@@ -169,10 +155,8 @@ public abstract class Character extends Thread {
                 }
             }
         }
-
         return false;
     }
-    
 
     public void metodoRandom(int dir) {
         int aux;
@@ -198,7 +182,6 @@ public abstract class Character extends Thread {
         } else {
             aux = -1;
         }
-
         if (this.currentBlock.getNext().size() == 1) {
             if ((dir == 1 || dir == 3) && this.currentBlock.getNext().get(0).getY() == yPos + aux) {
                 direction = dir;
@@ -227,60 +210,54 @@ public abstract class Character extends Thread {
     }
 
     public void rePos() throws InterruptedException {
-        int xB=currentBlock.getX() * size;
-        int yB=currentBlock.getY() * size;
-        
-        
-        direction=oposDir(direction);
+        int xB = currentBlock.getX() * size;
+        int yB = currentBlock.getY() * size;
+
+        direction = oposDir(direction);
         switch (direction) {
             case 1:
-                while (y<yB && crash) {
+                while (y < yB && crash) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
 //                    System.err.println("E1"+order);
                     y += movement;
-                   
+
 //                    buff.comparator(order);
-                    
                 }
                 break;
             case 2:
-                while (x<xB&& crash) {
+                while (x < xB && crash) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     x += movement;
 //                  System.err.println("E2"+order);
 //                    buff.comparator(order);
-                    
-                    
+
                 }
                 break;
             case 3:
-                while (y>yB&& crash) {
+                while (y > yB && crash) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     y -= movement;
-                    
-                    
+
 //                    System.err.println("E3"+order);
 //                    buff.comparator(order);
-                    
                 }
                 break;
             case 4:
-                while (x>xB&& crash) {
+                while (x > xB && crash) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     x -= movement;
-                    
+
 //                    System.err.println("E4"+order);
 //                    buff.comparator(order);
-                    
                 }
                 break;
         }
-        crash=false;
-        dirAux=direction;
+        crash = false;
+        dirAux = direction;
     }
 
     public String getTipo() {
@@ -289,4 +266,4 @@ public abstract class Character extends Thread {
 
     public abstract void draw(GraphicsContext gc);
 
-}
+} // 

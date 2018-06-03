@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package domain;
 
 import business.SharedBuffer;
@@ -11,10 +6,6 @@ import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-/**
- *
- * @author maikel
- */
 public class FastCharacter extends Character {
 
     private int cont = 1;
@@ -109,7 +100,7 @@ public class FastCharacter extends Character {
                 if (!crash) {
                     metodoRandom(direction);
                     currentBlock = nextBlock;
-                    if(currentBlock.getX()==7 && currentBlock.getY()==7){
+                    if (currentBlock.getX() == 7 && currentBlock.getY() == 7) {
                         super.setFlag(false);
                     }
                 } else {
@@ -141,4 +132,5 @@ public class FastCharacter extends Character {
         }
         gc.fillRect(x, y, size, size);
     }
-}
+
+} // end class

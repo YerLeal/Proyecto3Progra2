@@ -1,7 +1,6 @@
 package proyecto3progra2;
 
 import business.Logica;
-import business.Maze;
 import business.SharedBuffer;
 import domain.Block;
 import domain.Character;
@@ -10,7 +9,6 @@ import domain.FuriousCharacter;
 import domain.Item;
 import domain.SmartCharacter;
 import file.MazeFile;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,6 +59,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private SharedBuffer buffer;
     private ArrayList<Character> lista = new ArrayList<>();
     private int initCont = 0;
+    
     private Runnable hilos = new Runnable() {
         @Override
         public void run() {
@@ -74,15 +73,14 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                         buffer.getCharacters().add(lista.get(initCont));
                         lista.get(initCont).start();
                         initCont++;
-                    }else if (buffer.verifyStart(aux.get(1))) {
+                    } else if (buffer.verifyStart(aux.get(1))) {
                         lista.get(initCont).setStarto(aux.get(1));
                         lista.get(initCont).setOrder(initCont);
                         buffer.getCharacters().add(lista.get(initCont));
                         lista.get(initCont).start();
                         initCont++;
-                    } 
+                    }
 
-                    
                 }
 
             }
@@ -268,8 +266,8 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         gc.clearRect(0, 0, canvasWidth, HEIGTH);
         logica.drawMaze(gc);
         for (int i = 0; i < lista.size(); i++) {
-            if(lista.get(i).isAlive()){
-            lista.get(i).draw(gc);
+            if (lista.get(i).isAlive()) {
+                lista.get(i).draw(gc);
             }
         }
     }
@@ -278,4 +276,4 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         launch(args);
     } // main
 
-}
+} // end class

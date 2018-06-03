@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package business;
 
 import domain.Block;
@@ -10,17 +5,14 @@ import domain.Item;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import domain.Character;
-/**
- *
- * @author maikel
- */
+
 public class SharedBuffer {
 
     private ArrayList<Character> characters;
     private ArrayList<Item> items;
-    
-    public SharedBuffer(ArrayList<Character> characters,ArrayList<Item> items) {
-        this.items=items;
+
+    public SharedBuffer(ArrayList<Character> characters, ArrayList<Item> items) {
+        this.items = items;
         this.characters = characters;
     }
 
@@ -37,7 +29,6 @@ public class SharedBuffer {
         } else {
             aux = -10;
         }
-
         if (dirMe == 1 || dirMe == 3) {
             yMe += aux;
         } else {
@@ -48,34 +39,28 @@ public class SharedBuffer {
             xC = characters.get(i).getX();
             yC = characters.get(i).getY();
             dirO = characters.get(i).getDirection();
-            
             Rectangle elOtro = new Rectangle(xC, yC, size, size);
             if (i != order && elOtro.intersects(yo) && characters.get(i).getFlag()) {
-                if (characters.get(order).oposDir(dirMe) == dirO ) {
+                if (characters.get(order).oposDir(dirMe) == dirO) {
                     if (characters.get(order).isCrash() && !characters.get(i).isCrash()) {
                         characters.get(order).setCrash(false);
                         characters.get(i).setCrash(true);
                     } else if (characters.get(i).isCrash() && !characters.get(order).isCrash()) {
                         characters.get(i).setCrash(false);
                         characters.get(order).setCrash(true);
-                    } else if(characters.get(i).isCrash() && characters.get(order).isCrash()){
-                            characters.get(i).setCrash(false);
+                    } else if (characters.get(i).isCrash() && characters.get(order).isCrash()) {
+                        characters.get(i).setCrash(false);
                         characters.get(order).setCrash(false);
-                    
-                    }else {
+                    } else {
                         characters.get(order).setCrash(true);
                         characters.get(i).setCrash(true);
-
                     }
-
                     return true;
                 } else {
-//                    System.err.println("otro" + order);
                     characters.get(order).setMovement(0);
                     return true;
                 }
             }
-
         } //for
         characters.get(order).setMovement(1);
         return false;
@@ -84,8 +69,8 @@ public class SharedBuffer {
     public ArrayList<Character> getCharacters() {
         return characters;
     }
-    
-    public synchronized void itemColision(int order){
+
+    public synchronized void itemColision(int order) {
         int size = characters.get(0).getSize();
         int xC, yC, xMe, yMe;
         int dirMe = items.get(order).getDirection();
@@ -97,7 +82,6 @@ public class SharedBuffer {
         } else {
             aux = -10;
         }
-
         if (dirMe == 1 || dirMe == 3) {
             yMe += aux;
         } else {
@@ -108,44 +92,41 @@ public class SharedBuffer {
             xC = characters.get(i).getX();
             yC = characters.get(i).getY();
             Rectangle elOtro = new Rectangle(xC, yC, size, size);
-            if ( elOtro.intersects(yo)) {
-//                System.out.println("Entra?");
-                if(characters.get(i).getTipo().equals("S")){  
+            if (elOtro.intersects(yo)) {
+                if (characters.get(i).getTipo().equals("S")) {
                     characters.get(i).setSpeed();
                     items.get(order).setFlag(false);
-                }else if(characters.get(i).getTipo().equals("F")){
+                } else if (characters.get(i).getTipo().equals("F")) {
                     items.get(order).setFlag(false);
                 }
             }
         }
     }
 
-    public boolean verifyStart(Block starto){
-        int size=starto.getSize();
-        int xS=starto.getX()*size;
-        int yS=starto.getY()*size;
-        int xC,yC;
-        int cont=0;
-        Rectangle sBlock=new Rectangle(xS, yS, size, size);
-        for(int i=0;i<characters.size();i++){
-            xC=characters.get(i).getX();
-            yC=characters.get(i).getY();
-            Rectangle rC=new Rectangle(xC, yC, size, size);
-            if(sBlock.intersects(rC)){
+    public boolean verifyStart(Block starto) {
+        int size = starto.getSize();
+        int xS = starto.getX() * size;
+        int yS = starto.getY() * size;
+        int xC, yC;
+        int cont = 0;
+        Rectangle sBlock = new Rectangle(xS, yS, size, size);
+        for (int i = 0; i < characters.size(); i++) {
+            xC = characters.get(i).getX();
+            yC = characters.get(i).getY();
+            Rectangle rC = new Rectangle(xC, yC, size, size);
+            if (sBlock.intersects(rC)) {
                 cont++;
             }
         }
-        return cont==0;
+        return cont == 0;
     }
-    
+
     public void setCharacters(ArrayList<Character> characters) {
         this.characters = characters;
     }
-    
 
     public ArrayList<Item> getItems() {
         return items;
     }
-    
 
-}
+} // end class

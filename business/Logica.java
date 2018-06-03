@@ -14,13 +14,13 @@ public class Logica {
     private Block maze[][];
 
     public Logica() {
-        this.difficulty = 1;
+        this.difficulty = 3;
         getDificultad();
         this.maze = new Block[WIDTH / size][HEIGHT / size];
-    }
+    } // constructor
 
-    public ArrayList<Block> getStart(){
-        ArrayList<Block> starts=new ArrayList<>();
+    public ArrayList<Block> getStart() {
+        ArrayList<Block> starts = new ArrayList<>();
         switch (difficulty) {
             case 1:
                 starts.add(this.maze[0][4]);
@@ -34,7 +34,7 @@ public class Logica {
                 return starts;
         }
     }
-    
+
     public int getDifficulty() {
         return this.difficulty;
     }
@@ -55,7 +55,7 @@ public class Logica {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
                 if (this.maze[i][j].isClicked(x, y)) {
-                    System.out.println("i:" + i + ", j:"+j);
+                    System.out.println("i:" + i + ", j:" + j);
                     if (this.maze[i][j].getType().equals("wall")) {
                         this.maze[i][j].setType("floor");
                     } else {

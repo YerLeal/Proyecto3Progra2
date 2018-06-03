@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package domain;
 
 import business.SharedBuffer;
@@ -11,17 +6,13 @@ import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-/**
- *
- * @author maikel
- */
 public class Item extends Character {
 
     private int dir, visDir;
 
     private boolean bandera, cosa;
 
-    public Item(int size,  SharedBuffer buffer) {
+    public Item(int size, SharedBuffer buffer) {
         super(size, buffer);
         super.speed = 10;
         bandera = true;
@@ -77,7 +68,6 @@ public class Item extends Character {
                                 x -= 1;
                                 Thread.sleep(speed);
                             }
-
                     }
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Character.class
@@ -93,11 +83,10 @@ public class Item extends Character {
                 }
             }
         }
-    }
+    } // run
 
     @Override
     public boolean next(int dir) {
-
         if (((dir == 1 && dirAux == 3) || (dirAux == 1 && dir == 3)) && cosa) {
             return false;
         } else if (((dir == 2 && dirAux == 4) || (dirAux == 2 && dir == 4)) && cosa) {
@@ -109,7 +98,6 @@ public class Item extends Character {
         } else {
             aux = -1;
         }
-
         if (dir == 1 || dir == 3) {
             for (int i = 0; i < this.currentBlock.getNext().size(); i++) {
                 if (this.currentBlock.getNext().get(i).getY() == yPos + aux) {
@@ -132,13 +120,13 @@ public class Item extends Character {
                 }
             }
         }
-
         return false;
-    }
+    } // next
 
     @Override
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.CHOCOLATE);
         gc.fillOval(x, y, size, size);
-    }
-}
+    } // draw
+
+} // end class
