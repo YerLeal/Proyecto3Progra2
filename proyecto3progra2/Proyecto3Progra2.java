@@ -59,15 +59,15 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private int cantP;
     private SharedBuffer buffer;
     private ArrayList<Character> lista = new ArrayList<>();
-    
+
     private Runnable hilos = new Runnable() {
         @Override
         public void run() {
-            for(int i=0;i<lista.size();i++){
-                
+            for (int i = 0; i < lista.size(); i++) {
+
                 try {
                     buffer.getCharacters().add(lista.get(i));
-                lista.get(i).start();
+                    lista.get(i).start();
                     Thread.sleep(2000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,22 +131,22 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         btRun.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+
                 for (int i = 0; i < 10; i++) {
-                    System.err.println("lista"+i);
+                    System.err.println("lista" + i);
                     if (i < 2) {
-                        lista.add(new SmartCharacter(logica.getSize(), logica.ini(), buffer, i));
+                        lista.add(new SmartCharacter(logica.getSize(), logica.getStart().get(0), buffer, i));
 
                     } else if (i < 4) {
-                        lista.add(new FastCharacter(logica.getSize(), logica.ini(), buffer, i));
+                        lista.add(new FastCharacter(logica.getSize(), logica.getStart().get(0), buffer, i));
                     } else {
-                        lista.add(new FuriousCharacter(logica.getSize(), logica.ini(), buffer, i));
+                        lista.add(new FuriousCharacter(logica.getSize(), logica.getStart().get(0), buffer, i));
                     }
 
                 }
-                
+
                 thread.start();
                 new Thread(hilos).start();
-                
 
             }
         });
@@ -162,7 +162,6 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 //                }
 //            }
 //        });
-
         btnSet.setOnAction((ActionEvent t) -> {
         });
         btnStop.setOnAction((ActionEvent t) -> {
