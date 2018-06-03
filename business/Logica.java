@@ -19,6 +19,22 @@ public class Logica {
         this.maze = new Block[WIDTH / size][HEIGHT / size];
     }
 
+    public ArrayList<Block> getStart(){
+        ArrayList<Block> starts=new ArrayList<>();
+        switch (difficulty) {
+            case 1:
+                starts.add(this.maze[0][4]);
+                return starts;
+            case 2:
+                starts.add(this.maze[14][0]);
+                return starts;
+            default:
+                starts.add(this.maze[0][9]);
+                starts.add(this.maze[27][7]);
+                return starts;
+        }
+    }
+    
     public int getDifficulty() {
         return this.difficulty;
     }

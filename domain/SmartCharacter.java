@@ -17,8 +17,8 @@ import javafx.scene.paint.Color;
  */
 public class SmartCharacter extends Character {
     
-    public SmartCharacter(int size, Block start, SharedBuffer buffer, int order) {
-        super(size, start, buffer, order);
+    public SmartCharacter(int size, SharedBuffer buffer) {
+        super(size,  buffer);
         super.speed = 6;
         super.tipo="S";
     }
@@ -36,7 +36,7 @@ public class SmartCharacter extends Character {
                     switch (direction) {
                         case 1:
                             while (currentBlock.in(x, y) && !crash) {
-                                System.err.println("Speed:"+speed);
+                                
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 y += movement;
@@ -45,7 +45,7 @@ public class SmartCharacter extends Character {
                             break;
                         case 2:
                             while (currentBlock.in(x, y) && !crash) {
-                               System.err.println("Speed:"+speed);
+
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 x += movement;
@@ -55,7 +55,7 @@ public class SmartCharacter extends Character {
                             break;
                         case 3:
                             while (currentBlock.in(x, y) && !crash) {
-                                System.err.println("Speed:"+speed);
+
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 y -= movement;
@@ -65,7 +65,7 @@ public class SmartCharacter extends Character {
                             break;
                         case 4:
                             while (currentBlock.in(x, y) && !crash) {
-                                System.err.println("Speed:"+speed);
+
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 x -= movement;

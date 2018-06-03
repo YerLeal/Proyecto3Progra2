@@ -52,8 +52,8 @@ public class FastCharacter extends Character {
         }
     };
 
-    public FastCharacter(int size, Block start, SharedBuffer buffer, int order) {
-        super(size, start, buffer, order);
+    public FastCharacter(int size, SharedBuffer buffer) {
+        super(size, buffer);
         super.speed = 2;
         super.tipo = "FA";
     }

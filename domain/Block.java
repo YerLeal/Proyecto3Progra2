@@ -47,6 +47,10 @@ public class Block implements Serializable {
         this.next = next;
     }
 
+    public int getSize() {
+        return size;
+    }
+    
 //    public BufferedImage getImage() {
 //        return image;
 //    }

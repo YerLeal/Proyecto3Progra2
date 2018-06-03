@@ -17,8 +17,8 @@ import javafx.scene.paint.Color;
  */
 public class FuriousCharacter extends Character {
 
-    public FuriousCharacter(int size, Block start, SharedBuffer buffer, int order) {
-        super(size, start, buffer, order);
+    public FuriousCharacter(int size, SharedBuffer buffer) {
+        super(size, buffer);
         super.speed = 10;
         super.tipo = "F";
     }

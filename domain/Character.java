@@ -16,22 +16,47 @@ public abstract class Character extends Thread {
 
     protected SharedBuffer buff;
     protected int xPos, yPos, x, y, size, speed,movement, order;
-    protected Block currentBlock, nextBlock;
+    protected Block currentBlock, nextBlock,starto;
     protected int direction, dirAux;
-    protected boolean crash,wai = false;
+    protected boolean crash=false,ini = false;
     protected String tipo;
-    public Character(int size, Block start, SharedBuffer buffer, int order) {
-        xPos = start.getX();
-        yPos = start.getY();
+    private Boolean flag = true;
+    public Character(int size, SharedBuffer buffer) {
+        this.size = size;
+        this.buff = buffer;
+    }
+
+    public void setStarto(Block starto) {
+        xPos = starto.getX();
+        yPos = starto.getY();
         x = xPos * size;
         y = yPos * size;
-        this.size = size;
-        this.currentBlock = start;
-        this.buff = buffer;
+        this.starto=starto;
+        this.currentBlock = starto;
+    }
+    
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
         this.order = order;
     }
-    private Boolean flag = true;
 
+    public boolean isIni() {
+        return ini;
+    }
+
+    public Block getStarto() {
+        return starto;
+    }
+
+    public void setIni(boolean ini) {
+        this.ini = ini;
+    }
+    
+    
     public Boolean getFlag() {
         return flag;
     }
@@ -212,7 +237,7 @@ public abstract class Character extends Thread {
                 while (y<yB && crash) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
-                    System.err.println("E1"+order);
+//                    System.err.println("E1"+order);
                     y += movement;
                    
 //                    buff.comparator(order);
@@ -224,7 +249,7 @@ public abstract class Character extends Thread {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     x += movement;
-                  System.err.println("E2"+order);
+//                  System.err.println("E2"+order);
 //                    buff.comparator(order);
                     
                     
@@ -237,7 +262,7 @@ public abstract class Character extends Thread {
                     y -= movement;
                     
                     
-                    System.err.println("E3"+order);
+//                    System.err.println("E3"+order);
 //                    buff.comparator(order);
                     
                 }
@@ -248,7 +273,7 @@ public abstract class Character extends Thread {
                     buff.colisionVs(order);
                     x -= movement;
                     
-                    System.err.println("E4"+order);
+//                    System.err.println("E4"+order);
 //                    buff.comparator(order);
                     
                 }

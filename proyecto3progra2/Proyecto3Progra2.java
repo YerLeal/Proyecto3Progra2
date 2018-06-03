@@ -3,6 +3,7 @@ package proyecto3progra2;
 import business.Logica;
 import business.Maze;
 import business.SharedBuffer;
+import domain.Block;
 import domain.Character;
 import domain.FastCharacter;
 import domain.FuriousCharacter;
@@ -59,19 +60,31 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private int cantP;
     private SharedBuffer buffer;
     private ArrayList<Character> lista = new ArrayList<>();
-    
+    private int initCont = 0;
     private Runnable hilos = new Runnable() {
         @Override
         public void run() {
-            for(int i=0;i<lista.size();i++){
-                
-                try {
-                    buffer.getCharacters().add(lista.get(i));
-                lista.get(i).start();
-                    Thread.sleep(2000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
+            ArrayList<Block> aux = logica.getStart();
+            while (initCont < lista.size()) {
+
+                if (aux.size() == 2) {
+                    if (buffer.verifyStart(aux.get(0))) {
+                        lista.get(initCont).setStarto(aux.get(0));
+                        lista.get(initCont).setOrder(initCont);
+                        buffer.getCharacters().add(lista.get(initCont));
+                        lista.get(initCont).start();
+                        initCont++;
+                    }else if (buffer.verifyStart(aux.get(1))) {
+                        lista.get(initCont).setStarto(aux.get(1));
+                        lista.get(initCont).setOrder(initCont);
+                        buffer.getCharacters().add(lista.get(initCont));
+                        lista.get(initCont).start();
+                        initCont++;
+                    } 
+
+                    
                 }
+
             }
         }
     };
@@ -131,22 +144,20 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         btRun.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                for (int i = 0; i < 10; i++) {
-                    System.err.println("lista"+i);
-                    if (i < 2) {
-                        lista.add(new SmartCharacter(logica.getSize(), logica.ini(), buffer, i));
 
-                    } else if (i < 4) {
-                        lista.add(new FastCharacter(logica.getSize(), logica.ini(), buffer, i));
+                for (int i = 0; i < 30; i++) {
+
+                    if (i < 10) {
+                        lista.add(new SmartCharacter(logica.getSize(), buffer));
+                    } else if (i < 20) {
+                        lista.add(new FastCharacter(logica.getSize(), buffer));
                     } else {
-                        lista.add(new FuriousCharacter(logica.getSize(), logica.ini(), buffer, i));
+                        lista.add(new FuriousCharacter(logica.getSize(), buffer));
                     }
-
                 }
-                
+
                 thread.start();
                 new Thread(hilos).start();
-                
 
             }
         });
@@ -162,7 +173,6 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 //                }
 //            }
 //        });
-
         btnSet.setOnAction((ActionEvent t) -> {
         });
         btnStop.setOnAction((ActionEvent t) -> {
@@ -258,7 +268,9 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         gc.clearRect(0, 0, canvasWidth, HEIGTH);
         logica.drawMaze(gc);
         for (int i = 0; i < lista.size(); i++) {
+            if(lista.get(i).isAlive()){
             lista.get(i).draw(gc);
+            }
         }
     }
 
