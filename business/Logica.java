@@ -14,7 +14,7 @@ public class Logica {
     private Block maze[][];
 
     public Logica() {
-        this.difficulty = 3;
+        this.difficulty = 1;
         getDificultad();
         this.maze = new Block[WIDTH / size][HEIGHT / size];
     }
@@ -39,6 +39,7 @@ public class Logica {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
                 if (this.maze[i][j].isClicked(x, y)) {
+                    System.out.println("i:" + i + ", j:"+j);
                     if (this.maze[i][j].getType().equals("wall")) {
                         this.maze[i][j].setType("floor");
                     } else {
