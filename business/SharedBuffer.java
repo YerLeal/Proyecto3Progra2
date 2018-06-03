@@ -5,6 +5,7 @@
  */
 package business;
 
+import domain.Block;
 import domain.Item;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class SharedBuffer {
 
                     return true;
                 } else {
-                    System.err.println("otro" + order);
+//                    System.err.println("otro" + order);
                     characters.get(order).setMovement(0);
                     return true;
                 }
@@ -108,7 +109,7 @@ public class SharedBuffer {
             yC = characters.get(i).getY();
             Rectangle elOtro = new Rectangle(xC, yC, size, size);
             if ( elOtro.intersects(yo)) {
-                System.out.println("Entra?");
+//                System.out.println("Entra?");
                 if(characters.get(i).getTipo().equals("S")){  
                     characters.get(i).setSpeed();
                     items.get(order).setFlag(false);
@@ -119,9 +120,28 @@ public class SharedBuffer {
         }
     }
 
+    public boolean verifyStart(Block starto){
+        int size=starto.getSize();
+        int xS=starto.getX()*size;
+        int yS=starto.getY()*size;
+        int xC,yC;
+        int cont=0;
+        Rectangle sBlock=new Rectangle(xS, yS, size, size);
+        for(int i=0;i<characters.size();i++){
+            xC=characters.get(i).getX();
+            yC=characters.get(i).getY();
+            Rectangle rC=new Rectangle(xC, yC, size, size);
+            if(sBlock.intersects(rC)){
+                cont++;
+            }
+        }
+        return cont==0;
+    }
+    
     public void setCharacters(ArrayList<Character> characters) {
         this.characters = characters;
     }
+    
 
     public ArrayList<Item> getItems() {
         return items;
