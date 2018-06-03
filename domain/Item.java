@@ -4,19 +4,20 @@ import business.SharedBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 public class Item extends Character {
 
-    private int dir, visDir;
+    private int dir, visDir, image;
 
     private boolean bandera, cosa;
 
     public Item(int size, SharedBuffer buffer) {
-        super(size, buffer);
+        super(size, buffer,null);
         super.speed = 10;
         bandera = true;
         cosa = true;
+        addSprites();
     }
 
     @Override
@@ -123,10 +124,30 @@ public class Item extends Character {
         return false;
     } // next
 
+    public void addSprites() {
+
+        for (int i = 0; i < 3; i++) {
+            super.setSprites(new Image("assets/i" + i + ".png"));
+        }
+    }
+
+    public void setImage(int image) {
+        this.image = image;
+    }
+
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.CHOCOLATE);
-        gc.fillOval(x, y, size, size);
-    } // draw
+        switch (image) {
+            case 0:
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
+                break;
+            case 1:
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
+                break;
+            case 2:
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
+                break;
+        }
 
+    } // draw
 } // end class

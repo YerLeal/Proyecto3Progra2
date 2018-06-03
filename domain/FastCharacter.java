@@ -1,11 +1,11 @@
 package domain;
 
 import business.SharedBuffer;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 public class FastCharacter extends Character {
 
@@ -44,8 +44,8 @@ public class FastCharacter extends Character {
         }
     };
 
-    public FastCharacter(int size, SharedBuffer buffer) {
-        super(size, buffer);
+    public FastCharacter(int size, SharedBuffer buffer,ArrayList<Block> finish) {
+        super(size, buffer,finish);
         super.speed = 2;
         super.tipo = "FA";
         addSprites();
@@ -112,6 +112,7 @@ public class FastCharacter extends Character {
                         Logger.getLogger(FastCharacter.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                 super.isFinish();
             }
         }
     }
@@ -119,14 +120,12 @@ public class FastCharacter extends Character {
 public void addSprites(){
        
         for(int i=0;i<12;i++){
-            System.err.println(i);
             super.setSprites(new Image("assets/fa"+i+".png"));
         }
     }
     private int image=0;
     @Override
     public void draw(GraphicsContext gc) {
-        System.err.println(super.getSprites().size());
         switch (direction) {
             case 1:
                 if(image>2){

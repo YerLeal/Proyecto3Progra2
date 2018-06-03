@@ -66,7 +66,16 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             ArrayList<Block> aux = logica.getStart();
             while (initCont < lista.size()) {
 
-                if (aux.size() == 2) {
+                if (aux.size() == 1) {
+                    if (buffer.verifyStart(aux.get(0))) {
+                        lista.get(initCont).setStarto(aux.get(0));
+                        lista.get(initCont).setOrder(initCont);
+                        buffer.getCharacters().add(lista.get(initCont));
+                        lista.get(initCont).start();
+                        initCont++;
+                    }
+
+                }else {
                     if (buffer.verifyStart(aux.get(0))) {
                         lista.get(initCont).setStarto(aux.get(0));
                         lista.get(initCont).setOrder(initCont);
@@ -142,19 +151,23 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         btRun.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                ArrayList<Block> finish=logica.getFinish();
+                for (int i = 0; i < 60; i++) {
 
-                for (int i = 0; i < 10; i++) {
-
-                    if (i < 5) {
-                        lista.add(new SmartCharacter(logica.getSize(), buffer));
-                    } else if (i < 8) {
-                        lista.add(new FastCharacter(logica.getSize(), buffer));
+                    if (i < 20) {
+                        lista.add(new SmartCharacter(logica.getSize(), buffer,finish));
+                    } else if (i < 40) {
+                        lista.add(new FastCharacter(logica.getSize(), buffer,finish));
                     } else {
-                        lista.add(new FuriousCharacter(logica.getSize(), buffer));
+                        lista.add(new FuriousCharacter(logica.getSize(), buffer,finish));
                     }
                 }
-
+//                i1=new Item(logica.getSize(), buffer);
+//                i1.setStarto(logica.getMaze()[6][11]);
+//                i1.setOrder(0);
+//                buffer.getItems().add(i1);
                 thread.start();
+//                i1.start();
                 new Thread(hilos).start();
 
             }
@@ -265,11 +278,13 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     public void draw(GraphicsContext gc) throws InterruptedException {
         gc.clearRect(0, 0, canvasWidth, HEIGTH);
         logica.drawMaze(gc);
+//        i1.draw(gc);
         for (int i = 0; i < lista.size(); i++) {
             if (lista.get(i).isAlive()) {
                 lista.get(i).draw(gc);
             }
         }
+        
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package domain;
 
 import business.SharedBuffer;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,8 +9,8 @@ import javafx.scene.image.Image;
 
 public class FuriousCharacter extends Character {
     
-    public FuriousCharacter(int size, SharedBuffer buffer) {
-        super(size, buffer);
+    public FuriousCharacter(int size, SharedBuffer buffer,ArrayList<Block> finish) {
+        super(size, buffer,finish);
         super.speed = 10;
         super.tipo = "F";
         addSprites();
@@ -68,7 +69,7 @@ public class FuriousCharacter extends Character {
                         Logger.getLogger(SmartCharacter.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-
+                super.isFinish();
             }
         }
     } // run
@@ -76,14 +77,12 @@ public class FuriousCharacter extends Character {
     public void addSprites(){
        
         for(int i=0;i<12;i++){
-            System.err.println(i);
             super.setSprites(new Image("assets/f"+i+".png"));
         }
     }
     private int image=0;
     @Override
     public void draw(GraphicsContext gc) {
-        System.err.println(super.getSprites().size());
         switch (direction) {
             case 1:
                 if(image>2){

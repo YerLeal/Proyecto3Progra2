@@ -10,16 +10,18 @@ public abstract class Character extends Thread {
     protected SharedBuffer buff;
     protected int xPos, yPos, x, y, size, speed, movement, order;
     protected Block currentBlock, nextBlock, starto;
+    protected ArrayList<Block> finish;
     protected int direction, dirAux;
     protected boolean crash = false, ini = false;
     protected String tipo;
     private Boolean flag = true;
     private ArrayList<Image> spritesArray;
 
-    public Character(int size, SharedBuffer buffer) {
+    public Character(int size, SharedBuffer buffer,ArrayList<Block> finish) {
         this.size = size;
         this.buff = buffer;
-        spritesArray = new ArrayList<>();
+        this.spritesArray = new ArrayList<>();
+        this.finish=finish;
     }
 
     public void setStarto(Block starto) {
@@ -31,6 +33,8 @@ public abstract class Character extends Thread {
         this.currentBlock = starto;
 
     }
+    
+    
 
     public ArrayList<Image> getSprites() {
         return spritesArray;
@@ -101,7 +105,7 @@ public abstract class Character extends Thread {
     }
 
     public void setSpeed() {
-        this.speed = -1;
+        this.speed -= 1;
     }
 
     public void setMovement(int movement) {
@@ -271,6 +275,14 @@ public abstract class Character extends Thread {
         }
         crash = false;
         dirAux = direction;
+    }
+    
+    public void isFinish(){
+        for(int i=0;i<finish.size();i++){
+            if(currentBlock.getX()==finish.get(i).getX() && currentBlock.getY()==finish.get(i).getY()){
+                this.flag=false;
+            }
+        }
     }
 
     public String getTipo() {

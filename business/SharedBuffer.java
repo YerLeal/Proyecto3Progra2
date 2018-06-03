@@ -23,18 +23,30 @@ public class SharedBuffer {
         int dirO;
         xMe = characters.get(order).getX();
         yMe = characters.get(order).getY();
-        int aux;
-        if (dirMe == 1 || dirMe == 2) {
-            aux = 10;
-        } else {
-            aux = -10;
+        Rectangle yo;
+        switch (dirMe) {
+            case 1:
+                // abajo
+                yMe += size+10;
+                yo = new Rectangle(xMe, yMe, size, 10);
+                break;
+            case 3:
+                //arriba
+                yMe-=10;
+                yo = new Rectangle(xMe, yMe, size, 10);
+                break;
+            case 2:
+                //derecha
+                xMe += size+10;
+                yo = new Rectangle(xMe, yMe, 10, size);
+                break;
+            default:
+                //izquierda
+                xMe-=10;
+                yo = new Rectangle(xMe, yMe, 10, size);
+                break;
         }
-        if (dirMe == 1 || dirMe == 3) {
-            yMe += aux;
-        } else {
-            xMe += aux;
-        }
-        Rectangle yo = new Rectangle(xMe, yMe, size, size);
+        
         for (int i = 0; i < characters.size(); i++) {
             xC = characters.get(i).getX();
             yC = characters.get(i).getY();
@@ -71,33 +83,40 @@ public class SharedBuffer {
     }
 
     public synchronized void itemColision(int order) {
-        int size = characters.get(0).getSize();
-        int xC, yC, xMe, yMe;
-        int dirMe = items.get(order).getDirection();
-        xMe = items.get(order).getX();
-        yMe = items.get(order).getY();
-        int aux;
-        if (dirMe == 1 || dirMe == 2) {
-            aux = 10;
-        } else {
-            aux = -10;
-        }
-        if (dirMe == 1 || dirMe == 3) {
-            yMe += aux;
-        } else {
-            xMe += aux;
-        }
-        Rectangle yo = new Rectangle(xMe, yMe, size, size);
-        for (int i = 0; i < characters.size(); i++) {
-            xC = characters.get(i).getX();
-            yC = characters.get(i).getY();
-            Rectangle elOtro = new Rectangle(xC, yC, size, size);
-            if (elOtro.intersects(yo)) {
-                if (characters.get(i).getTipo().equals("S")) {
-                    characters.get(i).setSpeed();
-                    items.get(order).setFlag(false);
-                } else if (characters.get(i).getTipo().equals("F")) {
-                    items.get(order).setFlag(false);
+        if (items.get(order).getFlag()) {
+            int size = items.get(0).getSize();
+            int xC, yC, xMe, yMe;
+            int dirMe = items.get(order).getDirection();
+            xMe = items.get(order).getX();
+            yMe = items.get(order).getY();
+            int aux;
+            if (dirMe == 1 || dirMe == 2) {
+                aux = 10;
+            } else {
+                aux = -10;
+            }
+            if (dirMe == 1 || dirMe == 3) {
+                yMe += aux;
+            } else {
+                xMe += aux;
+            }
+            Rectangle yo = new Rectangle(xMe, yMe, size, size);
+            for (int i = 0; i < characters.size(); i++) {
+                xC = characters.get(i).getX();
+                yC = characters.get(i).getY();
+                Rectangle elOtro = new Rectangle(xC, yC, size, size);
+                if (elOtro.intersects(yo)) {
+                    if (characters.get(i).getTipo().equals("S")) {
+                        if(characters.get(i).getSpeed()>0){
+                            characters.get(i).setSpeed();
+                        }
+                        items.get(order).setFlag(false);
+                        items.get(order).setImage(1);
+                    } else if (characters.get(i).getTipo().equals("F")) {
+                        items.get(order).setFlag(false);
+                        items.get(order).setImage(2);
+
+                    }
                 }
             }
         }

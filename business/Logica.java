@@ -35,6 +35,22 @@ public class Logica {
         }
     }
 
+    public ArrayList<Block> getFinish() {
+        ArrayList<Block> finish = new ArrayList<>();
+        switch (difficulty) {
+            case 1:
+                finish.add(this.maze[10][8]);
+                return finish;
+            case 2:
+                finish.add(this.maze[14][17]);
+                return finish;
+            default:
+                finish.add(this.maze[10][4]);
+                finish.add(this.maze[24][11]);
+                return finish;
+        }
+    }
+
     public int getDifficulty() {
         return this.difficulty;
     }
@@ -115,6 +131,26 @@ public class Logica {
                 }
             }
         }
+        int xS, yS, xA, yA;
+        ArrayList<Block> finish = getFinish();
+        gc.setFill(Color.GREEN);
+        if (difficulty < 3) {
+            xS = finish.get(0).getX();
+            yS = finish.get(0).getY();
+
+            gc.fillRect(xS * size, yS * size, size, size);
+
+        } else {
+            xS = finish.get(0).getX();
+            yS = finish.get(0).getY();
+            xA = finish.get(1).getX();
+            yA = finish.get(1).getY();
+            gc.fillRect(xS * size, yS * size, size, size);
+
+            gc.fillRect(xA * size, yA * size, size, size);
+
+        }
+
     }
 
     private ArrayList<Block> caminos(int x, int y) {
