@@ -1,6 +1,7 @@
 package proyecto3progra2;
 
 import business.Logica;
+import business.Maze;
 import business.SharedBuffer;
 import domain.Character;
 import domain.FastCharacter;
@@ -8,6 +9,7 @@ import domain.FuriousCharacter;
 import domain.Item;
 import domain.SmartCharacter;
 import file.MazeFile;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -116,11 +118,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         thread = new Thread(this);
         //thread.start();
 
-//        if (this.logica.getDifficulty() == 1) {
-//            this.canvasWidth = 1100;
-//        } else {
         this.canvasWidth = 1120;
-//        }
         this.canvas = new Canvas(canvasWidth, HEIGTH);
 
         Button btRun = new Button("Run");
@@ -159,17 +157,17 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         });
 
-//        btSave.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                try {
-//                    mazeFile.addMaze(logica.getMaze());
-//                    System.out.println("Guardo");
-//                } catch (IOException | ClassNotFoundException ex) {
-//                    Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
+        btSave.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    mazeFile.addMaze(logica.getMaze());
+                    System.out.println("Guardo");
+                } catch (IOException | ClassNotFoundException ex) {
+                    Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
         btnSet.setOnAction((ActionEvent t) -> {
         });

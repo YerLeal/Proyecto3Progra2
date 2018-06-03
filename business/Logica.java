@@ -1,22 +1,9 @@
 package business;
 
 import domain.Block;
-import file.MazeFile;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javax.imageio.ImageIO;
 
 public class Logica {
 
@@ -27,7 +14,7 @@ public class Logica {
     private Block maze[][];
 
     public Logica() {
-        this.difficulty = (int) (Math.random() * (4 - 1) + 1);
+        this.difficulty = 3;
         getDificultad();
         this.maze = new Block[WIDTH / size][HEIGHT / size];
     }
@@ -80,8 +67,8 @@ public class Logica {
     }
 
     public void createMaze() {
-        Maze maze = new Maze();
-        this.maze = maze.getMaze(difficulty);
+        Maze m = new Maze();
+        this.maze = m.getMaze(difficulty, size);
         buscarNuevosCaminos();
     } // createMaze
 
@@ -91,15 +78,13 @@ public class Logica {
                 size = 80;
                 break;
             case 2:
-                size = 80;
+                size = 40;
                 break;
             case 3:
                 size = 40;
                 break;
-            default:
-                break;
         }
-    }
+    } // getDificultad
 
     public void drawMaze(GraphicsContext gc) {
         for (int i = 0; i < maze.length; i++) {
