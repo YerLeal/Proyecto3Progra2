@@ -4,18 +4,21 @@ import business.SharedBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class FuriousCharacter extends Character {
-
+    
     public FuriousCharacter(int size, SharedBuffer buffer) {
         super(size, buffer);
         super.speed = 10;
         super.tipo = "F";
+        addSprites();
     }
 
     @Override
     public void run() {
+
         while (super.getFlag()) {
             direction = (int) (Math.random() * (5 - 1) + 1);
 
@@ -70,24 +73,48 @@ public class FuriousCharacter extends Character {
             }
         }
     } // run
-
+    
+    public void addSprites(){
+       
+        for(int i=0;i<12;i++){
+            super.setSprites(new Image("assets/f"+i+".png"));
+        }
+    }
+    private int image=0;
     @Override
     public void draw(GraphicsContext gc) {
+        System.err.println(super.getSprites().size());
         switch (direction) {
             case 1:
-                gc.setFill(Color.AQUA);
+                if(image>2){
+                    image=0;
+                }
+                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                image++;
                 break;
             case 2:
-                gc.setFill(Color.RED);
+                if(image>8 || image <6){
+                    image=6;
+                }
+                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                image++;
                 break;
             case 3:
-                gc.setFill(Color.GREEN);
+                if(image>11 || image < 9){
+                    image=9;
+                }
+                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                image++;
                 break;
             default:
-                gc.setFill(Color.BLUE);
+                if(image>5 || image<3){
+                    image=3;
+                }
+                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                image++;
                 break;
         }
-        gc.fillRect(x, y, size, size);
+
     } // draw
 
 } // end class

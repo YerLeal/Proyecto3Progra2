@@ -143,10 +143,10 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             @Override
             public void handle(ActionEvent event) {
 
-                for (int i = 0; i < 30; i++) {
+                for (int i = 0; i < 3; i++) {
 
-                    if (i < 10) {
-                        lista.add(new SmartCharacter(logica.getSize(), buffer));
+                    if (i < 3) {
+                        lista.add(new FuriousCharacter(logica.getSize(), buffer));
                     } else if (i < 20) {
                         lista.add(new FastCharacter(logica.getSize(), buffer));
                     } else {

@@ -1,7 +1,9 @@
 package domain;
 
 import business.SharedBuffer;
+import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
 public abstract class Character extends Thread {
 
@@ -12,7 +14,8 @@ public abstract class Character extends Thread {
     protected boolean crash = false, ini = false;
     protected String tipo;
     private Boolean flag = true;
-
+    private ArrayList<Image> sprites;
+    
     public Character(int size, SharedBuffer buffer) {
         this.size = size;
         this.buff = buffer;
@@ -25,8 +28,19 @@ public abstract class Character extends Thread {
         y = yPos * size;
         this.starto = starto;
         this.currentBlock = starto;
+        sprites=new ArrayList<>();
     }
 
+    public ArrayList<Image> getSprites() {
+        return sprites;
+    }
+
+    public void setSprites(Image sprites) {
+        this.sprites.add(sprites);
+    }
+
+    
+    
     public int getOrder() {
         return order;
     }
