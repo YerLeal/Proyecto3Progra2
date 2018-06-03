@@ -145,9 +145,9 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
                 for (int i = 0; i < 10; i++) {
 
-                    if (i < 3) {
+                    if (i < 5) {
                         lista.add(new SmartCharacter(logica.getSize(), buffer));
-                    } else if (i < 6) {
+                    } else if (i < 8) {
                         lista.add(new FastCharacter(logica.getSize(), buffer));
                     } else {
                         lista.add(new FuriousCharacter(logica.getSize(), buffer));
