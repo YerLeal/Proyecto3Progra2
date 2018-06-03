@@ -4,7 +4,7 @@ import business.SharedBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 public class SmartCharacter extends Character {
 
@@ -12,6 +12,7 @@ public class SmartCharacter extends Character {
         super(size, buffer);
         super.speed = 6;
         super.tipo = "S";
+        addSprites();
     } // constructor
 
     @Override
@@ -70,23 +71,48 @@ public class SmartCharacter extends Character {
         } // while (super.getFlag())
     } // run
 
+public void addSprites(){
+       
+        for(int i=0;i<12;i++){
+            System.err.println(i);
+            super.setSprites(new Image("assets/s"+i+".png"));
+        }
+    }
+    private int image=0;
     @Override
     public void draw(GraphicsContext gc) {
+        System.err.println(super.getSprites().size());
         switch (direction) {
             case 1:
-                gc.setFill(Color.AQUA);
+                if(image>2){
+                    image=0;
+                }
+                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                image++;
                 break;
             case 2:
-                gc.setFill(Color.RED);
+                if(image>8 || image <6){
+                    image=6;
+                }
+                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                image++;
                 break;
             case 3:
-                gc.setFill(Color.GREEN);
+                if(image>11 || image < 9){
+                    image=9;
+                }
+                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                image++;
                 break;
             default:
-                gc.setFill(Color.BLUE);
+                if(image>5 || image<3){
+                    image=3;
+                }
+                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                image++;
                 break;
-        } // switch (direction)
-        gc.fillRect(x, y, size, size);
+        }
+
     } // draw
 
 } // end class

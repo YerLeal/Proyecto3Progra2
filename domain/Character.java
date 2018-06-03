@@ -14,11 +14,12 @@ public abstract class Character extends Thread {
     protected boolean crash = false, ini = false;
     protected String tipo;
     private Boolean flag = true;
-    private ArrayList<Image> sprites;
-    
+    private ArrayList<Image> spritesArray;
+
     public Character(int size, SharedBuffer buffer) {
         this.size = size;
         this.buff = buffer;
+        spritesArray = new ArrayList<>();
     }
 
     public void setStarto(Block starto) {
@@ -28,19 +29,17 @@ public abstract class Character extends Thread {
         y = yPos * size;
         this.starto = starto;
         this.currentBlock = starto;
-        sprites=new ArrayList<>();
+
     }
 
     public ArrayList<Image> getSprites() {
-        return sprites;
+        return spritesArray;
     }
 
     public void setSprites(Image sprites) {
-        this.sprites.add(sprites);
+        this.spritesArray.add(sprites);
     }
 
-    
-    
     public int getOrder() {
         return order;
     }

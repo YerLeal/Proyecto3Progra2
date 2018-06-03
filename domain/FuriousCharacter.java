@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 public class FuriousCharacter extends Character {
     
@@ -77,6 +76,7 @@ public class FuriousCharacter extends Character {
     public void addSprites(){
        
         for(int i=0;i<12;i++){
+            System.err.println(i);
             super.setSprites(new Image("assets/f"+i+".png"));
         }
     }
