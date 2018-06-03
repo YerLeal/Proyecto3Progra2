@@ -17,19 +17,18 @@ import javafx.scene.paint.Color;
  */
 public class FuriousCharacter extends Character {
 
-    public FuriousCharacter(int size, Block start,SharedBuffer buffer,int order) {
-        super(size, start,buffer,order);
+    public FuriousCharacter(int size, Block start, SharedBuffer buffer, int order) {
+        super(size, start, buffer, order);
         super.speed = 10;
+        super.tipo = "F";
     }
 
-   @Override
+    @Override
     public void run() {
-        //new Thread(veri).start();
-        while (flag) {
+        while (super.getFlag()) {
             direction = (int) (Math.random() * (5 - 1) + 1);
 
             if (next(direction)) {
-//                System.err.println("Direction:"+direction+"Hilo:"+order);
                 crash = false;
                 try {
                     switch (direction) {
@@ -37,32 +36,28 @@ public class FuriousCharacter extends Character {
                             while (currentBlock.in(x, y) && !crash) {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
-                                y += movement;         
-                                
+                                y += movement;
                             }
                             break;
                         case 2:
                             while (currentBlock.in(x, y) && !crash) {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
-                                x += movement;         
-                                
+                                x += movement;
                             }
                             break;
                         case 3:
                             while (currentBlock.in(x, y) && !crash) {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
-                                y -= movement;         
-                                
+                                y -= movement;
                             }
                             break;
                         case 4:
                             while (currentBlock.in(x, y) && !crash) {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
-                                x -= movement;         
-                                
+                                x -= movement;
                             }
                             break;
                     }
@@ -70,25 +65,37 @@ public class FuriousCharacter extends Character {
                     Logger.getLogger(Character.class
                             .getName()).log(Level.SEVERE, null, ex);
                 }
-                if(!crash){
+                if (!crash) {
                     metodoRandom(direction);
                     currentBlock = nextBlock;
-                }else{
+                } else {
                     try {
                         rePos();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(SmartCharacter.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                    
-                
+
             }
         }
     }
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.RED);
+        switch (direction) {
+            case 1:
+                gc.setFill(Color.AQUA);
+                break;
+            case 2:
+                gc.setFill(Color.RED);
+                break;
+            case 3:
+                gc.setFill(Color.GREEN);
+                break;
+            default:
+                gc.setFill(Color.BLUE);
+                break;
+        }
         gc.fillRect(x, y, size, size);
     }
 

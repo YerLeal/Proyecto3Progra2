@@ -18,14 +18,12 @@ import javafx.scene.paint.Color;
 public class FastCharacter extends Character {
 
     private int cont = 1;
-    private int sleep = 1000;
     private boolean state = true;
-    private int speedAux=5000;
+    private int speedAux = 5000;
     private Runnable timer = new Runnable() {
         @Override
         public void run() {
             while (true) {
-//                System.err.println("EntraFast");
                 if (cont <= 2) {
                     cont++;
 
@@ -36,19 +34,17 @@ public class FastCharacter extends Character {
                 if (state) {
                     speed = 2;
                 } else {
-                    
+
                     speed = speedAux;
-                    sleep = speed;
                 }
-                if(speedAux==1000){
-                    speedAux=5000;
+                if (speedAux == 1000) {
+                    speedAux = 5000;
                     state = true;
                     cont = 1;
                 }
-//                System.err.println("Cont:" + cont + " Sleep:" + sleep + "State:" + state);
                 try {
                     Thread.sleep(1000);
-                    speedAux-=1000;
+                    speedAux -= 1000;
                 } catch (InterruptedException ex) {
                     Logger.getLogger(FastCharacter.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -59,15 +55,16 @@ public class FastCharacter extends Character {
     public FastCharacter(int size, Block start, SharedBuffer buffer, int order) {
         super(size, start, buffer, order);
         super.speed = 2;
+        super.tipo = "FA";
     }
 
     @Override
     public void run() {
         new Thread(timer).start();
-        while (flag) {
-           
-                direction = (int) (Math.random() * (5 - 1) + 1);
-            
+        while (super.getFlag()) {
+
+            direction = (int) (Math.random() * (5 - 1) + 1);
+
             if (next(direction)) {
                 crash = false;
                 try {
@@ -77,8 +74,7 @@ public class FastCharacter extends Character {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 y += movement;
-                                
-                                
+
                             }
                             break;
                         case 2:
@@ -86,8 +82,7 @@ public class FastCharacter extends Character {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 x += movement;
-                                
-                                
+
                             }
                             break;
                         case 3:
@@ -95,8 +90,7 @@ public class FastCharacter extends Character {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 y -= movement;
-                                
-                                
+
                             }
                             break;
                         case 4:
@@ -104,8 +98,7 @@ public class FastCharacter extends Character {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 x -= movement;
-                                
-                                
+
                             }
                             break;
                     }
@@ -116,7 +109,10 @@ public class FastCharacter extends Character {
                 if (!crash) {
                     metodoRandom(direction);
                     currentBlock = nextBlock;
-                }else{
+                    if(currentBlock.getX()==7 && currentBlock.getY()==7){
+                        super.setFlag(false);
+                    }
+                } else {
                     try {
                         rePos();
                     } catch (InterruptedException ex) {
@@ -129,7 +125,20 @@ public class FastCharacter extends Character {
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.BLUE);
+        switch (direction) {
+            case 1:
+                gc.setFill(Color.AQUA);
+                break;
+            case 2:
+                gc.setFill(Color.RED);
+                break;
+            case 3:
+                gc.setFill(Color.GREEN);
+                break;
+            default:
+                gc.setFill(Color.BLUE);
+                break;
+        }
         gc.fillRect(x, y, size, size);
     }
 }

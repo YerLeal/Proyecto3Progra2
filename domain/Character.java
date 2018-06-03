@@ -6,7 +6,6 @@
 package domain;
 
 import business.SharedBuffer;
-import java.awt.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -20,6 +19,7 @@ public abstract class Character extends Thread {
     protected Block currentBlock, nextBlock;
     protected int direction, dirAux;
     protected boolean crash,wai = false;
+    protected String tipo;
     public Character(int size, Block start, SharedBuffer buffer, int order) {
         xPos = start.getX();
         yPos = start.getY();
@@ -30,47 +30,75 @@ public abstract class Character extends Thread {
         this.buff = buffer;
         this.order = order;
     }
-    Boolean flag = true;
+    private Boolean flag = true;
+
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    public int getSize() {
+        return size;
+    }
+    
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
 
     public SharedBuffer getBuff() {
         return buff;
     }
 
-    public void setBuff(SharedBuffer buff) {
-        this.buff = buff;
+    public int getxPos() {
+        return xPos;
+    }
+
+    public void setxPos(int xPos) {
+        this.xPos = xPos;
+    }
+
+    public int getyPos() {
+        return yPos;
+    }
+
+    public void setyPos(int yPos) {
+        this.yPos = yPos;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed() {
+        this.speed = -1;
+    }
+
+    public void setMovement(int movement) {
+        this.movement = movement;
+    }
+
+    public Block getCurrentBlock() {
+        return currentBlock;
+    }
+
+
+    public boolean isCrash() {
+        return crash;
     }
 
     public void setCrash(boolean crash) {
         this.crash = crash;
     }
 
-    public void setMovement(int movement) {
-        this.movement = movement;
-    }
-    
-    
 
-    public int getSize() {
-        return size;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public int getDirection() {
-        return direction;
-    }
-    
-    
 
     public int getX() {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
 
     public int getY() {
         return y;
@@ -178,13 +206,13 @@ public abstract class Character extends Thread {
         int yB=currentBlock.getY() * size;
         
         
-        dirAux=oposDir(direction);
-        switch (dirAux) {
+        direction=oposDir(direction);
+        switch (direction) {
             case 1:
                 while (y<yB && crash) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
-                    System.err.println("E1");
+                    System.err.println("E1"+order);
                     y += movement;
                    
 //                    buff.comparator(order);
@@ -196,7 +224,7 @@ public abstract class Character extends Thread {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     x += movement;
-                  System.err.println("E2");
+                  System.err.println("E2"+order);
 //                    buff.comparator(order);
                     
                     
@@ -209,7 +237,7 @@ public abstract class Character extends Thread {
                     y -= movement;
                     
                     
-                    System.err.println("E3");
+                    System.err.println("E3"+order);
 //                    buff.comparator(order);
                     
                 }
@@ -220,13 +248,18 @@ public abstract class Character extends Thread {
                     buff.colisionVs(order);
                     x -= movement;
                     
-                    System.err.println("E4");
+                    System.err.println("E4"+order);
 //                    buff.comparator(order);
                     
                 }
                 break;
         }
         crash=false;
+        dirAux=direction;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 
     public abstract void draw(GraphicsContext gc);

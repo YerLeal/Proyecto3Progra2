@@ -21,8 +21,8 @@ public class Item extends Character {
 
     private boolean bandera, cosa;
 
-    public Item(int size, Block start,SharedBuffer buffer,int order) {
-        super(size, start,buffer,order);
+    public Item(int size, Block start, SharedBuffer buffer, int order) {
+        super(size, start, buffer, order);
         super.speed = 10;
         bandera = true;
         cosa = true;
@@ -30,7 +30,7 @@ public class Item extends Character {
 
     @Override
     public void run() {
-        while (flag) {
+        while (super.getFlag()) {
             if (bandera) {
                 dir = (int) (Math.random() * (5 - 1) + 1);
             }
@@ -54,25 +54,28 @@ public class Item extends Character {
                 try {
                     switch (dir) {
                         case 1:
-                            while (currentBlock.in(x, y)) {
+                            while (currentBlock.in(x, y) && super.getFlag()) {
+                                buff.itemColision(order);
                                 y += 1;
                                 Thread.sleep(speed);
                             }
                         case 2:
-                            while (currentBlock.in(x, y)) {
+                            while (currentBlock.in(x, y) && super.getFlag()) {
+                                buff.itemColision(order);
                                 x += 1;
                                 Thread.sleep(speed);
                             }
                         case 3:
-                            while (currentBlock.in(x, y)) {
+                            while (currentBlock.in(x, y) && super.getFlag()) {
+                                buff.itemColision(order);
                                 y -= 1;
                                 Thread.sleep(speed);
                             }
                         case 4:
-                            while (currentBlock.in(x, y)) {
+                            while (currentBlock.in(x, y) && super.getFlag()) {
+                                buff.itemColision(order);
                                 x -= 1;
                                 Thread.sleep(speed);
-
                             }
 
                     }
@@ -136,6 +139,6 @@ public class Item extends Character {
     @Override
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.CHOCOLATE);
-        gc.fillOval(x+(size/2), y+(size/2), 20, 20);
+        gc.fillOval(x, y, size, size);
     }
 }
