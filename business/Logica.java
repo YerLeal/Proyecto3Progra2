@@ -10,18 +10,25 @@ public class Logica {
     private final int WIDTH = 1360;
     private final int HEIGHT = 720;
     private int size;
-    int difficulty;
+    private int difficulty;
     private Block maze[][];
 
-    public Logica() {
-        this.difficulty = 3;
+    public int getDifficulty() {
+        return this.difficulty;
+    }
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }    
+
+    public Logica(int dificulty) {
+        this.difficulty = dificulty;
         getDificultad();
         this.maze = new Block[WIDTH / size][HEIGHT / size];
     } // constructor
 
     public ArrayList<Block> getStart() {
         ArrayList<Block> starts = new ArrayList<>();
-        switch (difficulty) {
+        switch (getDifficulty()) {
             case 1:
                 starts.add(this.maze[0][4]);
                 return starts;
@@ -37,7 +44,7 @@ public class Logica {
 
     public ArrayList<Block> getFinish() {
         ArrayList<Block> finish = new ArrayList<>();
-        switch (difficulty) {
+        switch (getDifficulty()) {
             case 1:
                 finish.add(this.maze[10][8]);
                 return finish;
@@ -51,10 +58,7 @@ public class Logica {
         }
     }
 
-    public int getDifficulty() {
-        return this.difficulty;
-    }
-
+    
     public Block[][] getMaze() {
         return this.maze;
     }
@@ -101,12 +105,12 @@ public class Logica {
 
     public void createMaze() {
         Maze m = new Maze();
-        this.maze = m.getMaze(difficulty, size);
+        this.maze = m.getMaze(getDifficulty(), size);
         buscarNuevosCaminos();
     } // createMaze
 
     private void getDificultad() {
-        switch (this.difficulty) {
+        switch (this.getDifficulty()) {
             case 1:
                 size = 80;
                 break;
@@ -134,7 +138,7 @@ public class Logica {
         int xS, yS, xA, yA;
         ArrayList<Block> finish = getFinish();
         gc.setFill(Color.GREEN);
-        if (difficulty < 3) {
+        if (getDifficulty() < 3) {
             xS = finish.get(0).getX();
             yS = finish.get(0).getY();
 
@@ -177,5 +181,6 @@ public class Logica {
             }
         }
     }
+
 
 } // end class

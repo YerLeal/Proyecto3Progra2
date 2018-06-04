@@ -3,13 +3,14 @@ package business;
 import domain.Block;
 import file.MazeFile;
 import java.io.IOException;
+import proyecto3progra2.Proyecto3Progra2;
 
 public class Maze {
 
     private Logica logica;
 
     public Maze() {
-        this.logica = new Logica();
+        this.logica = new Logica(1);
     } // constructor
 
     public Block[][] getMaze(int difficulty, int size) {
