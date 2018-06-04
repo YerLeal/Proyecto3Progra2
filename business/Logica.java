@@ -12,14 +12,17 @@ public class Logica {
     private final int HEIGHT = 720;
     private int size;
     private int difficulty;
+    private int itemCont;
     private Block maze[][];
+    private ArrayList<Item> items = new ArrayList<>();
 
     public int getDifficulty() {
         return this.difficulty;
     }
+
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
-    }    
+    }
 
     public Logica(int dificulty) {
         this.difficulty = dificulty;
@@ -59,7 +62,6 @@ public class Logica {
         }
     }
 
-    
     public Block[][] getMaze() {
         return this.maze;
     }
@@ -90,21 +92,35 @@ public class Logica {
         buscarNuevosCaminos();
     }
     
-    public Item addItem(int x, int y,SharedBuffer buffer,int cont) {
-        Item itemAux=new Item(size, buffer);
+    public void startItems(){
+        for(int i=0;i<items.size();i++){
+            items.get(i).start();
+        }
+    }
+    
+    public void addItem(int x, int y, SharedBuffer buffer,boolean life,GraphicsContext gc) {
+        Item itemAux = new Item(size, buffer);
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
                 if (this.maze[i][j].isClicked(x, y)) {
-                    System.out.println("i:" + i + ", j:" + j);
                     if (this.maze[i][j].getType().equals("floor")) {
-                        itemAux.setOrder(cont);
+                        itemAux.setOrder(itemCont);
                         itemAux.setStarto(maze[i][j]);
-                        return itemAux;
+                        items.add(itemAux);
+                        buffer.getItems().add(items.get(itemCont));
+                        if(life){
+                            items.get(itemCont).start();
+                        }else{
+                            items.get(itemCont).draw(gc);
+                        }
+                        itemCont++;
+                        
                     }
+                    break;
                 }
             }
         }
-        return null;
+
     }
 
     public int getSize() {
@@ -172,6 +188,9 @@ public class Logica {
             gc.fillRect(xA * size, yA * size, size, size);
 
         }
+        for(int i=0;i<items.size();i++){
+            items.get(i).draw(gc);
+        }
 
     }
 
@@ -199,6 +218,5 @@ public class Logica {
             }
         }
     }
-
 
 } // end class

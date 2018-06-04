@@ -60,9 +60,8 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private int cantP;
     private SharedBuffer buffer;
     private ArrayList<Character> characters = new ArrayList<>();
-    private ArrayList<Item> items = new ArrayList<>();
     private int initCont = 0;
-    private int itemCont = 0;
+
     private boolean flag = true;
     private TableView<Character> table;
 
@@ -171,20 +170,18 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             @Override
             public void handle(ActionEvent event) {
                 ArrayList<Block> finish = logica.getFinish();
-                for (int i = 0; i < 30; i++) {
+                for (int i = 0; i < 90; i++) {
 
-                    if (i < 10) {
+                    if (i < 30) {
                         characters.add(new SmartCharacter(logica.getSize(), buffer, finish));
-                    } else if (i < 20) {
+                    } else if (i < 60) {
                         characters.add(new FastCharacter(logica.getSize(), buffer, finish));
                     } else {
                         characters.add(new FuriousCharacter(logica.getSize(), buffer, finish));
                     }
                 }
                 thread.start();
-                for (int i = 0; i < items.size(); i++) {
-                    items.get(i).start();
-                }
+                logica.startItems();
                 new Thread(hilos).start();
 
             }
@@ -267,21 +264,10 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                     logica.cambiarTipo((int) event.getX(), (int) event.getY(), gc);
                     logica.imprimirTipo((int) event.getX(), (int) event.getY());
                 } else {
-                    if (logica.addItem((int) event.getX(), (int) event.getY(), buffer, itemCont) != null) {
-                        if (!thread.isAlive()) {
-                            items.add(logica.addItem((int) event.getX(), (int) event.getY(), buffer, itemCont));
-                            buffer.getItems().add(items.get(itemCont));
-                            items.get(itemCont).draw(gc);
-                            itemCont++;
-
-                        } else {
-                            items.add(logica.addItem((int) event.getX(), (int) event.getY(), buffer, itemCont));
-                            buffer.getItems().add(items.get(itemCont));
-                            items.get(itemCont).start();
-                            itemCont++;
-
-                        }
-
+                    if (thread.isAlive()) {
+                        logica.addItem((int) event.getX(), (int) event.getY(), buffer, true,gc);
+                    } else {
+                        logica.addItem((int) event.getX(), (int) event.getY(), buffer, false,gc);
                     }
                 }
             }
@@ -319,9 +305,6 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     public void draw(GraphicsContext gc) throws InterruptedException {
         gc.clearRect(0, 0, canvasWidth, HEIGTH);
         logica.drawMaze(gc);
-        for (int i = 0; i < items.size(); i++) {
-            items.get(i).draw(gc);
-        }
         for (int i = 0; i < characters.size(); i++) {
             if (characters.get(i).isAlive()) {
                 characters.get(i).draw(gc);
