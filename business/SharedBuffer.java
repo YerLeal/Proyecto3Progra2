@@ -5,15 +5,18 @@ import domain.Item;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import domain.Character;
+import proyecto3progra2.Proyecto3Progra2;
 
 public class SharedBuffer {
 
     private ArrayList<Character> characters;
+    private ArrayList<String> finisheds;
     private ArrayList<Item> items;
 
     public SharedBuffer(ArrayList<Character> characters, ArrayList<Item> items) {
         this.items = items;
         this.characters = characters;
+        this.finisheds=new ArrayList<>();
     }
 
     public synchronized boolean colisionVs(int order) {
@@ -147,6 +150,11 @@ public class SharedBuffer {
 
     public ArrayList<Item> getItems() {
         return items;
+    }
+    
+    public void addFinisher(String dato){
+        System.err.println(dato+Proyecto3Progra2.chronometer);
+        this.finisheds.add(dato+Proyecto3Progra2.chronometer);
     }
 
 } // end class

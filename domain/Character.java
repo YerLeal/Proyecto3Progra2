@@ -280,6 +280,7 @@ public abstract class Character extends Thread {
     public void isFinish(){
         for(int i=0;i<finish.size();i++){
             if(currentBlock.getX()==finish.get(i).getX() && currentBlock.getY()==finish.get(i).getY()){
+                buff.addFinisher(tipo);
                 this.flag=false;
             }
         }

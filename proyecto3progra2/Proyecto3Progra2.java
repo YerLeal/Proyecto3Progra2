@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class Proyecto3Progra2 extends Application implements Runnable {
-
+    public static String chronometer="00-00-000";
     private int width = 1360;
     private final int HEIGTH = 720;
     private int canvasWidth;
@@ -170,11 +170,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             @Override
             public void handle(ActionEvent event) {
                 ArrayList<Block> finish = logica.getFinish();
-                for (int i = 0; i < 90; i++) {
+                for (int i = 0; i < 9; i++) {
 
-                    if (i < 30) {
+                    if (i < 3) {
                         characters.add(new SmartCharacter(logica.getSize(), buffer, finish));
-                    } else if (i < 60) {
+                    } else if (i < 6) {
                         characters.add(new FastCharacter(logica.getSize(), buffer, finish));
                     } else {
                         characters.add(new FuriousCharacter(logica.getSize(), buffer, finish));
