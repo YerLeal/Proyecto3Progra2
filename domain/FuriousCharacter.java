@@ -4,8 +4,15 @@ import business.SharedBuffer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ColorInput;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 public class FuriousCharacter extends Character {
     
@@ -75,9 +82,30 @@ public class FuriousCharacter extends Character {
     } // run
     
     public void addSprites(){
-       
-        for(int i=0;i<12;i++){
-            super.setSprites(new Image("assets/f"+i+".png"));
+for(int i=0;i<12;i++){
+            Image image = new Image(
+                "assets/f"+i+".png"
+        );
+
+        ImageView imageView = new ImageView(image);
+        imageView.setClip(new ImageView(image));
+
+        ColorAdjust monochrome = new ColorAdjust();
+        monochrome.setSaturation(-1.0);
+        imageView.setStyle("-fx-background-color: transparent");
+        Blend blush = new Blend(
+                BlendMode.MULTIPLY,
+                monochrome,
+                new ColorInput(
+                        0,
+                        0,
+                        imageView.getImage().getWidth(),
+                        imageView.getImage().getHeight(),
+                        Color.RED
+                )
+        );
+        imageView.setEffect(blush);
+        super.setSprites(imageView.snapshot(new SnapshotParameters(), null));
         }
     }
     private int image=0;

@@ -4,13 +4,20 @@ import business.SharedBuffer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ColorInput;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 public class SmartCharacter extends Character {
 
-    public SmartCharacter(int size, SharedBuffer buffer,ArrayList<Block> finish) {
-        super(size, buffer,finish);
+    public SmartCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish) {
+        super(size, buffer, finish);
         super.speed = 6;
         super.tipo = "S";
         addSprites();
@@ -68,47 +75,70 @@ public class SmartCharacter extends Character {
                         Logger.getLogger(SmartCharacter.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                 super.isFinish();
+                super.isFinish();
             } // if (next(direction))
         } // while (super.getFlag())
     } // run
 
-public void addSprites(){     
-        for(int i=0;i<12;i++){
-            super.setSprites(new Image("assets/s"+i+".png"));
+    public void addSprites() {
+        for (int i = 0; i < 12; i++) {
+            Image image = new Image(
+                    "assets/s" + i + ".png"
+            );
+
+            ImageView imageView = new ImageView(image);
+            imageView.setClip(new ImageView(image));
+
+            ColorAdjust monochrome = new ColorAdjust();
+            monochrome.setSaturation(-1.0);
+            imageView.setStyle("-fx-background-color: transparent");
+            Blend blush = new Blend(
+                    BlendMode.MULTIPLY,
+                    monochrome,
+                    new ColorInput(
+                            0,
+                            0,
+                            imageView.getImage().getWidth(),
+                            imageView.getImage().getHeight(),
+                            Color.YELLOWGREEN
+                    )
+            );
+            imageView.setEffect(blush);
+            super.setSprites(imageView.snapshot(new SnapshotParameters(), null));
         }
     }
 
-    private int image=0;
+    private int image = 0;
+
     @Override
     public void draw(GraphicsContext gc) {
         switch (direction) {
             case 1:
-                if(image>2){
-                    image=0;
+                if (image > 2) {
+                    image = 0;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
                 image++;
                 break;
             case 2:
-                if(image>8 || image <6){
-                    image=6;
+                if (image > 8 || image < 6) {
+                    image = 6;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
                 image++;
                 break;
             case 3:
-                if(image>11 || image < 9){
-                    image=9;
+                if (image > 11 || image < 9) {
+                    image = 9;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
                 image++;
                 break;
             default:
-                if(image>5 || image<3){
-                    image=3;
+                if (image > 5 || image < 3) {
+                    image = 3;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
                 image++;
                 break;
         }
