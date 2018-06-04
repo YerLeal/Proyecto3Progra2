@@ -142,6 +142,7 @@ public class SharedBuffer {
 
     public void setCharacters(ArrayList<Character> characters) {
         this.characters = characters;
+        
     }
 
     public ArrayList<Item> getItems() {

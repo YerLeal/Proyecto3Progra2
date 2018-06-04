@@ -43,11 +43,8 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Pane pane;
     private GraphicsContext gc;
     private Logica logica;
-    private boolean bol = false;
+    private boolean itemCharge = false;
     private Thread thread;
-    private Character c1, c2, c3;
-    private MazeFile mazeFile;
-    private Item i1;
     private HBox hbox;
     private VBox vbox;
     private javafx.scene.control.Label lblType;
@@ -62,38 +59,40 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private TextField tfdName;
     private int cantP;
     private SharedBuffer buffer;
-    private ArrayList<Character> lista = new ArrayList<>();
+    private ArrayList<Character> characters = new ArrayList<>();
+    private ArrayList<Item> items = new ArrayList<>();
     private int initCont = 0;
-    private boolean flag=true;
+    private int itemCont = 0;
+    private boolean flag = true;
     private TableView<Character> table;
-    
+
     private Runnable hilos = new Runnable() {
         @Override
         public void run() {
             ArrayList<Block> aux = logica.getStart();
-            while (initCont < lista.size()) {
+            while (initCont < characters.size()) {
 
                 if (aux.size() == 1) {
                     if (buffer.verifyStart(aux.get(0))) {
-                        lista.get(initCont).setStarto(aux.get(0));
-                        lista.get(initCont).setOrder(initCont);
-                        buffer.getCharacters().add(lista.get(initCont));
-                        lista.get(initCont).start();
+                        characters.get(initCont).setStarto(aux.get(0));
+                        characters.get(initCont).setOrder(initCont);
+                        buffer.getCharacters().add(characters.get(initCont));
+                        characters.get(initCont).start();
                         initCont++;
                     }
 
-                }else {
+                } else {
                     if (buffer.verifyStart(aux.get(0))) {
-                        lista.get(initCont).setStarto(aux.get(0));
-                        lista.get(initCont).setOrder(initCont);
-                        buffer.getCharacters().add(lista.get(initCont));
-                        lista.get(initCont).start();
+                        characters.get(initCont).setStarto(aux.get(0));
+                        characters.get(initCont).setOrder(initCont);
+                        buffer.getCharacters().add(characters.get(initCont));
+                        characters.get(initCont).start();
                         initCont++;
                     } else if (buffer.verifyStart(aux.get(1))) {
-                        lista.get(initCont).setStarto(aux.get(1));
-                        lista.get(initCont).setOrder(initCont);
-                        buffer.getCharacters().add(lista.get(initCont));
-                        lista.get(initCont).start();
+                        characters.get(initCont).setStarto(aux.get(1));
+                        characters.get(initCont).setOrder(initCont);
+                        buffer.getCharacters().add(characters.get(initCont));
+                        characters.get(initCont).start();
                         initCont++;
                     }
 
@@ -105,8 +104,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
     @Override
     public void start(Stage primaryStage) {
-        mazeFile = new MazeFile();
-        table=new TableView<>();
+        table = new TableView<>();
 
         primaryStage.setTitle("The Maze of Threads");
         init(primaryStage);
@@ -127,18 +125,18 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         hbox.setSpacing(10);
         vbox.setSpacing(1);
         btnSet = new Button("Start Simulation");
-        
+
         btnStop = new Button("Stop Threads");
         btnPause = new Button("Pause Characters");
         btnName = new Button("Set Player Name");
-        
+
         tfdQuantity = new TextField();
         //tfdType = new TextField();
         tfdName = new TextField();
         this.lblType = new javafx.scene.control.Label();
         this.lblQuantity = new javafx.scene.control.Label("Quantity of Characters");
         this.lblName = new javafx.scene.control.Label("Name of Player");
-        
+
         listType = FXCollections.observableArrayList();//para el combobox
         listType.addAll("Fast", "Furious", "Smart");//opciones del combobox
         ComboBox<String> cbx = new ComboBox<>(listType);//
@@ -150,44 +148,43 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         thread = new Thread(this);
         //thread.start();
         //tableColumn
-        TableColumn name= new TableColumn("Name");
+        TableColumn name = new TableColumn("Name");
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        TableColumn type= new TableColumn("Type");
+        TableColumn type = new TableColumn("Type");
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        TableColumn position= new TableColumn("Position");
+        TableColumn position = new TableColumn("Position");
         position.setCellValueFactory(new PropertyValueFactory<>("position"));
-        ObservableList<Character> datos=getTableData();
+        ObservableList<Character> datos = getTableData();
         table.setItems(datos);
         table.getColumns().addAll(name, type, position);
-        
-        
+
         this.canvasWidth = 1120;
         this.canvas = new Canvas(canvasWidth, HEIGTH);
 
         Button btRun = new Button("Run");
-        Button btItem=new Button("Item");
+        Button btItem = new Button("Item");
 
         btRun.relocate(400, 400);
         btItem.relocate(700, 400);
-        
-        
+
         btRun.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ArrayList<Block> finish=logica.getFinish();
+                ArrayList<Block> finish = logica.getFinish();
                 for (int i = 0; i < 60; i++) {
 
                     if (i < 20) {
-                        lista.add(new SmartCharacter(logica.getSize(), buffer,finish));
+                        characters.add(new SmartCharacter(logica.getSize(), buffer, finish));
                     } else if (i < 40) {
-                        lista.add(new FastCharacter(logica.getSize(), buffer,finish));
+                        characters.add(new FastCharacter(logica.getSize(), buffer, finish));
                     } else {
-                        lista.add(new FuriousCharacter(logica.getSize(), buffer,finish));
+                        characters.add(new FuriousCharacter(logica.getSize(), buffer, finish));
                     }
                 }
-
                 thread.start();
-;
+                for (int i = 0; i < items.size(); i++) {
+                    items.get(i).start();
+                }
                 new Thread(hilos).start();
 
             }
@@ -196,7 +193,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         btItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+                itemCharge = !itemCharge;
             }
         });
         btnSet.setOnAction((ActionEvent t) -> {
@@ -211,21 +208,21 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         cbx.setOnAction((ActionEvent e) -> {
             if (cbx.getValue().equalsIgnoreCase("Fast")) {
                 for (int i = 0; i < Integer.parseInt(tfdQuantity.getText()); i++) {
-                    lista.add(new FastCharacter(logica.getSize(), buffer,logica.getFinish()));
+                    characters.add(new FastCharacter(logica.getSize(), buffer, logica.getFinish()));
                 }
                 this.lblType.setText("Fast");
             } else if (cbx.getValue().equalsIgnoreCase("Furious")) {
                 for (int i = 0; i < Integer.parseInt(lblQuantity.getText()); i++) {
-                    lista.add(new FuriousCharacter(logica.getSize(), buffer,logica.getFinish()));
+                    characters.add(new FuriousCharacter(logica.getSize(), buffer, logica.getFinish()));
                 }
                 this.lblType.setText("Furious");
             } else {
                 for (int i = 0; i < Integer.parseInt(lblQuantity.getText()); i++) {
-                    lista.add(new SmartCharacter(logica.getSize(), buffer,logica.getFinish()));
+                    characters.add(new SmartCharacter(logica.getSize(), buffer, logica.getFinish()));
                 }
                 this.lblType.setText("Smart");
             }
-            
+
             if (cantP == Integer.parseInt(tfdQuantity.getText())) {
                 //btnSet.setVisible(true);
                 btnSet.setDisable(true);
@@ -234,12 +231,12 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             tfdQuantity.setText("");
         });
         cbxD.setOnAction((ActionEvent e) -> {
-            
+
             if (cbxD.getValue().equalsIgnoreCase("Easy")) {
                 logica = new Logica(1);
                 this.logica.setDifficulty(1);
                 //setNum(1);
-                
+
             } else if (cbxD.getValue().equalsIgnoreCase("Medium")) {
                 logica = new Logica(2);
                 this.logica.setDifficulty(2);
@@ -247,7 +244,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 logica = new Logica(3);
                 this.logica.setDifficulty(3);
             }
-            
+
             logica.createMaze();
             logica.drawMaze(gc);
             cbxD.setVisible(false);
@@ -256,18 +253,27 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         gc = canvas.getGraphicsContext2D();
         pane = new Pane(canvas);
         pane.getChildren().add(btRun);
+        pane.getChildren().add(btItem);
 //        pane.getChildren().add(btSave);
-        
-        this.vbox.getChildren().addAll(this.lblQuantity, tfdQuantity, cbx, cbxD, this.lblType,this.tfdName, this.lblName, this. btnName , this.btnSet, this.btnStop, table);
+
+        this.vbox.getChildren().addAll(this.lblQuantity, tfdQuantity, cbx, cbxD, this.lblType, this.tfdName, this.lblName, this.btnName, this.btnSet, this.btnStop, table);
         this.hbox.getChildren().add(pane);
         this.hbox.getChildren().add(vbox);
 
         this.canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (event.getSource() == canvas) {
+                if (event.getSource() == canvas && !itemCharge) {
                     logica.cambiarTipo((int) event.getX(), (int) event.getY(), gc);
                     logica.imprimirTipo((int) event.getX(), (int) event.getY());
+                } else {
+                    if (logica.addItem((int) event.getX(), (int) event.getY(), buffer, itemCont) != null) {
+                        items.add(logica.addItem((int) event.getX(), (int) event.getY(), buffer, itemCont));
+                        buffer.getItems().add(items.get(itemCont));
+                        items.get(itemCont).draw(gc);
+                        itemCont++;
+
+                    }
                 }
             }
         });
@@ -304,21 +310,24 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     public void draw(GraphicsContext gc) throws InterruptedException {
         gc.clearRect(0, 0, canvasWidth, HEIGTH);
         logica.drawMaze(gc);
-//        i1.draw(gc);
-        for (int i = 0; i < lista.size(); i++) {
-            if (lista.get(i).isAlive()) {
-                lista.get(i).draw(gc);
+        for (int i = 0; i < items.size(); i++) {
+            items.get(i).draw(gc);
+        }
+        for (int i = 0; i < characters.size(); i++) {
+            if (characters.get(i).isAlive()) {
+                characters.get(i).draw(gc);
             }
         }
-        
+
     }
-    public ObservableList<Character> getTableData(){
-        ArrayList array= new ArrayList();
-         
-        for (int i = 0; i < lista.size(); i++) {
-             array.add(lista.get(i));
+
+    public ObservableList<Character> getTableData() {
+        ArrayList array = new ArrayList();
+
+        for (int i = 0; i < characters.size(); i++) {
+            array.add(characters.get(i));
         }
-        ObservableList <Character> listData=FXCollections.observableArrayList(array);
+        ObservableList<Character> listData = FXCollections.observableArrayList(array);
         return listData;
     }
 //    public int setNum(int num){

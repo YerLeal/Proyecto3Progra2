@@ -1,6 +1,7 @@
 package business;
 
 import domain.Block;
+import domain.Item;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -87,6 +88,23 @@ public class Logica {
         }
         drawMaze(gc);
         buscarNuevosCaminos();
+    }
+    
+    public Item addItem(int x, int y,SharedBuffer buffer,int cont) {
+        Item itemAux=new Item(size, buffer);
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < this.maze[0].length; j++) {
+                if (this.maze[i][j].isClicked(x, y)) {
+                    System.out.println("i:" + i + ", j:" + j);
+                    if (this.maze[i][j].getType().equals("floor")) {
+                        itemAux.setOrder(cont);
+                        itemAux.setStarto(maze[i][j]);
+                        return itemAux;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public int getSize() {
