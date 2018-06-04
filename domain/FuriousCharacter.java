@@ -15,9 +15,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class FuriousCharacter extends Character {
-    
-    public FuriousCharacter(int size, SharedBuffer buffer,ArrayList<Block> finish) {
-        super(size, buffer,finish);
+
+    public FuriousCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish) {
+        super(size, buffer, finish);
         super.speed = 10;
         super.tipo = "F";
         addSprites();
@@ -27,8 +27,9 @@ public class FuriousCharacter extends Character {
     public void run() {
 
         while (super.getFlag()) {
+            
             direction = (int) (Math.random() * (5 - 1) + 1);
-
+            
             if (next(direction)) {
                 crash = false;
                 try {
@@ -70,6 +71,8 @@ public class FuriousCharacter extends Character {
                     metodoRandom(direction);
                     currentBlock = nextBlock;
                 } else {
+                    
+                    
                     try {
                         rePos();
                     } catch (InterruptedException ex) {
@@ -80,64 +83,65 @@ public class FuriousCharacter extends Character {
             }
         }
     } // run
-    
-    public void addSprites(){
-for(int i=0;i<12;i++){
+
+    public void addSprites() {
+        for (int i = 0; i < 12; i++) {
             Image image = new Image(
-                "assets/f"+i+".png"
-        );
+                    "assets/f" + i + ".png"
+            );
 
-        ImageView imageView = new ImageView(image);
-        imageView.setClip(new ImageView(image));
+            ImageView imageView = new ImageView(image);
+            imageView.setClip(new ImageView(image));
 
-        ColorAdjust monochrome = new ColorAdjust();
-        monochrome.setSaturation(-1.0);
-        imageView.setStyle("-fx-background-color: transparent");
-        Blend blush = new Blend(
-                BlendMode.MULTIPLY,
-                monochrome,
-                new ColorInput(
-                        0,
-                        0,
-                        imageView.getImage().getWidth(),
-                        imageView.getImage().getHeight(),
-                        Color.RED
-                )
-        );
-        imageView.setEffect(blush);
-        super.setSprites(imageView.snapshot(new SnapshotParameters(), null));
+            ColorAdjust monochrome = new ColorAdjust();
+            monochrome.setSaturation(-1.0);
+            imageView.setStyle("-fx-background-color: transparent");
+            Blend blush = new Blend(
+                    BlendMode.MULTIPLY,
+                    monochrome,
+                    new ColorInput(
+                            0,
+                            0,
+                            imageView.getImage().getWidth(),
+                            imageView.getImage().getHeight(),
+                            Color.RED
+                    )
+            );
+            imageView.setEffect(blush);
+            super.setSprites(imageView.snapshot(new SnapshotParameters(), null));
         }
     }
-    private int image=0;
+    private int image = 0;
+
     @Override
     public void draw(GraphicsContext gc) {
         switch (direction) {
             case 1:
-                if(image>2){
-                    image=0;
+                if (image > 2) {
+                    image = 0;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
                 image++;
                 break;
             case 2:
-                if(image>8 || image <6){
-                    image=6;
+                if (image > 8 || image < 6) {
+                    image = 6;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
                 image++;
                 break;
             case 3:
-                if(image>11 || image < 9){
-                    image=9;
+                if (image > 11 || image < 9) {
+                    image = 9;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
                 image++;
                 break;
             default:
-                if(image>5 || image<3){
-                    image=3;
+                if (image > 5 || image < 3) {
+                    image = 3;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y,size,size);
+                gc.drawImage(super.getSprites().get(image), x, y, size, size);
                 image++;
                 break;
         }

@@ -8,8 +8,8 @@ import javafx.scene.image.Image;
 public abstract class Character extends Thread {
 
     protected SharedBuffer buff;
-    protected int xPos, yPos, x, y, size, speed, movement, order;
-    protected Block currentBlock, nextBlock, starto;
+    protected int xPos, yPos, x, y, size, speed, movement, order,action;
+    protected Block currentBlock, nextBlock,auxBlock, starto;
     protected ArrayList<Block> finish;
     protected int direction, dirAux;
     protected boolean crash = false, ini = false;
@@ -137,15 +137,13 @@ public abstract class Character extends Thread {
     }
 
     public boolean next(int dir) {
-
+//        System.err.println(dir+ " "+ dirAux);
         if (((dir == 1 && dirAux == 3) || (dirAux == 1 && dir == 3)) && !encerrado() && !crash) {
             return false;
         } else if (((dir == 2 && dirAux == 4) || (dirAux == 2 && dir == 4)) && !encerrado() && !crash) {
             return false;
         }
-        if (crash && dir == dirAux) {
-            return false;
-        }
+        
 
         int aux;
         if (dir == 1 || dir == 2) {
@@ -226,24 +224,42 @@ public abstract class Character extends Thread {
         }
     }
 
+    public void sum(){
+        this.action++;
+    }
+    
     public void rePos() throws InterruptedException {
+        while (crash) {
+        int aux=action;
+        if(action>1){
+            auxBlock=currentBlock;
+            currentBlock=nextBlock;
+            nextBlock=auxBlock;
+        }
         int xB = currentBlock.getX() * size;
         int yB = currentBlock.getY() * size;
-
         direction = oposDir(direction);
+        
         switch (direction) {
             case 1:
-                while (y < yB && crash) {
+                while (y < yB && aux==action) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
-//                    System.err.println("E1"+order);
+//                  System.err.println("E1"+order);
                     y += movement;
 
 //                    buff.comparator(order);
                 }
+                if(aux==action){
+                    System.err.println("Entra?"+order);
+                    crash=false;
+                    xPos=currentBlock.getX();
+                    yPos=currentBlock.getY();
+                    action=0;
+                }
                 break;
             case 2:
-                while (x < xB && crash) {
+                while (x < xB && aux==action) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     x += movement;
@@ -251,9 +267,16 @@ public abstract class Character extends Thread {
 //                    buff.comparator(order);
 
                 }
+                if(aux==action){
+                    System.err.println("Entra?"+order);
+                    crash=false;
+                    xPos=currentBlock.getX();
+                    yPos=currentBlock.getY();
+                    action=0;
+                }
                 break;
             case 3:
-                while (y > yB && crash) {
+                while (y > yB && aux==action) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     y -= movement;
@@ -261,9 +284,16 @@ public abstract class Character extends Thread {
 //                    System.err.println("E3"+order);
 //                    buff.comparator(order);
                 }
+                if(aux==action){
+                    System.err.println("Entra?"+order);
+                    crash=false;
+                    xPos=currentBlock.getX();
+                    yPos=currentBlock.getY();
+                    action=0;
+                }
                 break;
             case 4:
-                while (x > xB && crash) {
+                while (x > xB && aux==action) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     x -= movement;
@@ -271,10 +301,17 @@ public abstract class Character extends Thread {
 //                    System.err.println("E4"+order);
 //                    buff.comparator(order);
                 }
+                if(aux==action){
+                    System.err.println("Entra?"+order);
+                    crash=false;
+                    xPos=currentBlock.getX();
+                    yPos=currentBlock.getY();
+                    action=0;
+                }
                 break;
         }
-        crash = false;
         dirAux = direction;
+        }
     }
     
     public void isFinish(){

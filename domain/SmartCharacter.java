@@ -26,8 +26,12 @@ public class SmartCharacter extends Character {
     @Override
     public void run() {
         while (super.getFlag()) {
-            direction = (int) (Math.random() * (5 - 1) + 1);
+            
+                direction = (int) (Math.random() * (5 - 1) + 1);
+
+            
             if (next(direction)) {
+//                System.err.println("Por algun motivo entra");
                 crash = false;
                 try {
                     switch (direction) {
@@ -69,6 +73,7 @@ public class SmartCharacter extends Character {
                     metodoRandom(direction);
                     currentBlock = nextBlock;
                 } else {
+
                     try {
                         rePos();
                     } catch (InterruptedException ex) {

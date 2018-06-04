@@ -62,9 +62,9 @@ public class FastCharacter extends Character {
     public void run() {
         new Thread(timer).start();
         while (super.getFlag()) {
-
+            
             direction = (int) (Math.random() * (5 - 1) + 1);
-
+            
             if (next(direction)) {
                 crash = false;
                 try {
@@ -109,10 +109,10 @@ public class FastCharacter extends Character {
                 if (!crash) {
                     metodoRandom(direction);
                     currentBlock = nextBlock;
-                    if (currentBlock.getX() == 7 && currentBlock.getY() == 7) {
-                        super.setFlag(false);
-                    }
+                    
                 } else {
+                    
+                    
                     try {
                         rePos();
                     } catch (InterruptedException ex) {

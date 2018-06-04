@@ -57,19 +57,10 @@ public class SharedBuffer {
             Rectangle elOtro = new Rectangle(xC, yC, size, size);
             if (i != order && elOtro.intersects(yo) && characters.get(i).getFlag()) {
                 if (characters.get(order).oposDir(dirMe) == dirO) {
-                    if (characters.get(order).isCrash() && !characters.get(i).isCrash()) {
-                        characters.get(order).setCrash(false);
-                        characters.get(i).setCrash(true);
-                    } else if (characters.get(i).isCrash() && !characters.get(order).isCrash()) {
-                        characters.get(i).setCrash(false);
-                        characters.get(order).setCrash(true);
-                    } else if (characters.get(i).isCrash() && characters.get(order).isCrash()) {
-                        characters.get(i).setCrash(false);
-                        characters.get(order).setCrash(false);
-                    } else {
+                        characters.get(order).sum();
+                        characters.get(i).sum();
                         characters.get(order).setCrash(true);
                         characters.get(i).setCrash(true);
-                    }
                     return true;
                 } else {
                     characters.get(order).setMovement(0);
