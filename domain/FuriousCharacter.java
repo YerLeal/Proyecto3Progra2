@@ -85,30 +85,25 @@ public class FuriousCharacter extends Character {
     } // run
 
     public void addSprites() {
+        SnapshotParameters parameters = new SnapshotParameters();
         for (int i = 0; i < 12; i++) {
             Image image = new Image(
-                    "assets/f" + i + ".png"
+                    "assets/s" + i + ".png"
             );
-
             ImageView imageView = new ImageView(image);
             imageView.setClip(new ImageView(image));
-
             ColorAdjust monochrome = new ColorAdjust();
             monochrome.setSaturation(-1.0);
-            imageView.setStyle("-fx-background-color: transparent");
             Blend blush = new Blend(
                     BlendMode.MULTIPLY,
                     monochrome,
-                    new ColorInput(
-                            0,
-                            0,
+                    new ColorInput(0,0,
                             imageView.getImage().getWidth(),
                             imageView.getImage().getHeight(),
-                            Color.RED
-                    )
-            );
+                            Color.RED));
             imageView.setEffect(blush);
-            super.setSprites(imageView.snapshot(new SnapshotParameters(), null));
+            parameters.setFill(Color.TRANSPARENT);
+            super.setSprites(imageView.snapshot(parameters, null));
         }
     }
     private int image = 0;

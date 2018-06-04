@@ -170,11 +170,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             @Override
             public void handle(ActionEvent event) {
                 ArrayList<Block> finish = logica.getFinish();
-                for (int i = 0; i < 60; i++) {
+                for (int i = 0; i < 18; i++) {
 
-                    if (i < 20) {
+                    if (i < 6) {
                         characters.add(new SmartCharacter(logica.getSize(), buffer, finish));
-                    } else if (i < 40) {
+                    } else if (i < 12) {
                         characters.add(new FastCharacter(logica.getSize(), buffer, finish));
                     } else {
                         characters.add(new FuriousCharacter(logica.getSize(), buffer, finish));
