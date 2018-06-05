@@ -75,12 +75,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private int initCont = 0;
     private Scene scene;
     private final Stage stage = new Stage();
-    private Timer t;
-    private int h = 0, m, s, cs;
-    private ActionListener action;
+    private String min = "", seg = "";
     private boolean flag = true;
     private TableView<Record> table;
-
+    public static String timer="";
+    
     private Runnable hilos = new Runnable() {
         @Override
         public void run() {
@@ -121,7 +120,6 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         public void run() {
             int minutos = 0, segundos = 0, milesimas = 0;
             //min es minutos, seg es segundos y mil es milesimas de segundo
-            String min = "", seg = "", mil = "";
             while (flag) {
                 try {
                     Thread.sleep(4);
@@ -157,7 +155,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 //                    if( milesimas < 10 ) mil = "00" + milesimas;
 //                    else if( milesimas < 100 ) mil = "0" + milesimas;
 //                    else mil = milesimas.toString();
-
+                    timer=minutos + ":" + seg;
                     //Colocamos en la etiqueta la informacion
                     tiempo.setText(minutos + ":" + seg);
                 } catch (Exception e) {
@@ -174,7 +172,6 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         public void run() {
             while (true) {
                 table.setItems(buffer.getRecords());
-
             }
         }
 
@@ -254,11 +251,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             @Override
             public void handle(ActionEvent event) {
                 ArrayList<Block> finish = logica.getFinish();
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 30; i++) {
 
-                    if (i < 3) {
+                    if (i < 10) {
                         characters.add(new SmartCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
-                    } else if (i < 6) {
+                    } else if (i < 20) {
                         characters.add(new FastCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
                     } else {
                         characters.add(new FuriousCharacter(logica.getSize(), buffer, finish, tfdName.getText()));

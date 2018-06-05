@@ -147,7 +147,7 @@ public class SharedBuffer {
     }
     
     public void addFinisher(Record r){
-        r.setTime(Proyecto3Progra2.chronometer);
+        r.setTime(Proyecto3Progra2.timer);
         this.records.add(r);
     }
 
