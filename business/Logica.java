@@ -15,7 +15,9 @@ public class Logica {
     private int itemCont;
     private Block maze[][];
     private ArrayList<Item> items = new ArrayList<>();
-
+    private String name;
+    
+    
     public int getDifficulty() {
         return this.difficulty;
     }
@@ -98,8 +100,8 @@ public class Logica {
         }
     }
     
-    public void addItem(int x, int y, SharedBuffer buffer,boolean life,GraphicsContext gc) {
-        Item itemAux = new Item(size, buffer);
+    public void addItem(int x, int y, SharedBuffer buffer,boolean life, GraphicsContext gc) {
+        Item itemAux = new Item(size, buffer, name);
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
                 if (this.maze[i][j].isClicked(x, y)) {

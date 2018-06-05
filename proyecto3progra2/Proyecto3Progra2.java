@@ -47,21 +47,26 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Thread thread;
     private HBox hbox;
     private VBox vbox;
+    private VBox vb;
     private javafx.scene.control.Label lblType;
     private javafx.scene.control.Label lblQuantity;
     private javafx.scene.control.Label lblName;
+    private javafx.scene.control.Label tiempo;
     private ObservableList<String> listType, listDifficult;
     private Button btnSet;
     private Button btnPause;
     private Button btnStop;
     private Button btnName;
+    private Button btnLogin;
     private TextField tfdQuantity;
     private TextField tfdName;
     private int cantP;
     private SharedBuffer buffer;
     private ArrayList<Character> characters = new ArrayList<>();
     private int initCont = 0;
-
+    private Scene scene;
+    private final Stage stage=new Stage();
+    
     private boolean flag = true;
     private TableView<Character> table;
 
@@ -119,22 +124,27 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     } // start
 
     public void init(Stage primaryStage) {
+        
         this.hbox = new HBox(10);
         this.vbox = new VBox(10);
         hbox.setSpacing(10);
-        vbox.setSpacing(1);
+        vbox.setSpacing(10);
+        
         btnSet = new Button("Start Simulation");
-
+        btnLogin=new Button("Set the name and Characters");
         btnStop = new Button("Stop Threads");
         btnPause = new Button("Pause Characters");
         btnName = new Button("Set Player Name");
 
+
+        
         tfdQuantity = new TextField();
-        //tfdType = new TextField();
+        
         tfdName = new TextField();
         this.lblType = new javafx.scene.control.Label();
         this.lblQuantity = new javafx.scene.control.Label("Quantity of Characters");
         this.lblName = new javafx.scene.control.Label("Name of Player");
+        this.tiempo=new javafx.scene.control.Label("");
 
         listType = FXCollections.observableArrayList();//para el combobox
         listType.addAll("Fast", "Furious", "Smart");//opciones del combobox
@@ -173,11 +183,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 for (int i = 0; i < 18; i++) {
 
                     if (i < 6) {
-                        characters.add(new SmartCharacter(logica.getSize(), buffer, finish));
+                        characters.add(new SmartCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
                     } else if (i < 12) {
-                        characters.add(new FastCharacter(logica.getSize(), buffer, finish));
+                        characters.add(new FastCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
                     } else {
-                        characters.add(new FuriousCharacter(logica.getSize(), buffer, finish));
+                        characters.add(new FuriousCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
                     }
                 }
                 thread.start();
@@ -194,6 +204,13 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         });
         btnSet.setOnAction((ActionEvent t) -> {
+                thread.start();
+                logica.startItems();
+                new Thread(hilos).start();
+
+        });
+        btnLogin.setOnAction((ActionEvent t) -> {
+            stage.show();
         });
         btnStop.setOnAction((ActionEvent t) -> {
             try {
@@ -203,27 +220,26 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         });
         cbx.setOnAction((ActionEvent e) -> {
-            if (cbx.getValue().equalsIgnoreCase("Fast")) {
-                for (int i = 0; i < Integer.parseInt(tfdQuantity.getText()); i++) {
-                    characters.add(new FastCharacter(logica.getSize(), buffer, logica.getFinish()));
-                }
-                this.lblType.setText("Fast");
-            } else if (cbx.getValue().equalsIgnoreCase("Furious")) {
-                for (int i = 0; i < Integer.parseInt(lblQuantity.getText()); i++) {
-                    characters.add(new FuriousCharacter(logica.getSize(), buffer, logica.getFinish()));
-                }
-                this.lblType.setText("Furious");
-            } else {
-                for (int i = 0; i < Integer.parseInt(lblQuantity.getText()); i++) {
-                    characters.add(new SmartCharacter(logica.getSize(), buffer, logica.getFinish()));
-                }
-                this.lblType.setText("Smart");
-            }
+            System.out.println(tfdQuantity.getText());
+            for(int i=0; i<Integer.parseInt(tfdQuantity.getText()); i++){ 
+                    if (cbx.getValue().equalsIgnoreCase("Fast")) {
+                        characters.add(new FastCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
 
-            if (cantP == Integer.parseInt(tfdQuantity.getText())) {
-                //btnSet.setVisible(true);
-                btnSet.setDisable(true);
+                        this.lblType.setText("Fast");
+                    } else if (cbx.getValue().equalsIgnoreCase("Furious")) {
+                        characters.add(new FuriousCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
+
+                        this.lblType.setText("Furious");
+                    } else {
+                        characters.add(new SmartCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
+                        this.lblType.setText("Smart");
+                    }
+                    System.out.println("num");
             }
+                    if (cantP == Integer.parseInt(tfdQuantity.getText())) {
+                        //btnSet.setVisible(true);
+                        btnSet.setDisable(true);
+                    }
             cantP++;
             tfdQuantity.setText("");
         });
@@ -253,7 +269,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         pane.getChildren().add(btItem);
 //        pane.getChildren().add(btSave);
 
-        this.vbox.getChildren().addAll(this.lblQuantity, tfdQuantity, cbx, cbxD, this.lblType, this.tfdName, this.lblName, this.btnName, this.btnSet, this.btnStop, table);
+        this.vbox.getChildren().addAll(cbxD, this.lblName, this.btnLogin, this.btnSet, this.btnPause, this.btnStop, tiempo, table);
         this.hbox.getChildren().add(pane);
         this.hbox.getChildren().add(vbox);
 
@@ -275,6 +291,13 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
         Scene scene = new Scene(hbox, width, HEIGTH);
         primaryStage.setScene(scene);
+        vb=new VBox(10);
+        vb.getChildren().addAll(lblQuantity, tfdQuantity, lblType, cbx, lblName,tfdName, btnName);
+        //popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
+        
+        scene=new Scene(vb, 400, 400);
+        stage.setTitle("Login Player");
+        stage.setScene(scene);
     } // init
 
     @Override

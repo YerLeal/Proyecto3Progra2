@@ -13,15 +13,16 @@ public abstract class Character extends Thread {
     protected ArrayList<Block> finish;
     protected int direction, dirAux;
     protected boolean crash = false, ini = false;
-    protected String tipo;
+    protected String tipo, nombre;
     private Boolean flag = true;
     private ArrayList<Image> spritesArray;
 
-    public Character(int size, SharedBuffer buffer,ArrayList<Block> finish) {
+    public Character(int size, SharedBuffer buffer,ArrayList<Block> finish, String nombre) {
         this.size = size;
         this.buff = buffer;
         this.spritesArray = new ArrayList<>();
         this.finish=finish;
+        this.nombre=nombre;
     }
 
     public void setStarto(Block starto) {

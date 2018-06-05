@@ -12,8 +12,8 @@ public class Item extends Character {
 
     private boolean bandera, cosa;
 
-    public Item(int size, SharedBuffer buffer) {
-        super(size, buffer,null);
+    public Item(int size, SharedBuffer buffer, String name) {
+        super(size, buffer,null, name);
         super.speed = 10;
         bandera = true;
         cosa = true;

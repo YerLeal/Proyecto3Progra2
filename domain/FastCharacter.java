@@ -51,8 +51,8 @@ public class FastCharacter extends Character {
         }
     };
 
-    public FastCharacter(int size, SharedBuffer buffer,ArrayList<Block> finish) {
-        super(size, buffer,finish);
+    public FastCharacter(int size, SharedBuffer buffer,ArrayList<Block> finish, String name) {
+        super(size, buffer,finish, name);
         super.speed = 2;
         super.tipo = "FA";
         addSprites();
