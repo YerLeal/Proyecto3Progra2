@@ -88,7 +88,7 @@ public class FuriousCharacter extends Character {
         SnapshotParameters parameters = new SnapshotParameters();
         for (int i = 0; i < 12; i++) {
             Image image = new Image(
-                    "assets/s" + i + ".png"
+                    "assets/f" + i + ".png"
             );
             ImageView imageView = new ImageView(image);
             imageView.setClip(new ImageView(image));

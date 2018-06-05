@@ -246,13 +246,10 @@ public abstract class Character extends Thread {
                 while (y < yB && aux==action) {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
-//                  System.err.println("E1"+order);
                     y += movement;
 
-//                    buff.comparator(order);
                 }
                 if(aux==action){
-                    System.err.println("Entra?"+order);
                     crash=false;
                     xPos=currentBlock.getX();
                     yPos=currentBlock.getY();
@@ -264,8 +261,6 @@ public abstract class Character extends Thread {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     x += movement;
-//                  System.err.println("E2"+order);
-//                    buff.comparator(order);
 
                 }
                 if(aux==action){
@@ -282,11 +277,8 @@ public abstract class Character extends Thread {
                     buff.colisionVs(order);
                     y -= movement;
 
-//                    System.err.println("E3"+order);
-//                    buff.comparator(order);
                 }
                 if(aux==action){
-                    System.err.println("Entra?"+order);
                     crash=false;
                     xPos=currentBlock.getX();
                     yPos=currentBlock.getY();
@@ -298,12 +290,8 @@ public abstract class Character extends Thread {
                     Thread.sleep(speed);
                     buff.colisionVs(order);
                     x -= movement;
-
-//                    System.err.println("E4"+order);
-//                    buff.comparator(order);
                 }
                 if(aux==action){
-                    System.err.println("Entra?"+order);
                     crash=false;
                     xPos=currentBlock.getX();
                     yPos=currentBlock.getY();
@@ -318,7 +306,7 @@ public abstract class Character extends Thread {
     public void isFinish(){
         for(int i=0;i<finish.size();i++){
             if(currentBlock.getX()==finish.get(i).getX() && currentBlock.getY()==finish.get(i).getY()){
-                buff.addFinisher(tipo);
+                buff.addFinisher(new Record(nombre, tipo));
                 this.flag=false;
             }
         }

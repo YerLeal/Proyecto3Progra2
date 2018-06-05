@@ -7,6 +7,7 @@ import domain.Character;
 import domain.FastCharacter;
 import domain.FuriousCharacter;
 import domain.Item;
+import domain.Record;
 import domain.SmartCharacter;
 import file.MazeFile;
 import java.awt.event.ActionListener;
@@ -40,8 +41,9 @@ import javafx.stage.WindowEvent;
 import org.omg.PortableServer.THREAD_POLICY_ID;
 
 public class Proyecto3Progra2 extends Application implements Runnable {
-    public static String chronometer="00-00-000";
-    public String num="";
+
+    public static String chronometer = "00-00-000";
+    public String num = "";
     private int width = 1360;
     private final int HEIGTH = 720;
     private int canvasWidth;
@@ -58,9 +60,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private javafx.scene.control.Label lblType;
     private javafx.scene.control.Label lblQuantity;
     private javafx.scene.control.Label lblName;
-    private Text tiempo=new Text(); 
-    
-    
+    private Text tiempo = new Text();
     private ObservableList<String> listType, listDifficult;
     private Button btnSet;
     private Button btnPause;
@@ -74,13 +74,12 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private ArrayList<Character> characters = new ArrayList<>();
     private int initCont = 0;
     private Scene scene;
-    private final Stage stage=new Stage();
+    private final Stage stage = new Stage();
     private Timer t;
-    private int h=0, m, s, cs;
+    private int h = 0, m, s, cs;
     private ActionListener action;
     private boolean flag = true;
-    private TableView<Character> table;
-    
+    private TableView<Record> table;
 
     private Runnable hilos = new Runnable() {
         @Override
@@ -120,24 +119,23 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Runnable crono = new Runnable() {
         @Override
         public void run() {
-            int minutos = 0 , segundos = 0, milesimas = 0;
+            int minutos = 0, segundos = 0, milesimas = 0;
             //min es minutos, seg es segundos y mil es milesimas de segundo
-            String min="", seg="", mil="";
-            while(flag){
-                try{
-                    Thread.sleep( 4 );
+            String min = "", seg = "", mil = "";
+            while (flag) {
+                try {
+                    Thread.sleep(4);
                     //Incrementamos 4 milesimas de segundo
                     milesimas += 4;
 
                     //Cuando llega a 1000 osea 1 segundo aumenta 1 segundo
                     //y las milesimas de segundo de nuevo a 0
-                    if( milesimas == 1000 ){
+                    if (milesimas == 1000) {
                         milesimas = 0;
                         segundos += 1;
                         //Si los segundos llegan a 60 entonces aumenta 1 los minutos
                         //y los segundos vuelven a 0
-                        if( segundos == 60 )
-                        {
+                        if (segundos == 60) {
                             segundos = 0;
                             minutos++;
                         }
@@ -145,34 +143,47 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
                     //Esto solamente es estetica para que siempre este en formato
                     //00:00:000
-                    if( minutos < 10 ){ min = "0" + minutos;
-                    } else 
-                    {min = String.valueOf(minutos);}
-                    if( segundos < 10 ) seg = "0" + segundos;
-                    else seg = String.valueOf(segundos);
+                    if (minutos < 10) {
+                        min = "0" + minutos;
+                    } else {
+                        min = String.valueOf(minutos);
+                    }
+                    if (segundos < 10) {
+                        seg = "0" + segundos;
+                    } else {
+                        seg = String.valueOf(segundos);
+                    }
 //
 //                    if( milesimas < 10 ) mil = "00" + milesimas;
 //                    else if( milesimas < 100 ) mil = "0" + milesimas;
 //                    else mil = milesimas.toString();
 
                     //Colocamos en la etiqueta la informacion
-                    tiempo.setText( minutos + ":" + seg );
-            }
-        catch(Exception e){
-        //Cuando se reincie se coloca nuevamente en 00:00:000
-        tiempo.setText( "00:00:000" );
-        }
+                    tiempo.setText(minutos + ":" + seg);
+                } catch (Exception e) {
+                    //Cuando se reincie se coloca nuevamente en 00:00:000
+                    tiempo.setText("00:00:000");
+                }
             }
 //tiempo.setText("");
-        }    
-        };
-    
-            
+        }
+    };
+
+    private Runnable tableU = new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                table.setItems(buffer.getRecords());
+
+            }
+        }
+
+    };
 
     @Override
     public void start(Stage primaryStage) {
         table = new TableView<>();
-        
+
         primaryStage.setTitle("The Maze of Threads");
         init(primaryStage);
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -187,14 +198,14 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     } // start
 
     public void init(Stage primaryStage) {
-        
+
         this.hbox = new HBox(10);
         this.vbox = new VBox(10);
         hbox.setSpacing(10);
         vbox.setSpacing(10);
-        cronometro=new Thread(crono);
+        cronometro = new Thread(crono);
         btnSet = new Button("Start Simulation");
-        btnLogin=new Button("Set the name and Characters");
+        btnLogin = new Button("Set the name and Characters");
         btnStop = new Button("Stop Threads");
         btnPause = new Button("Pause Characters");
         btnName = new Button("Set Player Name");
@@ -202,9 +213,8 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         btnPause.setDisable(true);
         btnStop.setDisable(true);
 
-        
         tfdQuantity = new TextField();
-        
+
         tfdName = new TextField();
         this.lblType = new javafx.scene.control.Label();
         this.lblQuantity = new javafx.scene.control.Label("Quantity of Characters");
@@ -223,13 +233,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         //thread.start();
         //tableColumn
         TableColumn name = new TableColumn("Name");
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        name.setCellValueFactory(new PropertyValueFactory<>("userName"));
         TableColumn type = new TableColumn("Type");
-        type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        TableColumn position = new TableColumn("Position");
-        position.setCellValueFactory(new PropertyValueFactory<>("position"));
-        ObservableList<Character> datos = getTableData();
-        table.setItems(datos);
+        type.setCellValueFactory(new PropertyValueFactory<>("characterType"));
+        TableColumn position = new TableColumn("Time");
+        position.setCellValueFactory(new PropertyValueFactory<>("time"));
         table.getColumns().addAll(name, type, position);
 
         this.canvasWidth = 1120;
@@ -237,7 +245,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
         Button btRun = new Button("Run");
         Button btItem = new Button("Item");
-        
+
         btRun.relocate(400, 400);
         btItem.relocate(700, 400);
         tiempo.relocate(1000, 600);
@@ -246,11 +254,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             @Override
             public void handle(ActionEvent event) {
                 ArrayList<Block> finish = logica.getFinish();
-                for (int i = 0; i < 18; i++) {
+                for (int i = 0; i < 9; i++) {
 
-                    if (i < 6) {
+                    if (i < 3) {
                         characters.add(new SmartCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
-                    } else if (i < 12) {
+                    } else if (i < 6) {
                         characters.add(new FastCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
                     } else {
                         characters.add(new FuriousCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
@@ -259,9 +267,9 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 thread.start();
                 logica.startItems();
                 new Thread(hilos).start();
-                cronometro=new Thread(crono);
+                cronometro = new Thread(crono);
                 cronometro.start();
-
+                new Thread(tableU).start();
             }
         });
 
@@ -272,46 +280,45 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         });
         btnSet.setOnAction((ActionEvent t) -> {
-                thread.start();
-                logica.startItems();
-                new Thread(hilos).start();
-                cronometro=new Thread(crono);
-                cronometro.start();
-                
+            thread.start();
+            logica.startItems();
+            new Thread(hilos).start();
+            cronometro = new Thread(crono);
+            cronometro.start();
 
         });
         btnLogin.setOnAction((ActionEvent t) -> {
             stage.show();
         });
         btnStop.setOnAction((ActionEvent t) -> {
-            flag=false;
+            flag = false;
         });
         cbx.setOnAction((ActionEvent e) -> {
             System.out.println(tfdQuantity.getText());
-            for(int i=0; i<Integer.parseInt(tfdQuantity.getText()); i++){ 
-                    if (cbx.getValue().equalsIgnoreCase("Fast")) {
-                        characters.add(new FastCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
+            for (int i = 0; i < Integer.parseInt(tfdQuantity.getText()); i++) {
+                if (cbx.getValue().equalsIgnoreCase("Fast")) {
+                    characters.add(new FastCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
 
-                        this.lblType.setText(tfdName.getText()+" Fast");
-                    } else if (cbx.getValue().equalsIgnoreCase("Furious")) {
-                        characters.add(new FuriousCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
+                    this.lblType.setText(tfdName.getText() + " Fast");
+                } else if (cbx.getValue().equalsIgnoreCase("Furious")) {
+                    characters.add(new FuriousCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
 
-                        this.lblType.setText(tfdName.getText()+" Furious");
-                    } else {
-                        characters.add(new SmartCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
-                        this.lblType.setText(tfdName.getText()+" Smart");
-                    }
-                    System.out.println("num");
+                    this.lblType.setText(tfdName.getText() + " Furious");
+                } else {
+                    characters.add(new SmartCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
+                    this.lblType.setText(tfdName.getText() + " Smart");
+                }
+                System.out.println("num");
             }
-                    if (cantP == Integer.parseInt(tfdQuantity.getText())) {
-                        //btnSet.setVisible(true);
+            if (cantP == Integer.parseInt(tfdQuantity.getText())) {
+                //btnSet.setVisible(true);
 //                        btnSet.setDisable(true);
-                    }
+            }
             cantP++;
             tfdQuantity.setText("");
             btnSet.setDisable(false);
-        btnPause.setDisable(false);
-        btnStop.setDisable(false);
+            btnPause.setDisable(false);
+            btnStop.setDisable(false);
         });
         cbxD.setOnAction((ActionEvent e) -> {
 
@@ -332,7 +339,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             logica.drawMaze(gc);
             cbxD.setVisible(false);
         });
-        
+
         gc = canvas.getGraphicsContext2D();
         pane = new Pane(canvas);
         pane.getChildren().add(btRun);
@@ -351,9 +358,9 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                     logica.imprimirTipo((int) event.getX(), (int) event.getY());
                 } else {
                     if (thread.isAlive()) {
-                        logica.addItem((int) event.getX(), (int) event.getY(), buffer, true,gc);
+                        logica.addItem((int) event.getX(), (int) event.getY(), buffer, true, gc);
                     } else {
-                        logica.addItem((int) event.getX(), (int) event.getY(), buffer, false,gc);
+                        logica.addItem((int) event.getX(), (int) event.getY(), buffer, false, gc);
                     }
                 }
             }
@@ -361,11 +368,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
         Scene scene = new Scene(hbox, width, HEIGTH);
         primaryStage.setScene(scene);
-        vb=new VBox(10);
-        vb.getChildren().addAll(lblQuantity, tfdQuantity, lblType, cbx, lblName,tfdName, btnName);
+        vb = new VBox(10);
+        vb.getChildren().addAll(lblQuantity, tfdQuantity, lblType, cbx, lblName, tfdName, btnName);
         //popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
-        
-        scene=new Scene(vb, 400, 400);
+
+        scene = new Scene(vb, 400, 400);
         stage.setTitle("Login Player");
         stage.setScene(scene);
     } // init
@@ -377,18 +384,17 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         long wait;
         int fps = 20;
         long time = 1000 / fps;
-        
+
         try {
             while (flag) {
-                
+
                 start = System.nanoTime();
                 elapsed = System.nanoTime() - start;
                 wait = time - elapsed / 1000000;
 
                 draw(gc);
                 Thread.sleep(wait);
-                
-               
+
             }
 
         } catch (InterruptedException ex) {

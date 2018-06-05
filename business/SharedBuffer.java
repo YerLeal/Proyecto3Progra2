@@ -5,18 +5,21 @@ import domain.Item;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import domain.Character;
+import domain.Record;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import proyecto3progra2.Proyecto3Progra2;
 
 public class SharedBuffer {
 
     private ArrayList<Character> characters;
-    private ArrayList<String> finisheds;
+    private ObservableList<Record> records;
     private ArrayList<Item> items;
 
     public SharedBuffer(ArrayList<Character> characters, ArrayList<Item> items) {
         this.items = items;
         this.characters = characters;
-        this.finisheds=new ArrayList<>();
+        this.records = FXCollections.observableArrayList();
     }
 
     public synchronized boolean colisionVs(int order) {
@@ -143,9 +146,14 @@ public class SharedBuffer {
         return items;
     }
     
-    public void addFinisher(String dato){
-        System.err.println(dato+Proyecto3Progra2.chronometer);
-        this.finisheds.add(dato+Proyecto3Progra2.chronometer);
+    public void addFinisher(Record r){
+        r.setTime(Proyecto3Progra2.chronometer);
+        this.records.add(r);
     }
+
+    public ObservableList<Record> getRecords() {
+        return records;
+    }
+    
 
 } // end class
