@@ -9,7 +9,9 @@ import domain.FuriousCharacter;
 import domain.Item;
 import domain.SmartCharacter;
 import file.MazeFile;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -23,6 +25,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -31,11 +34,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.omg.PortableServer.THREAD_POLICY_ID;
 
 public class Proyecto3Progra2 extends Application implements Runnable {
     public static String chronometer="00-00-000";
+    public String num="";
     private int width = 1360;
     private final int HEIGTH = 720;
     private int canvasWidth;
@@ -45,13 +51,16 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Logica logica;
     private boolean itemCharge = false;
     private Thread thread;
+    private Thread cronometro;
     private HBox hbox;
     private VBox vbox;
     private VBox vb;
     private javafx.scene.control.Label lblType;
     private javafx.scene.control.Label lblQuantity;
     private javafx.scene.control.Label lblName;
-    private javafx.scene.control.Label tiempo;
+    private Text tiempo=new Text(); 
+    
+    
     private ObservableList<String> listType, listDifficult;
     private Button btnSet;
     private Button btnPause;
@@ -66,9 +75,12 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private int initCont = 0;
     private Scene scene;
     private final Stage stage=new Stage();
-    
+    private Timer t;
+    private int h=0, m, s, cs;
+    private ActionListener action;
     private boolean flag = true;
     private TableView<Character> table;
+    
 
     private Runnable hilos = new Runnable() {
         @Override
@@ -105,11 +117,62 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         }
     };
+    private Runnable crono = new Runnable() {
+        @Override
+        public void run() {
+            int minutos = 0 , segundos = 0, milesimas = 0;
+            //min es minutos, seg es segundos y mil es milesimas de segundo
+            String min="", seg="", mil="";
+            while(flag){
+                try{
+                    Thread.sleep( 4 );
+                    //Incrementamos 4 milesimas de segundo
+                    milesimas += 4;
+
+                    //Cuando llega a 1000 osea 1 segundo aumenta 1 segundo
+                    //y las milesimas de segundo de nuevo a 0
+                    if( milesimas == 1000 ){
+                        milesimas = 0;
+                        segundos += 1;
+                        //Si los segundos llegan a 60 entonces aumenta 1 los minutos
+                        //y los segundos vuelven a 0
+                        if( segundos == 60 )
+                        {
+                            segundos = 0;
+                            minutos++;
+                        }
+                    }
+
+                    //Esto solamente es estetica para que siempre este en formato
+                    //00:00:000
+                    if( minutos < 10 ){ min = "0" + minutos;
+                    } else 
+                    {min = String.valueOf(minutos);}
+                    if( segundos < 10 ) seg = "0" + segundos;
+                    else seg = String.valueOf(segundos);
+//
+//                    if( milesimas < 10 ) mil = "00" + milesimas;
+//                    else if( milesimas < 100 ) mil = "0" + milesimas;
+//                    else mil = milesimas.toString();
+
+                    //Colocamos en la etiqueta la informacion
+                    tiempo.setText( minutos + ":" + seg );
+            }
+        catch(Exception e){
+        //Cuando se reincie se coloca nuevamente en 00:00:000
+        tiempo.setText( "00:00:000" );
+        }
+            }
+//tiempo.setText("");
+        }    
+        };
+    
+            
 
     @Override
     public void start(Stage primaryStage) {
         table = new TableView<>();
-
+        
         primaryStage.setTitle("The Maze of Threads");
         init(primaryStage);
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -129,13 +192,15 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         this.vbox = new VBox(10);
         hbox.setSpacing(10);
         vbox.setSpacing(10);
-        
+        cronometro=new Thread(crono);
         btnSet = new Button("Start Simulation");
         btnLogin=new Button("Set the name and Characters");
         btnStop = new Button("Stop Threads");
         btnPause = new Button("Pause Characters");
         btnName = new Button("Set Player Name");
-
+        btnSet.setDisable(true);
+        btnPause.setDisable(true);
+        btnStop.setDisable(true);
 
         
         tfdQuantity = new TextField();
@@ -144,7 +209,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         this.lblType = new javafx.scene.control.Label();
         this.lblQuantity = new javafx.scene.control.Label("Quantity of Characters");
         this.lblName = new javafx.scene.control.Label("Name of Player");
-        this.tiempo=new javafx.scene.control.Label("");
+        //this.tiempo.setText("jj");
 
         listType = FXCollections.observableArrayList();//para el combobox
         listType.addAll("Fast", "Furious", "Smart");//opciones del combobox
@@ -172,9 +237,10 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
         Button btRun = new Button("Run");
         Button btItem = new Button("Item");
-
+        
         btRun.relocate(400, 400);
         btItem.relocate(700, 400);
+        tiempo.relocate(1000, 600);
 
         btRun.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -193,6 +259,8 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 thread.start();
                 logica.startItems();
                 new Thread(hilos).start();
+                cronometro=new Thread(crono);
+                cronometro.start();
 
             }
         });
@@ -207,17 +275,16 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                 thread.start();
                 logica.startItems();
                 new Thread(hilos).start();
+                cronometro=new Thread(crono);
+                cronometro.start();
+                
 
         });
         btnLogin.setOnAction((ActionEvent t) -> {
             stage.show();
         });
         btnStop.setOnAction((ActionEvent t) -> {
-            try {
-                thread.wait();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            flag=false;
         });
         cbx.setOnAction((ActionEvent e) -> {
             System.out.println(tfdQuantity.getText());
@@ -225,23 +292,26 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                     if (cbx.getValue().equalsIgnoreCase("Fast")) {
                         characters.add(new FastCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
 
-                        this.lblType.setText("Fast");
+                        this.lblType.setText(tfdName.getText()+" Fast");
                     } else if (cbx.getValue().equalsIgnoreCase("Furious")) {
                         characters.add(new FuriousCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
 
-                        this.lblType.setText("Furious");
+                        this.lblType.setText(tfdName.getText()+" Furious");
                     } else {
                         characters.add(new SmartCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
-                        this.lblType.setText("Smart");
+                        this.lblType.setText(tfdName.getText()+" Smart");
                     }
                     System.out.println("num");
             }
                     if (cantP == Integer.parseInt(tfdQuantity.getText())) {
                         //btnSet.setVisible(true);
-                        btnSet.setDisable(true);
+//                        btnSet.setDisable(true);
                     }
             cantP++;
             tfdQuantity.setText("");
+            btnSet.setDisable(false);
+        btnPause.setDisable(false);
+        btnStop.setDisable(false);
         });
         cbxD.setOnAction((ActionEvent e) -> {
 
@@ -262,12 +332,12 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             logica.drawMaze(gc);
             cbxD.setVisible(false);
         });
-
+        
         gc = canvas.getGraphicsContext2D();
         pane = new Pane(canvas);
         pane.getChildren().add(btRun);
         pane.getChildren().add(btItem);
-//        pane.getChildren().add(btSave);
+        pane.getChildren().add(tiempo);
 
         this.vbox.getChildren().addAll(cbxD, this.lblName, this.btnLogin, this.btnSet, this.btnPause, this.btnStop, tiempo, table);
         this.hbox.getChildren().add(pane);
@@ -307,16 +377,18 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         long wait;
         int fps = 20;
         long time = 1000 / fps;
+        
         try {
-            while (true) {
-
+            while (flag) {
+                
                 start = System.nanoTime();
                 elapsed = System.nanoTime() - start;
                 wait = time - elapsed / 1000000;
 
                 draw(gc);
-
                 Thread.sleep(wait);
+                
+               
             }
 
         } catch (InterruptedException ex) {
