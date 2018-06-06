@@ -185,7 +185,7 @@ public class Logic {
             next.add(this.maze[x][y - 1]);
         }
         return next;
-    } // paths: setea las rutas al bloque
+    } // paths: busca rutas aledañas al bloque
 
     private void lookForNewWays() {
         for (int i = 0; i < this.maze.length; i++) {
@@ -193,7 +193,7 @@ public class Logic {
                 this.maze[i][j].setNext(paths(i, j));
             } // for j
         } // for i
-    } // lookForNewWays: busca posibles rutas
+    } // lookForNewWays: annade rutas
     
     public void clear(){
         this.items.clear();

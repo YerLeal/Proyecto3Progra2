@@ -115,7 +115,7 @@ public class SharedBuffer {
                 Rectangle rectangleOther = new Rectangle(xC, yC, size, size);
                 if (rectangleOther.intersects(rectangleMe)) {
                     if (this.characters.get(i).getType().equals("S")) {
-                        if (this.characters.get(i).getSpeed() > 0) {
+                        if (this.characters.get(i).getSpeed() > 1) {
                             this.characters.get(i).setSpeed();
                         }
                         this.items.get(order).setFlag(false);
