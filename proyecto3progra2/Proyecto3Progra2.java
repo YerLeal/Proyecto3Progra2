@@ -9,7 +9,6 @@ import domain.FuriousCharacter;
 import domain.Item;
 import domain.Record;
 import domain.SmartCharacter;
-import file.MazeFile;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -351,8 +350,8 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getSource() == canvas && !itemCharge) {
-                    logica.cambiarTipo((int) event.getX(), (int) event.getY(), gc);
-                    logica.imprimirTipo((int) event.getX(), (int) event.getY());
+                    logica.changeTypeBlock((int) event.getX(), (int) event.getY(), gc);
+//                    logica.imprimirTipo((int) event.getX(), (int) event.getY());
                 } else {
                     if (thread.isAlive()) {
                         logica.addItem((int) event.getX(), (int) event.getY(), buffer, true, gc);

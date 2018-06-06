@@ -1,9 +1,6 @@
 package business;
 
 import domain.Block;
-import file.MazeFile;
-import java.io.IOException;
-import proyecto3progra2.Proyecto3Progra2;
 
 public class Maze {
 
@@ -14,42 +11,19 @@ public class Maze {
     } // constructor
 
     public Block[][] getMaze(int difficulty, int size) {
-        int numeros[][] = getMatrixNumbers(difficulty);
-        Block[][] matrixBloques = new Block[numeros.length][numeros[0].length];
+        int numbers[][] = getMatrixNumbers(difficulty);
+        Block[][] matrixBloques = new Block[numbers.length][numbers[0].length];
         for (int i = 0; i < matrixBloques.length; i++) {
             for (int j = 0; j < matrixBloques[0].length; j++) {
-                if (numeros[i][j] == 1) {
+                if (numbers[i][j] == 1) {
                     matrixBloques[i][j] = new Block(i, j, size, "wall");
                 } else {
                     matrixBloques[i][j] = new Block(i, j, size, "floor");
                 }
-            }
-        }
+            } // for
+        } // for
         return matrixBloques;
     } // getMaze
-
-    public void impresion(int difficulty, int size) throws IOException, ClassNotFoundException {
-        MazeFile file = new MazeFile();
-        Block matriz[][] = file.getMaze(difficulty);
-        for (int i = 0; i < matriz.length; i++) {
-            System.out.print("{");
-            for (int j = 0; j < matriz[0].length; j++) {
-                if (j == (matriz[0].length - 1)) {
-                    if (matriz[i][j].getType().equals("wall")) {
-                        System.out.print("1");
-                    } else {
-                        System.out.print("0");
-                    }
-                } else {
-                    if (matriz[i][j].getType().equals("wall")) {
-                        System.out.print("1,");
-                    } else {
-                        System.out.print("0,");
-                    }
-                }
-            }
-        }
-    } // eliminar
 
     private int[][] getMatrixNumbers(int difficulty) {
         switch (difficulty) {

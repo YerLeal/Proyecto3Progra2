@@ -16,15 +16,14 @@ public class Logica {
     private Block maze[][];
     private ArrayList<Item> items = new ArrayList<>();
     private String name;
-    
-    
+
     public int getDifficulty() {
         return this.difficulty;
-    }
+    } // getDifficulty
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
-    }
+    } // setDifficulty
 
     public Logica(int dificulty) {
         this.difficulty = dificulty;
@@ -46,7 +45,7 @@ public class Logica {
                 starts.add(this.maze[27][7]);
                 return starts;
         }
-    }
+    } // getStart
 
     public ArrayList<Block> getFinish() {
         ArrayList<Block> finish = new ArrayList<>();
@@ -61,46 +60,37 @@ public class Logica {
                 finish.add(this.maze[10][4]);
                 finish.add(this.maze[24][11]);
                 return finish;
-        }
-    }
+        } // switch
+    } // getFinish
 
     public Block[][] getMaze() {
         return this.maze;
-    }
+    } // getMaze
 
-    public Block ini() {
-        return this.maze[0][0];
-    }
-
-    public Block ini3() {
-        return this.maze[4][1];
-    }
-
-    public void cambiarTipo(int x, int y, GraphicsContext gc) {
+    public void changeTypeBlock(int x, int y, GraphicsContext gc) {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
                 if (this.maze[i][j].isClicked(x, y)) {
-                    System.out.println("i:" + i + ", j:" + j);
                     if (this.maze[i][j].getType().equals("wall")) {
                         this.maze[i][j].setType("floor");
                     } else {
                         this.maze[i][j].setType("wall");
                     }
                     break;
-                }
-            }
-        }
+                } // if
+            } // for 
+        } // for i
         drawMaze(gc);
         buscarNuevosCaminos();
-    }
-    
-    public void startItems(){
-        for(int i=0;i<items.size();i++){
+    } // changeTypeBlock
+
+    public void startItems() {
+        for (int i = 0; i < items.size(); i++) {
             items.get(i).start();
-        }
-    }
-    
-    public void addItem(int x, int y, SharedBuffer buffer,boolean life, GraphicsContext gc) {
+        } // for
+    } // startItems
+
+    public void addItem(int x, int y, SharedBuffer buffer, boolean life, GraphicsContext gc) {
         Item itemAux = new Item(size, buffer, name);
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
@@ -110,34 +100,22 @@ public class Logica {
                         itemAux.setStarto(maze[i][j]);
                         items.add(itemAux);
                         buffer.getItems().add(items.get(itemCont));
-                        if(life){
+                        if (life) {
                             items.get(itemCont).start();
-                        }else{
+                        } else {
                             items.get(itemCont).draw(gc);
                         }
                         itemCont++;
-                        
-                    }
+                    } // if (this.maze[i][j].getType().equals("floor"))
                     break;
-                }
-            }
-        }
-
-    }
+                } // if (this.maze[i][j].isClicked(x, y))
+            } // for j
+        } // for i
+    } // addItem
 
     public int getSize() {
         return this.size;
-    }
-
-    public void imprimirTipo(int x, int y) {
-        for (int f = 0; f < maze.length; f++) {
-            for (int c = 0; c < maze[0].length; c++) {
-                if (maze[f][c].isClicked(x, y)) {
-                    System.out.println(maze[f][c].getType());
-                }
-            }
-        }
-    }
+    } // getSize
 
     public void createMaze() {
         Maze m = new Maze();
@@ -156,7 +134,7 @@ public class Logica {
             case 3:
                 size = 40;
                 break;
-        }
+        } // switch
     } // getDificultad
 
     public void drawMaze(GraphicsContext gc) {
@@ -169,32 +147,27 @@ public class Logica {
                     gc.setFill(Color.WHITE);
                     gc.fillRect(i * size, j * size, size, size);
                 }
-            }
-        }
+            } // for j
+        } // for i
         int xS, yS, xA, yA;
         ArrayList<Block> finish = getFinish();
         gc.setFill(Color.GREEN);
         if (getDifficulty() < 3) {
             xS = finish.get(0).getX();
             yS = finish.get(0).getY();
-
             gc.fillRect(xS * size, yS * size, size, size);
-
         } else {
             xS = finish.get(0).getX();
             yS = finish.get(0).getY();
             xA = finish.get(1).getX();
             yA = finish.get(1).getY();
             gc.fillRect(xS * size, yS * size, size, size);
-
             gc.fillRect(xA * size, yA * size, size, size);
-
         }
-        for(int i=0;i<items.size();i++){
+        for (int i = 0; i < items.size(); i++) {
             items.get(i).draw(gc);
         }
-
-    }
+    } // drawMaze
 
     private ArrayList<Block> caminos(int x, int y) {
         ArrayList<Block> next = new ArrayList<>();
