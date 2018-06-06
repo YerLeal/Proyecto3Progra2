@@ -88,9 +88,9 @@ public class Item extends Character {
 
     @Override
     public boolean next(int direction) {
-        if (((direction == 1 && this.dirAux == 3) || (this.dirAux == 1 && direction == 3)) && this.cosa) {
+        if (((direction == 1 && this.directionAux == 3) || (this.directionAux == 1 && direction == 3)) && this.cosa) {
             return false;
-        } else if (((direction == 2 && this.dirAux == 4) || (this.dirAux == 2 && direction == 4)) && this.cosa) {
+        } else if (((direction == 2 && this.directionAux == 4) || (this.directionAux == 2 && direction == 4)) && this.cosa) {
             return false;
         }
         int aux;
@@ -104,7 +104,7 @@ public class Item extends Character {
                 if (this.currentBlock.getNext().get(i).getY() == this.yPos + aux) {
                     this.nextBlock = this.currentBlock.getNext().get(i);
                     this.yPos += aux;
-                    this.dirAux = direction;
+                    this.directionAux = direction;
                     return true;
                 }
             } // for i
@@ -113,7 +113,7 @@ public class Item extends Character {
                 if (this.currentBlock.getNext().get(i).getX() == this.xPos + aux) {
                     this.nextBlock = this.currentBlock.getNext().get(i);
                     this.xPos += aux;
-                    this.dirAux = direction;
+                    this.directionAux = direction;
                     return true;
                 }
             } // for i

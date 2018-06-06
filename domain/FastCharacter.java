@@ -108,7 +108,7 @@ public class FastCharacter extends Character {
                             .getName()).log(Level.SEVERE, null, ex);
                 }
                 if (!crash) {
-                    metodoRandom(direction);
+                    changePositionInMatrix(direction);
                     currentBlock = nextBlock;
                 } else {
                     try {

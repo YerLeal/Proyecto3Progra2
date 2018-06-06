@@ -11,7 +11,7 @@ public abstract class Character extends Thread {
     protected int xPos, yPos, x, y, size, speed, movement, order, action;
     protected Block currentBlock, nextBlock, auxBlock, starto;
     protected ArrayList<Block> finish;
-    protected int direction, dirAux;
+    protected int direction, directionAux;
     protected boolean crash = false, ini = false;
     protected String type, name;
     private Boolean flag = true;
@@ -49,10 +49,6 @@ public abstract class Character extends Thread {
     public void setOrder(int order) {
         this.order = order;
     } // setOrder
-
-    public boolean isIni() {
-        return this.ini;
-    }
 
     public Block getStarto() {
         return this.starto;
@@ -124,20 +120,20 @@ public abstract class Character extends Thread {
 
     public int getX() {
         return x;
-    }
+    } // getX
 
     public int getY() {
         return y;
-    }
+    } // getY
 
     public void setY(int y) {
         this.y = y;
-    }
+    } // setY
 
     public boolean next(int dir) {
-        if (((dir == 1 && dirAux == 3) || (dirAux == 1 && dir == 3)) && !isCaught() && !crash) {
+        if (((dir == 1 && directionAux == 3) || (directionAux == 1 && dir == 3)) && !isCaught() && !crash) {
             return false;
-        } else if (((dir == 2 && dirAux == 4) || (dirAux == 2 && dir == 4)) && !isCaught() && !crash) {
+        } else if (((dir == 2 && directionAux == 4) || (directionAux == 2 && dir == 4)) && !isCaught() && !crash) {
             return false;
         }
         int aux;
@@ -146,7 +142,6 @@ public abstract class Character extends Thread {
         } else {
             aux = -1;
         }
-
         if (dir == 1 || dir == 3) {
             for (int i = 0; i < this.currentBlock.getNext().size(); i++) {
                 if (this.currentBlock.getNext().get(i).getY() == yPos + aux) {
@@ -163,36 +158,37 @@ public abstract class Character extends Thread {
             }
         }
         return false;
-    }
+    } // next: retorna true si el bloque al que intento avanzar
+    // es un movimiento valido
 
-    public void metodoRandom(int dir) {
+    public void changePositionInMatrix(int direction) {
         int aux;
-        if (dir == 1 || dir == 2) {
+        if (direction == 1 || direction == 2) {
             aux = 1;
         } else {
             aux = -1;
         }
-        if (dir == 1 || dir == 3) {
-            yPos += aux;
+        if (direction == 1 || direction == 3) {
+            this.yPos += aux;
         } else {
-            xPos += aux;
+            this.xPos += aux;
         }
-        this.dirAux = dir;
-    }
+        this.directionAux = direction;
+    } // cambia mi posicion a nivel de matriz
 
     public boolean isCaught() {
-        int dir = oppositeDirection(dirAux);
+        int direction1 = oppositeDirection(this.directionAux);
         int aux;
-        if (dir == 1 || dir == 2) {
+        if (direction1 == 1 || direction1 == 2) {
             aux = 1;
         } else {
             aux = -1;
         }
         if (this.currentBlock.getNext().size() == 1) {
-            if ((dir == 1 || dir == 3) && this.currentBlock.getNext().get(0).getY() == yPos + aux) {
-                direction = dir;
-            } else if ((dir == 2 || dir == 4) && this.currentBlock.getNext().get(0).getX() == xPos + aux) {
-                direction = dir;
+            if ((direction1 == 1 || direction1 == 3) && this.currentBlock.getNext().get(0).getY() == this.yPos + aux) {
+                this.direction = direction1;
+            } else if ((direction1 == 2 || direction1 == 4) && this.currentBlock.getNext().get(0).getX() == this.xPos + aux) {
+                this.direction = direction1;
             }
             return true;
         }
@@ -286,7 +282,7 @@ public abstract class Character extends Thread {
                     }
                     break;
             }
-            dirAux = direction;
+            directionAux = direction;
         }
     }
 

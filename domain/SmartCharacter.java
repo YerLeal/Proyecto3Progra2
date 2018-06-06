@@ -67,7 +67,7 @@ public class SmartCharacter extends Character {
                             .getName()).log(Level.SEVERE, null, ex);
                 }
                 if (!this.crash) {
-                    metodoRandom(this.direction);
+                    changePositionInMatrix(this.direction);
                     this.currentBlock = this.nextBlock;
                 } else {
                     try {

@@ -25,41 +25,41 @@ public class SharedBuffer {
     public synchronized boolean colisionVs(int order) {
         int size = this.characters.get(0).getSize();
         int xC, yC, xMe, yMe;
-        int dirMe = this.characters.get(order).getDirection();
-        int dirO;
+        int directionMe = this.characters.get(order).getDirection();
+        int directionOther;
         xMe = this.characters.get(order).getX();
         yMe = this.characters.get(order).getY();
-        Rectangle yo;
-        switch (dirMe) {
+        Rectangle rectangleMe;
+        switch (directionMe) {
             case 1:
                 // abajo
                 yMe += size + 10;
-                yo = new Rectangle(xMe, yMe, size, 10);
+                rectangleMe = new Rectangle(xMe, yMe, size, 10);
                 break;
             case 3:
                 //arriba
                 yMe -= 10;
-                yo = new Rectangle(xMe, yMe, size, 10);
+                rectangleMe = new Rectangle(xMe, yMe, size, 10);
                 break;
             case 2:
                 //derecha
                 xMe += size + 10;
-                yo = new Rectangle(xMe, yMe, 10, size);
+                rectangleMe = new Rectangle(xMe, yMe, 10, size);
                 break;
             default:
                 //izquierda
                 xMe -= 10;
-                yo = new Rectangle(xMe, yMe, 10, size);
+                rectangleMe = new Rectangle(xMe, yMe, 10, size);
                 break;
         } // switch
 
         for (int i = 0; i < this.characters.size(); i++) {
             xC = this.characters.get(i).getX();
             yC = this.characters.get(i).getY();
-            dirO = this.characters.get(i).getDirection();
-            Rectangle elOtro = new Rectangle(xC, yC, size, size);
-            if (i != order && elOtro.intersects(yo) && this.characters.get(i).getFlag()) {
-                if (this.characters.get(order).oppositeDirection(dirMe) == dirO) {
+            directionOther = this.characters.get(i).getDirection();
+            Rectangle rectangleOther = new Rectangle(xC, yC, size, size);
+            if (i != order && rectangleOther.intersects(rectangleMe) && this.characters.get(i).getFlag()) {
+                if (this.characters.get(order).oppositeDirection(directionMe) == directionOther) {
                     this.characters.get(order).collision();
                     this.characters.get(i).collision();
                     this.characters.get(order).setCrash(true);
@@ -71,14 +71,13 @@ public class SharedBuffer {
                 }
             } // if (i != order && elOtro.intersects(yo) && this.characters.get(i).getFlag())
         } //for
-
         this.characters.get(order).setMovement(1);
         return false;
-    } // colisionVs
+    } // colisionVs: retorna true si colisionan directamente o si el personaje debe disminuir su velocidad
 
     public ArrayList<Character> getCharacters() {
         return this.characters;
-    } // getCharacters
+    } // getCharacters: retorna array characters
 
     public synchronized void itemColision(int order) {
         if (this.items.get(order).getFlag()) {
@@ -98,12 +97,12 @@ public class SharedBuffer {
             } else {
                 xMe += aux;
             }
-            Rectangle yo = new Rectangle(xMe, yMe, size, size);
+            Rectangle rectangleMe = new Rectangle(xMe, yMe, size, size);
             for (int i = 0; i < this.characters.size(); i++) {
                 xC = this.characters.get(i).getX();
                 yC = this.characters.get(i).getY();
-                Rectangle elOtro = new Rectangle(xC, yC, size, size);
-                if (elOtro.intersects(yo)) {
+                Rectangle rectangleOther = new Rectangle(xC, yC, size, size);
+                if (rectangleOther.intersects(rectangleMe)) {
                     if (this.characters.get(i).getType().equals("S")) {
                         if (this.characters.get(i).getSpeed() > 0) {
                             this.characters.get(i).setSpeed();
@@ -117,41 +116,42 @@ public class SharedBuffer {
                 } // if (elOtro.intersects(yo))
             } // for i
         } // if (this.items.get(order).getFlag())
-    } // itemColision
+    } // itemColision: Método que detecta si un item colisiona con un personaje, si es smart aumenta su velocidad
+    // y si es un furious lo destruye
 
     public boolean verifyStart(Block starto) {
         int size = starto.getSize();
-        int xS = starto.getX() * size;
-        int yS = starto.getY() * size;
-        int xC, yC;
+        int xStart = starto.getX() * size;
+        int yStart = starto.getY() * size;
+        int xCharacter, yC;
         int cont = 0;
-        Rectangle sBlock = new Rectangle(xS, yS, size, size);
+        Rectangle startBlock = new Rectangle(xStart, yStart, size, size);
         for (int i = 0; i < this.characters.size(); i++) {
-            xC = this.characters.get(i).getX();
+            xCharacter = this.characters.get(i).getX();
             yC = this.characters.get(i).getY();
-            Rectangle rC = new Rectangle(xC, yC, size, size);
-            if (sBlock.intersects(rC)) {
+            Rectangle rC = new Rectangle(xCharacter, yC, size, size);
+            if (startBlock.intersects(rC)) {
                 cont++;
             }
         } // for i
         return cont == 0;
-    } // verifyStart
+    } // verifyStart: retorna true si el personaje llegó a la meta
 
     public void setCharacters(ArrayList<Character> characters) {
         this.characters = characters;
-    } // setCharacters
+    } // setCharacters: setea array de characters
 
     public ArrayList<Item> getItems() {
         return this.items;
-    } // getItems
+    } // getItems: retorna array de items
 
-    public void addFinisher(Record r) {
-        r.setTime(Proyecto3Progra2.timer);
-        this.records.add(r);
-    } // addFinisher
+    public void addFinisher(Record record) {
+        record.setTime(Proyecto3Progra2.timer);
+        this.records.add(record);
+    } // addFinisher: se añaden los datos de personaje cuando finaliza
 
     public ObservableList<Record> getRecords() {
         return this.records;
-    } // getRecords
+    } // getRecords: retorna observableList de records
 
 } // end class

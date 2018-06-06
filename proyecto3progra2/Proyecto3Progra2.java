@@ -63,7 +63,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private int quantityCharacters, initCont = 0;
 
     private ArrayList<Character> characters;
-    private Scene scene;/////////////////////////////////// :v
+//    private Scene scene;/////////////////////////////////// :v
 
     public static String timer = "";
 

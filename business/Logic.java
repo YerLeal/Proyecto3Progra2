@@ -17,19 +17,19 @@ public class Logic {
     private ArrayList<Item> items = new ArrayList<>();
     private String name;
 
+    public Logic(int dificulty) {
+        this.difficulty = dificulty;
+        getBlockSize();
+        this.maze = new Block[WIDTH / this.size][HEIGHT / this.size];
+    } // constructor
+
     public int getDifficulty() {
         return this.difficulty;
-    } // getDifficulty
+    } // getDifficulty: retorna dificultad
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
-    } // setDifficulty
-
-    public Logic(int dificulty) {
-        this.difficulty = dificulty;
-        getDificultad();
-        this.maze = new Block[WIDTH / this.size][HEIGHT / this.size];
-    } // constructor
+    } // setDifficulty: setea dificultad
 
     public ArrayList<Block> getStart() {
         ArrayList<Block> starts = new ArrayList<>();
@@ -45,7 +45,7 @@ public class Logic {
                 starts.add(this.maze[27][7]);
                 return starts;
         } // switch
-    } // getStart
+    } // getStart: retorna array con las entradas del laberinto
 
     public ArrayList<Block> getFinish() {
         ArrayList<Block> finish = new ArrayList<>();
@@ -61,16 +61,17 @@ public class Logic {
                 finish.add(this.maze[24][11]);
                 return finish;
         } // switch
-    } // getFinish
+    } // getFinish: retorna array con las salidas del laberinto
 
     public Block[][] getMaze() {
         return this.maze;
-    } // getMaze
+    } // getMaze: retorna el laberinto
 
     public void changeTypeBlock(int x, int y, GraphicsContext gc) {
         for (int i = 0; i < this.maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
                 if (this.maze[i][j].isClicked(x, y)) {
+                    System.out.println(i + " " + j);
                     if (this.maze[i][j].getType().equals("wall")) {
                         this.maze[i][j].setType("floor");
                     } else {
@@ -82,13 +83,13 @@ public class Logic {
         } // for i
         drawMaze(gc);
         lookForNewWays();
-    } // changeTypeBlock
+    } // changeTypeBlock:cambia el tipo de bloque
 
     public void startItems() {
         for (int i = 0; i < this.items.size(); i++) {
             this.items.get(i).start();
         } // for
-    } // startItems
+    } // startItems: inicia los items
 
     public void addItem(int x, int y, SharedBuffer buffer, boolean life, GraphicsContext gc) {
         Item itemAux = new Item(this.size, buffer, this.name);
@@ -111,19 +112,19 @@ public class Logic {
                 } // if (this.maze[i][j].isClicked(x, y))
             } // for j
         } // for i
-    } // addItem
+    } // addItem: annade nuevo item a el array de items
 
     public int getSize() {
         return this.size;
-    } // getSize
+    } // getSize: retorna el size de los bloques y los personajes
 
     public void createMaze() {
         Maze m = new Maze();
         this.maze = m.getMaze(getDifficulty(), this.size);
         lookForNewWays();
-    } // createMaze
+    } // createMaze: creacion de laberinto
 
-    private void getDificultad() {
+    private void getBlockSize() {
         switch (this.getDifficulty()) {
             case 1:
                 this.size = 80;
@@ -135,7 +136,7 @@ public class Logic {
                 this.size = 40;
                 break;
         } // switch
-    } // getDificultad
+    } // getBlockSize: da el tamanno del bloque segun dificultad
 
     public void drawMaze(GraphicsContext gc) {
         for (int i = 0; i < this.maze.length; i++) {
@@ -167,9 +168,9 @@ public class Logic {
         for (int i = 0; i < this.items.size(); i++) {
             this.items.get(i).draw(gc);
         }
-    } // drawMaze
+    } // drawMaze: dibuja el laberinto
 
-    private ArrayList<Block> caminos(int x, int y) {
+    private ArrayList<Block> paths(int x, int y) {
         ArrayList<Block> next = new ArrayList<>();
         if (x + 1 < this.maze.length && this.maze[x + 1][y].getType().equals("floor")) {
             next.add(this.maze[x + 1][y]);
@@ -184,14 +185,14 @@ public class Logic {
             next.add(this.maze[x][y - 1]);
         }
         return next;
-    }
+    } // paths: setea las rutas al bloque
 
     private void lookForNewWays() {
         for (int i = 0; i < this.maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
-                this.maze[i][j].setNext(caminos(i, j));
+                this.maze[i][j].setNext(paths(i, j));
             } // for j
         } // for i
-    } // lookForNewWays
+    } // lookForNewWays: busca posibles rutas
 
 } // end class
