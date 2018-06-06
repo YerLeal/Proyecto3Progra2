@@ -2,8 +2,11 @@ package domain;
 
 import business.SharedBuffer;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 public abstract class Character extends Thread {
 
@@ -16,14 +19,49 @@ public abstract class Character extends Thread {
     protected String type, name;
     private Boolean flag = true;
     private ArrayList<Image> spritesArray;
+    protected Color color;
 
-    public Character(int size, SharedBuffer buffer, ArrayList<Block> finish, String nombre) {
+    public Character(int size, SharedBuffer buffer, ArrayList<Block> finish, String nombre, String colorN) {
         this.size = size;
         this.buff = buffer;
         this.spritesArray = new ArrayList<>();
         this.finish = finish;
         this.name = nombre;
+        setColor(colorN);
+        movement=1;
     } // constructor
+
+    public void setColor(String color) {
+        switch (color) {
+            case "GREEN":
+                this.color = Color.GREEN;
+                break;
+            case "BLUE":
+                this.color = Color.BLUE;
+                break;
+            case "AQUA":
+                this.color = Color.AQUA;
+                break;
+            case "RED":
+                this.color = Color.RED;
+                break;
+            case "YELLOW":
+                this.color = Color.YELLOW;
+                break;
+            case "BLUEVIOLET":
+                this.color = Color.BLUEVIOLET;
+                break;
+            case "CORAL":
+                this.color = Color.CORAL;
+                break;
+            case "MAGENTE":
+                this.color = Color.MAGENTA;
+                break;
+            case "LIGHTSEAGREEN":
+                this.color = Color.LIGHTGREEN;
+                break;
+        }
+    }
 
     public void setStarto(Block starto) {
         this.xPos = starto.getX();
@@ -37,6 +75,14 @@ public abstract class Character extends Thread {
     public ArrayList<Image> getSprites() {
         return this.spritesArray;
     } // getSprites
+    
+    public void pause(){
+        try {
+            this.wait();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Character.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public void setSprites(Image sprites) {
         this.spritesArray.add(sprites);

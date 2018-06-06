@@ -44,23 +44,24 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Canvas canvas;
     private Pane pane;
     private GraphicsContext gc;
-    private Thread thread, chronometer;
+    private Thread thread, chronometer,cThread;
     private Label lbType, lbQuantity, lbName;
     private TextField tfdQuantity, tfdName;
-    private Button btnSet, btnPause, btnStop, btnName, btnLogin, btnRun, btnItem;
-    private ObservableList<String> listType, listDifficult;
+    private Button btnSet, btnPause, btnStop, btnAdd, btnLogin, btnItem;
+    private ObservableList<String> listType, listDifficult,colorList;
     private HBox hBox;
-    private VBox vBox, vBox1;
-    private ComboBox<String> cbxDifficult, cbxType;
+    private VBox vBox;
+    private Pane addWindows;
+    private ComboBox<String> cbxDifficult, cbxType,cbxColor;
     private TableView<Record> table;
 
     private SharedBuffer buffer;
-    private String num = "", min = "", seg = "";
+    private String  min = "", seg = "";
 
     private Logic logic;
-    private boolean itemCharge = false, flag = true;
+    private boolean itemCharge = false, flag = true,pause=true;
     private Text time;
-    private int quantityCharacters, initCont = 0;
+    private int  initCont = 0;
 
     private ArrayList<Character> characters;
 //    private Scene scene;/////////////////////////////////// :v
@@ -101,6 +102,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
             }
         }
+        
     };
 
     private Runnable chronometerThread = new Runnable() {
@@ -132,9 +134,10 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                     timer = minutes + ":" + seg;
                     time.setText(minutes + ":" + seg);
                 } catch (Exception e) {
-                    time.setText("00:00:000");
+                    time.setText("00:00");
                 }
             }
+            time.setText("00:00");
         }
     };
 
@@ -188,20 +191,21 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         this.tfdName = new TextField();
 
         // Buttons
-        this.btnRun = new Button("Run");
-        this.btnItem = new Button("Item");
+        
+        this.btnItem = new Button("Add Items");
         this.btnSet = new Button("Start Simulation");
-        this.btnLogin = new Button("Set the name and Characters");
+        this.btnLogin = new Button("Add Characters");
         this.btnStop = new Button("Stop Threads");
-        this.btnPause = new Button("Pause Characters");
-        this.btnName = new Button("Set Player Name");
+        this.btnPause = new Button("Pause/Continue");
+        this.btnAdd = new Button("Add Characters");
 
         // ObservableList
         this.listDifficult = FXCollections.observableArrayList();
         this.listDifficult.addAll("Easy", "Medium", "Hard");
         this.listType = FXCollections.observableArrayList();
         this.listType.addAll("Fast", "Furious", "Smart");
-
+        this.colorList=FXCollections.observableArrayList();
+        this.colorList.addAll("BLUE","GREEN","RED","YELLOW","AQUA","BLUEVIOLET","BROWN","CORAL","MAGENTA","LIGHTSEAGREEN");
         // HBox
         this.hBox = new HBox(10);
         this.hBox.setSpacing(10);
@@ -209,14 +213,15 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         // VBox
         this.vBox = new VBox(10);
         this.vBox.setSpacing(10);
-        vBox1 = new VBox(10);
+        addWindows = new Pane();
 
         // ComboBox
         this.cbxDifficult = new ComboBox<>(this.listDifficult);
         this.cbxDifficult.setPromptText("Choose the Difficult");
         this.cbxType = new ComboBox<>(this.listType);
         this.cbxType.setPromptText("Type of Character");
-
+        this.cbxColor=new ComboBox<>(colorList);
+        this.cbxColor.setPromptText("Color");
         // Text
         this.time = new Text();
 
@@ -230,27 +235,25 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         tcTime.setCellValueFactory(new PropertyValueFactory<>("time"));
         this.table.getColumns().addAll(tcName, tcType, tcTime);
 
-        this.btnRun.setOnAction(actionButtons);
         this.btnSet.setOnAction(actionButtons);
         this.btnItem.setOnAction(actionButtons);
         this.btnLogin.setOnAction(actionButtons);
         this.btnStop.setOnAction(actionButtons);
         this.cbxDifficult.setOnAction(actionButtons);
-        this.cbxType.setOnAction(actionButtons);
-
+        this.btnPause.setOnAction(actionButtons);
+        this.btnAdd.setOnAction(actionButtons);
         this.btnSet.setDisable(true);
         this.btnPause.setDisable(true);
         this.btnStop.setDisable(true);
+        this.btnLogin.setDisable(true);
 
-        this.btnRun.relocate(400, 400);
-        this.btnItem.relocate(700, 400);
         this.time.relocate(1000, 600);
 
         // getChildren
-        this.pane.getChildren().add(this.btnRun);
+        
         this.pane.getChildren().add(this.btnItem);
         this.pane.getChildren().add(this.time);
-        this.vBox.getChildren().addAll(this.cbxDifficult, this.lbName, this.btnLogin, this.btnSet, this.btnPause, this.btnStop, this.time, this.table);
+        this.vBox.getChildren().addAll(this.cbxDifficult, this.lbName, this.btnLogin, this.btnSet, this.btnPause, this.btnStop, this.time, this.table,this.btnItem);
         this.hBox.getChildren().add(this.pane);
         this.hBox.getChildren().add(this.vBox);
 
@@ -272,8 +275,15 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         // :O
         Scene scene = new Scene(hBox, WIDTH, HEIGTH);
         primaryStage.setScene(scene);
-        vBox1.getChildren().addAll(lbQuantity, tfdQuantity, lbType, cbxType, lbName, tfdName, btnName);
-        scene = new Scene(vBox1, 400, 400);
+        this.lbName.relocate(10, 10);
+        this.tfdName.relocate(10, 30);
+        this.cbxType.relocate(10, 60);
+        this.lbQuantity.relocate(10, 100);
+        this.tfdQuantity.relocate(10, 120);
+        this.btnAdd.relocate(10, 180);
+        this.cbxColor.relocate(10,150);
+        addWindows.getChildren().addAll(this.lbName,this.tfdName,this.cbxType,this.lbQuantity,this.tfdQuantity,this.btnAdd,this.cbxColor);
+        scene = new Scene(addWindows, 250, 250);
         stage.setTitle("Login Player");
         stage.setScene(scene);
     } // init
@@ -292,58 +302,68 @@ public class Proyecto3Progra2 extends Application implements Runnable {
                     logic = new Logic(3);
                     logic.setDifficulty(3);
                 }
+                btnLogin.setDisable(false);
                 logic.createMaze();
                 logic.drawMaze(gc);
-            } else if (e.getSource() == cbxType) {
+                cbxDifficult.setVisible(false);
+            } else if (e.getSource() == btnAdd) {
                 for (int i = 0; i < Integer.parseInt(tfdQuantity.getText()); i++) {
                     if (cbxType.getValue().equalsIgnoreCase("Fast")) {
-                        characters.add(new FastCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText()));
+                        characters.add(new FastCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText(),cbxColor.getValue()));
                         lbType.setText(tfdName.getText() + " Fast");
                     } else if (cbxType.getValue().equalsIgnoreCase("Furious")) {
-                        characters.add(new FuriousCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText()));
+                        characters.add(new FuriousCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText(),cbxColor.getValue()));
                         lbType.setText(tfdName.getText() + " Furious");
                     } else {
-                        characters.add(new SmartCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText()));
+                        characters.add(new SmartCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText(),cbxColor.getValue()));
                         lbType.setText(tfdName.getText() + " Smart");
                     }
                 }
-                quantityCharacters++;
+                
                 tfdQuantity.setText("");
                 btnSet.setDisable(false);
                 btnPause.setDisable(false);
                 btnStop.setDisable(false);
-            } else if (e.getSource() == btnRun) {
-                ArrayList<Block> finish = logic.getFinish();
-                for (int i = 0; i < 5; i++) {
-                    if (i < 0) {
-                        characters.add(new SmartCharacter(logic.getSize(), buffer, finish, tfdName.getText()));
-                    } else if (i < 5) {
-                        characters.add(new FastCharacter(logic.getSize(), buffer, finish, tfdName.getText()));
-                    } else {
-                        characters.add(new FuriousCharacter(logic.getSize(), buffer, finish, tfdName.getText()));
-                    }
-                }
-                thread.start();
-                logic.startItems();
-                new Thread(hilos).start();
-                chronometer = new Thread(chronometerThread);
-                chronometer.start();
-                new Thread(tableUpdater).start();
             } else if (e.getSource() == btnSet) {
-                thread.start();
+                flag=true;
+                initThread();
                 logic.startItems();
-                new Thread(hilos).start();
                 chronometer = new Thread(chronometerThread);
                 chronometer.start();
+                cbxDifficult.setVisible(false);
+                new Thread(tableUpdater).start();
+                btnSet.setDisable(true);
             } else if (e.getSource() == btnItem) {
                 itemCharge = !itemCharge;
             } else if (e.getSource() == btnLogin) {
                 stage.show();
             } else if (e.getSource() == btnStop) {
-                flag = false;
+                    flag=false;
+                    thread.stop();
+                    cThread.stop();
+                    buffer.stopAll();
+                    buffer.clear();
+                    characters.clear();
+                    gc.clearRect(0, 0, 1120, HEIGTH);
+                    cbxDifficult.setVisible(true);
+                    logic.clear();
+                    initCont=0;
+                    cbxDifficult.setVisible(true);
+                    
+                    
+            }else if(e.getSource()==btnPause){
+                buffer.pauseCharacters(pause);
+                pause=!pause;
             }
         }
     };
+    
+    public void initThread(){
+        thread=new Thread(this);
+        thread.start();
+        cThread=new Thread(hilos);
+        cThread.start();
+    }
 
     @Override
     public void run() {

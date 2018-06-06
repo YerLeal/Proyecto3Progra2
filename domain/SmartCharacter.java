@@ -18,8 +18,8 @@ public class SmartCharacter extends Character {
 
     private int image = 0;
 
-    public SmartCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name) {
-        super(size, buffer, finish, name);
+    public SmartCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name,String color) {
+        super(size, buffer, finish, name,color);
         super.speed = 6;
         super.type = "S";
         addSprites();
@@ -97,7 +97,7 @@ public class SmartCharacter extends Character {
                     new ColorInput(0, 0,
                             imageView.getImage().getWidth(),
                             imageView.getImage().getHeight(),
-                            Color.YELLOWGREEN));
+                            super.color));
             imageView.setEffect(blush);
             parameters.setFill(Color.TRANSPARENT);
             super.setSprites(imageView.snapshot(parameters, null));

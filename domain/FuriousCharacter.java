@@ -18,8 +18,8 @@ public class FuriousCharacter extends Character {
 
     private int image = 0;
 
-    public FuriousCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name) {
-        super(size, buffer, finish, name);
+    public FuriousCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name,String color) {
+        super(size, buffer, finish, name,color);
         super.speed = 10;
         super.type = "F";
         addSprites();
@@ -97,7 +97,7 @@ public class FuriousCharacter extends Character {
                     new ColorInput(0, 0,
                             imageView.getImage().getWidth(),
                             imageView.getImage().getHeight(),
-                            Color.RED));
+                            super.color));
             imageView.setEffect(blush);
             parameters.setFill(Color.TRANSPARENT);
             super.setSprites(imageView.snapshot(parameters, null));

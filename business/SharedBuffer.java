@@ -15,12 +15,18 @@ public class SharedBuffer {
     private ArrayList<Character> characters;
     private ObservableList<Record> records;
     private ArrayList<Item> items;
+    private boolean pause=false;
 
     public SharedBuffer(ArrayList<Character> characters, ArrayList<Item> items) {
         this.items = items;
         this.characters = characters;
         this.records = FXCollections.observableArrayList();
     } // costructor
+    
+    public void clear(){
+        this.characters.clear();
+        this.items.clear();
+    }
 
     public synchronized boolean colisionVs(int order) {
         int size = this.characters.get(0).getSize();
@@ -71,7 +77,12 @@ public class SharedBuffer {
                 }
             } // if (i != order && elOtro.intersects(yo) && this.characters.get(i).getFlag())
         } //for
-        this.characters.get(order).setMovement(1);
+        if(!pause){
+            this.characters.get(order).setMovement(1);
+        }else{
+            this.characters.get(order).setMovement(0);
+        }
+        
         return false;
     } // colisionVs: retorna true si colisionan directamente o si el personaje debe disminuir su velocidad
 
@@ -119,6 +130,12 @@ public class SharedBuffer {
     } // itemColision: Método que detecta si un item colisiona con un personaje, si es smart aumenta su velocidad
     // y si es un furious lo destruye
 
+    public void stopAll(){
+        for(int i=0;i<characters.size();i++){
+            characters.get(i).stop();
+        }
+    }
+    
     public boolean verifyStart(Block starto) {
         int size = starto.getSize();
         int xStart = starto.getX() * size;
@@ -153,5 +170,9 @@ public class SharedBuffer {
     public ObservableList<Record> getRecords() {
         return this.records;
     } // getRecords: retorna observableList de records
-
+    
+    public void pauseCharacters(boolean pause){        
+        this.pause=pause;
+        
+    }
 } // end class

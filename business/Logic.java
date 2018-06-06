@@ -194,5 +194,11 @@ public class Logic {
             } // for j
         } // for i
     } // lookForNewWays: busca posibles rutas
+    
+    public void clear(){
+        this.items.clear();
+        itemCont=0;
+    }
+    
 
 } // end class

@@ -58,8 +58,8 @@ public class FastCharacter extends Character {
         }
     };
 
-    public FastCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name) {
-        super(size, buffer, finish, name);
+    public FastCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name,String color) {
+        super(size, buffer, finish, name,color);
         super.speed = 2;
         super.type = "FA";
         addSprites();
@@ -138,7 +138,7 @@ public class FastCharacter extends Character {
                     new ColorInput(0, 0,
                             imageView.getImage().getWidth(),
                             imageView.getImage().getHeight(),
-                            Color.BLUE));
+                            super.color));
             imageView.setEffect(blush);
             parameters.setFill(Color.TRANSPARENT);
             super.setSprites(imageView.snapshot(parameters, null));
