@@ -13,7 +13,7 @@ public class Item extends Character {
     private boolean bandera, cosa;
 
     public Item(int size, SharedBuffer buffer, String name) {
-        super(size, buffer,null, name);
+        super(size, buffer, null, name);
         super.speed = 10;
         bandera = true;
         cosa = true;
@@ -49,48 +49,48 @@ public class Item extends Character {
                             while (currentBlock.isInTheBlock(x, y) && super.getFlag()) {
                                 buff.itemColision(order);
                                 y += 1;
-                                Thread.sleep(speed);
+                                Thread.sleep(this.speed);
                             }
                         case 2:
-                            while (currentBlock.isInTheBlock(x, y) && super.getFlag()) {
-                                buff.itemColision(order);
-                                x += 1;
-                                Thread.sleep(speed);
+                            while (this.currentBlock.isInTheBlock(this.x, this.y) && super.getFlag()) {
+                                this.buff.itemColision(this.order);
+                                this.x += 1;
+                                Thread.sleep(this.speed);
                             }
                         case 3:
-                            while (currentBlock.isInTheBlock(x, y) && super.getFlag()) {
-                                buff.itemColision(order);
-                                y -= 1;
-                                Thread.sleep(speed);
+                            while (this.currentBlock.isInTheBlock(this.x, this.y) && super.getFlag()) {
+                                this.buff.itemColision(this.order);
+                                this.y -= 1;
+                                Thread.sleep(this.speed);
                             }
                         case 4:
-                            while (currentBlock.isInTheBlock(x, y) && super.getFlag()) {
-                                buff.itemColision(order);
-                                x -= 1;
-                                Thread.sleep(speed);
+                            while (this.currentBlock.isInTheBlock(this.x, this.y) && super.getFlag()) {
+                                this.buff.itemColision(this.order);
+                                this.x -= 1;
+                                Thread.sleep(this.speed);
                             }
                     }
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Character.class
                             .getName()).log(Level.SEVERE, null, ex);
                 }
-                currentBlock = nextBlock;
+                this.currentBlock = this.nextBlock;
             } else {
-                if (!bandera) {
-                    int aux = dir;
-                    dir = visDir;
-                    visDir = aux;
-                    cosa = false;
+                if (!this.bandera) {
+                    int aux = this.dir;
+                    this.dir = this.visDir;
+                    this.visDir = aux;
+                    this.cosa = false;
                 }
             }
-        }
+        } // while
     } // run
 
     @Override
     public boolean next(int direction) {
-        if (((direction == 1 && dirAux == 3) || (dirAux == 1 && direction == 3)) && cosa) {
+        if (((direction == 1 && this.dirAux == 3) || (this.dirAux == 1 && direction == 3)) && this.cosa) {
             return false;
-        } else if (((direction == 2 && dirAux == 4) || (dirAux == 2 && direction == 4)) && cosa) {
+        } else if (((direction == 2 && this.dirAux == 4) || (this.dirAux == 2 && direction == 4)) && this.cosa) {
             return false;
         }
         int aux;
@@ -101,25 +101,22 @@ public class Item extends Character {
         }
         if (direction == 1 || direction == 3) {
             for (int i = 0; i < this.currentBlock.getNext().size(); i++) {
-                if (this.currentBlock.getNext().get(i).getY() == yPos + aux) {
+                if (this.currentBlock.getNext().get(i).getY() == this.yPos + aux) {
                     this.nextBlock = this.currentBlock.getNext().get(i);
-                    yPos += aux;
+                    this.yPos += aux;
                     this.dirAux = direction;
                     return true;
-
                 }
-            }
+            } // for i
         } else {
             for (int i = 0; i < this.currentBlock.getNext().size(); i++) {
-                if (this.currentBlock.getNext().get(i).getX() == xPos + aux) {
-
+                if (this.currentBlock.getNext().get(i).getX() == this.xPos + aux) {
                     this.nextBlock = this.currentBlock.getNext().get(i);
-                    xPos += aux;
+                    this.xPos += aux;
                     this.dirAux = direction;
                     return true;
-
                 }
-            }
+            } // for i
         }
         return false;
     } // next
@@ -136,18 +133,17 @@ public class Item extends Character {
 
     @Override
     public void draw(GraphicsContext gc) {
-        switch (image) {
+        switch (this.image) {
             case 0:
-                gc.drawImage(super.getSprites().get(image), x, y, size, size);
+                gc.drawImage(super.getSprites().get(this.image), this.x, this.y, this.size, this.size);
                 break;
             case 1:
-                gc.drawImage(super.getSprites().get(image), x, y, size, size);
+                gc.drawImage(super.getSprites().get(this.image), this.x, this.y, this.size, this.size);
                 break;
             case 2:
-                gc.drawImage(super.getSprites().get(image), x, y, size, size);
+                gc.drawImage(super.getSprites().get(this.image), this.x, this.y, this.size, this.size);
                 break;
-        }
-
+        } // switch
     } // draw
-    
+
 } // end class

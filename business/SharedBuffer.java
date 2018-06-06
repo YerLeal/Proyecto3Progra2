@@ -20,72 +20,73 @@ public class SharedBuffer {
         this.items = items;
         this.characters = characters;
         this.records = FXCollections.observableArrayList();
-    }
+    } // costructor
 
     public synchronized boolean colisionVs(int order) {
-        int size = characters.get(0).getSize();
+        int size = this.characters.get(0).getSize();
         int xC, yC, xMe, yMe;
-        int dirMe = characters.get(order).getDirection();
+        int dirMe = this.characters.get(order).getDirection();
         int dirO;
-        xMe = characters.get(order).getX();
-        yMe = characters.get(order).getY();
+        xMe = this.characters.get(order).getX();
+        yMe = this.characters.get(order).getY();
         Rectangle yo;
         switch (dirMe) {
             case 1:
                 // abajo
-                yMe += size+10;
+                yMe += size + 10;
                 yo = new Rectangle(xMe, yMe, size, 10);
                 break;
             case 3:
                 //arriba
-                yMe-=10;
+                yMe -= 10;
                 yo = new Rectangle(xMe, yMe, size, 10);
                 break;
             case 2:
                 //derecha
-                xMe += size+10;
+                xMe += size + 10;
                 yo = new Rectangle(xMe, yMe, 10, size);
                 break;
             default:
                 //izquierda
-                xMe-=10;
+                xMe -= 10;
                 yo = new Rectangle(xMe, yMe, 10, size);
                 break;
-        }
-        
-        for (int i = 0; i < characters.size(); i++) {
-            xC = characters.get(i).getX();
-            yC = characters.get(i).getY();
-            dirO = characters.get(i).getDirection();
+        } // switch
+
+        for (int i = 0; i < this.characters.size(); i++) {
+            xC = this.characters.get(i).getX();
+            yC = this.characters.get(i).getY();
+            dirO = this.characters.get(i).getDirection();
             Rectangle elOtro = new Rectangle(xC, yC, size, size);
-            if (i != order && elOtro.intersects(yo) && characters.get(i).getFlag()) {
-                if (characters.get(order).oppositeDirection(dirMe) == dirO) {
-                        characters.get(order).collision();
-                        characters.get(i).collision();
-                        characters.get(order).setCrash(true);
-                        characters.get(i).setCrash(true);
+            if (i != order && elOtro.intersects(yo) && this.characters.get(i).getFlag()) {
+                if (this.characters.get(order).oppositeDirection(dirMe) == dirO) {
+                    this.characters.get(order).collision();
+                    this.characters.get(i).collision();
+                    this.characters.get(order).setCrash(true);
+                    this.characters.get(i).setCrash(true);
                     return true;
                 } else {
-                    characters.get(order).setMovement(0);
+                    this.characters.get(order).setMovement(0);
                     return true;
                 }
-            }
+            } // if (i != order && elOtro.intersects(yo) && this.characters.get(i).getFlag())
         } //for
-        characters.get(order).setMovement(1);
+
+        this.characters.get(order).setMovement(1);
         return false;
-    }
+    } // colisionVs
 
     public ArrayList<Character> getCharacters() {
-        return characters;
-    }
+        return this.characters;
+    } // getCharacters
 
     public synchronized void itemColision(int order) {
-        if (items.get(order).getFlag()) {
-            int size = items.get(0).getSize();
+        if (this.items.get(order).getFlag()) {
+            int size = this.items.get(0).getSize();
             int xC, yC, xMe, yMe;
-            int dirMe = items.get(order).getDirection();
-            xMe = items.get(order).getX();
-            yMe = items.get(order).getY();
+            int dirMe = this.items.get(order).getDirection();
+            xMe = this.items.get(order).getX();
+            yMe = this.items.get(order).getY();
             int aux;
             if (dirMe == 1 || dirMe == 2) {
                 aux = 10;
@@ -98,26 +99,25 @@ public class SharedBuffer {
                 xMe += aux;
             }
             Rectangle yo = new Rectangle(xMe, yMe, size, size);
-            for (int i = 0; i < characters.size(); i++) {
-                xC = characters.get(i).getX();
-                yC = characters.get(i).getY();
+            for (int i = 0; i < this.characters.size(); i++) {
+                xC = this.characters.get(i).getX();
+                yC = this.characters.get(i).getY();
                 Rectangle elOtro = new Rectangle(xC, yC, size, size);
                 if (elOtro.intersects(yo)) {
-                    if (characters.get(i).getType().equals("S")) {
-                        if(characters.get(i).getSpeed()>0){
-                            characters.get(i).setSpeed();
+                    if (this.characters.get(i).getType().equals("S")) {
+                        if (this.characters.get(i).getSpeed() > 0) {
+                            this.characters.get(i).setSpeed();
                         }
-                        items.get(order).setFlag(false);
-                        items.get(order).setImage(1);
-                    } else if (characters.get(i).getType().equals("F")) {
-                        items.get(order).setFlag(false);
-                        items.get(order).setImage(2);
-
+                        this.items.get(order).setFlag(false);
+                        this.items.get(order).setImage(1);
+                    } else if (this.characters.get(i).getType().equals("F")) {
+                        this.items.get(order).setFlag(false);
+                        this.items.get(order).setImage(2);
                     }
-                }
-            }
-        }
-    }
+                } // if (elOtro.intersects(yo))
+            } // for i
+        } // if (this.items.get(order).getFlag())
+    } // itemColision
 
     public boolean verifyStart(Block starto) {
         int size = starto.getSize();
@@ -126,34 +126,32 @@ public class SharedBuffer {
         int xC, yC;
         int cont = 0;
         Rectangle sBlock = new Rectangle(xS, yS, size, size);
-        for (int i = 0; i < characters.size(); i++) {
-            xC = characters.get(i).getX();
-            yC = characters.get(i).getY();
+        for (int i = 0; i < this.characters.size(); i++) {
+            xC = this.characters.get(i).getX();
+            yC = this.characters.get(i).getY();
             Rectangle rC = new Rectangle(xC, yC, size, size);
             if (sBlock.intersects(rC)) {
                 cont++;
             }
-        }
+        } // for i
         return cont == 0;
-    }
+    } // verifyStart
 
     public void setCharacters(ArrayList<Character> characters) {
         this.characters = characters;
-        
-    }
+    } // setCharacters
 
     public ArrayList<Item> getItems() {
-        return items;
-    }
-    
-    public void addFinisher(Record r){
+        return this.items;
+    } // getItems
+
+    public void addFinisher(Record r) {
         r.setTime(Proyecto3Progra2.timer);
         this.records.add(r);
-    }
+    } // addFinisher
 
     public ObservableList<Record> getRecords() {
-        return records;
-    }
-    
+        return this.records;
+    } // getRecords
 
 } // end class

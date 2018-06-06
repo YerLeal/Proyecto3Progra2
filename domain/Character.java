@@ -8,122 +8,119 @@ import javafx.scene.image.Image;
 public abstract class Character extends Thread {
 
     protected SharedBuffer buff;
-    protected int xPos, yPos, x, y, size, speed, movement, order,action;
-    protected Block currentBlock, nextBlock,auxBlock, starto;
+    protected int xPos, yPos, x, y, size, speed, movement, order, action;
+    protected Block currentBlock, nextBlock, auxBlock, starto;
     protected ArrayList<Block> finish;
     protected int direction, dirAux;
     protected boolean crash = false, ini = false;
-    protected String type ,name;
+    protected String type, name;
     private Boolean flag = true;
     private ArrayList<Image> spritesArray;
 
-    public Character(int size, SharedBuffer buffer,ArrayList<Block> finish, String nombre) {
+    public Character(int size, SharedBuffer buffer, ArrayList<Block> finish, String nombre) {
         this.size = size;
         this.buff = buffer;
         this.spritesArray = new ArrayList<>();
-        this.finish=finish;
-        this.name=nombre;
-    }
+        this.finish = finish;
+        this.name = nombre;
+    } // constructor
 
     public void setStarto(Block starto) {
-        xPos = starto.getX();
-        yPos = starto.getY();
-        x = xPos * size;
-        y = yPos * size;
+        this.xPos = starto.getX();
+        this.yPos = starto.getY();
+        this.x = this.xPos * this.size;
+        this.y = this.yPos * this.size;
         this.starto = starto;
         this.currentBlock = starto;
-
-    }
-    
-    
+    } // setStarto
 
     public ArrayList<Image> getSprites() {
-        return spritesArray;
-    }
+        return this.spritesArray;
+    } // getSprites
 
     public void setSprites(Image sprites) {
         this.spritesArray.add(sprites);
-    }
+    } // setSprites
 
     public int getOrder() {
-        return order;
-    }
+        return this.order;
+    } // getOrder
 
     public void setOrder(int order) {
         this.order = order;
-    }
+    } // setOrder
 
     public boolean isIni() {
-        return ini;
+        return this.ini;
     }
 
     public Block getStarto() {
-        return starto;
-    }
+        return this.starto;
+    } // getStarto
 
     public void setIni(boolean ini) {
         this.ini = ini;
     }
 
     public Boolean getFlag() {
-        return flag;
-    }
+        return this.flag;
+    } // getFlag
 
     public int getSize() {
-        return size;
-    }
+        return this.size;
+    } // getSize
 
     public void setFlag(Boolean flag) {
         this.flag = flag;
-    }
+    } // setFlag
 
     public int getDirection() {
-        return direction;
-    }
+        return this.direction;
+    } // getDirection
 
     public SharedBuffer getBuff() {
-        return buff;
-    }
+        return this.buff;
+    } // getBuff
 
     public int getXPos() {
-        return xPos;
-    }
+        return this.xPos;
+    } // getXPos
 
     public void setXPos(int xPos) {
         this.xPos = xPos;
-    }
+    } // setXPos
 
     public int getYPos() {
-        return yPos;
-    }
+        return this.yPos;
+    } // getYPos
 
     public void setYPos(int yPos) {
         this.yPos = yPos;
-    }
+    } // setYPos
 
     public int getSpeed() {
-        return speed;
-    }
+        return this.speed;
+    } // getSpeed
 
     public void setSpeed() {
         this.speed -= 1;
-    }
+    } // setSpeed
 
     public void setMovement(int movement) {
         this.movement = movement;
-    }
+    } // setMovement
 
     public Block getCurrentBlock() {
-        return currentBlock;
-    }
+        return this.currentBlock;
+    } // getCurrentBlock
 
     public boolean isCrash() {
-        return crash;
-    }
+        return this.crash;
+    } // isCrash
 
     public void setCrash(boolean crash) {
         this.crash = crash;
-    }
+    } // setCrash
 
     public int getX() {
         return x;
@@ -138,14 +135,11 @@ public abstract class Character extends Thread {
     }
 
     public boolean next(int dir) {
-//        System.err.println(dir+ " "+ dirAux);
         if (((dir == 1 && dirAux == 3) || (dirAux == 1 && dir == 3)) && !isCaught() && !crash) {
             return false;
         } else if (((dir == 2 && dirAux == 4) || (dirAux == 2 && dir == 4)) && !isCaught() && !crash) {
             return false;
         }
-        
-
         int aux;
         if (dir == 1 || dir == 2) {
             aux = 1;
@@ -158,16 +152,13 @@ public abstract class Character extends Thread {
                 if (this.currentBlock.getNext().get(i).getY() == yPos + aux) {
                     this.nextBlock = this.currentBlock.getNext().get(i);
                     return true;
-
                 }
             }
         } else {
             for (int i = 0; i < this.currentBlock.getNext().size(); i++) {
                 if (this.currentBlock.getNext().get(i).getX() == xPos + aux) {
-
                     this.nextBlock = this.currentBlock.getNext().get(i);
                     return true;
-
                 }
             }
         }
@@ -181,7 +172,6 @@ public abstract class Character extends Thread {
         } else {
             aux = -1;
         }
-
         if (dir == 1 || dir == 3) {
             yPos += aux;
         } else {
@@ -225,89 +215,86 @@ public abstract class Character extends Thread {
         }
     }
 
-    public void collision(){
+    public void collision() {
         this.action++;
     }
-    
+
     public void repositioning() throws InterruptedException {
         while (crash) {
-        int aux=action;
-        if(action>1){
-            auxBlock=currentBlock;
-            currentBlock=nextBlock;
-            nextBlock=auxBlock;
-        }
-        int xB = currentBlock.getX() * size;
-        int yB = currentBlock.getY() * size;
-        direction = oppositeDirection(direction);
-        
-        switch (direction) {
-            case 1:
-                while (y < yB && aux==action) {
-                    Thread.sleep(speed);
-                    buff.colisionVs(order);
-                    y += movement;
+            int aux = action;
+            if (action > 1) {
+                auxBlock = currentBlock;
+                currentBlock = nextBlock;
+                nextBlock = auxBlock;
+            }
+            int xB = currentBlock.getX() * size;
+            int yB = currentBlock.getY() * size;
+            direction = oppositeDirection(direction);
 
-                }
-                if(aux==action){
-                    crash=false;
-                    xPos=currentBlock.getX();
-                    yPos=currentBlock.getY();
-                    action=0;
-                }
-                break;
-            case 2:
-                while (x < xB && aux==action) {
-                    Thread.sleep(speed);
-                    buff.colisionVs(order);
-                    x += movement;
+            switch (direction) {
+                case 1:
+                    while (y < yB && aux == action) {
+                        Thread.sleep(speed);
+                        buff.colisionVs(order);
+                        y += movement;
+                    }
+                    if (aux == action) {
+                        crash = false;
+                        xPos = currentBlock.getX();
+                        yPos = currentBlock.getY();
+                        action = 0;
+                    }
+                    break;
+                case 2:
+                    while (x < xB && aux == action) {
+                        Thread.sleep(speed);
+                        buff.colisionVs(order);
+                        x += movement;
+                    }
+                    if (aux == action) {
+                        crash = false;
+                        xPos = currentBlock.getX();
+                        yPos = currentBlock.getY();
+                        action = 0;
+                    }
+                    break;
+                case 3:
+                    while (y > yB && aux == action) {
+                        Thread.sleep(speed);
+                        buff.colisionVs(order);
+                        y -= movement;
 
-                }
-                if(aux==action){
-                    System.err.println("Entra?"+order);
-                    crash=false;
-                    xPos=currentBlock.getX();
-                    yPos=currentBlock.getY();
-                    action=0;
-                }
-                break;
-            case 3:
-                while (y > yB && aux==action) {
-                    Thread.sleep(speed);
-                    buff.colisionVs(order);
-                    y -= movement;
-
-                }
-                if(aux==action){
-                    crash=false;
-                    xPos=currentBlock.getX();
-                    yPos=currentBlock.getY();
-                    action=0;
-                }
-                break;
-            case 4:
-                while (x > xB && aux==action) {
-                    Thread.sleep(speed);
-                    buff.colisionVs(order);
-                    x -= movement;
-                }
-                if(aux==action){
-                    crash=false;
-                    xPos=currentBlock.getX();
-                    yPos=currentBlock.getY();
-                    action=0;
-                }
-                break;
-        }
-        dirAux = direction;
+                    }
+                    if (aux == action) {
+                        crash = false;
+                        xPos = currentBlock.getX();
+                        yPos = currentBlock.getY();
+                        action = 0;
+                    }
+                    break;
+                case 4:
+                    while (x > xB && aux == action) {
+                        Thread.sleep(speed);
+                        buff.colisionVs(order);
+                        x -= movement;
+                    }
+                    if (aux == action) {
+                        crash = false;
+                        xPos = currentBlock.getX();
+                        yPos = currentBlock.getY();
+                        action = 0;
+                    }
+                    break;
+            }
+            dirAux = direction;
         }
     }
-    
-    public void isFinish(){
-        for(int i=0;i<finish.size();i++){
-            if(currentBlock.getX()==finish.get(i).getX() && currentBlock.getY()==finish.get(i).getY()){
+
+    public void isFinish() {
+        for (int i = 0; i < finish.size(); i++) {
+            if (currentBlock.getX() == finish.get(i).getX() && currentBlock.getY() == finish.get(i).getY()) {
                 buff.addFinisher(new Record(name, type));
-                this.flag=false;
+                this.flag = false;
             }
         }
     }

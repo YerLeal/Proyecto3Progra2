@@ -28,7 +28,7 @@ public class Logic {
     public Logic(int dificulty) {
         this.difficulty = dificulty;
         getDificultad();
-        this.maze = new Block[WIDTH / size][HEIGHT / size];
+        this.maze = new Block[WIDTH / this.size][HEIGHT / this.size];
     } // constructor
 
     public ArrayList<Block> getStart() {
@@ -44,7 +44,7 @@ public class Logic {
                 starts.add(this.maze[0][9]);
                 starts.add(this.maze[27][7]);
                 return starts;
-        }
+        } // switch
     } // getStart
 
     public ArrayList<Block> getFinish() {
@@ -68,7 +68,7 @@ public class Logic {
     } // getMaze
 
     public void changeTypeBlock(int x, int y, GraphicsContext gc) {
-        for (int i = 0; i < maze.length; i++) {
+        for (int i = 0; i < this.maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
                 if (this.maze[i][j].isClicked(x, y)) {
                     if (this.maze[i][j].getType().equals("wall")) {
@@ -85,27 +85,27 @@ public class Logic {
     } // changeTypeBlock
 
     public void startItems() {
-        for (int i = 0; i < items.size(); i++) {
-            items.get(i).start();
+        for (int i = 0; i < this.items.size(); i++) {
+            this.items.get(i).start();
         } // for
     } // startItems
 
     public void addItem(int x, int y, SharedBuffer buffer, boolean life, GraphicsContext gc) {
-        Item itemAux = new Item(size, buffer, name);
-        for (int i = 0; i < maze.length; i++) {
+        Item itemAux = new Item(this.size, buffer, this.name);
+        for (int i = 0; i < this.maze.length; i++) {
             for (int j = 0; j < this.maze[0].length; j++) {
                 if (this.maze[i][j].isClicked(x, y)) {
                     if (this.maze[i][j].getType().equals("floor")) {
-                        itemAux.setOrder(itemCont);
-                        itemAux.setStarto(maze[i][j]);
-                        items.add(itemAux);
-                        buffer.getItems().add(items.get(itemCont));
+                        itemAux.setOrder(this.itemCont);
+                        itemAux.setStarto(this.maze[i][j]);
+                        this.items.add(itemAux);
+                        buffer.getItems().add(this.items.get(this.itemCont));
                         if (life) {
-                            items.get(itemCont).start();
+                            this.items.get(this.itemCont).start();
                         } else {
-                            items.get(itemCont).draw(gc);
+                            this.items.get(this.itemCont).draw(gc);
                         }
-                        itemCont++;
+                        this.itemCont++;
                     } // if (this.maze[i][j].getType().equals("floor"))
                     break;
                 } // if (this.maze[i][j].isClicked(x, y))
@@ -119,33 +119,33 @@ public class Logic {
 
     public void createMaze() {
         Maze m = new Maze();
-        this.maze = m.getMaze(getDifficulty(), size);
+        this.maze = m.getMaze(getDifficulty(), this.size);
         lookForNewWays();
     } // createMaze
 
     private void getDificultad() {
         switch (this.getDifficulty()) {
             case 1:
-                size = 80;
+                this.size = 80;
                 break;
             case 2:
-                size = 40;
+                this.size = 40;
                 break;
             case 3:
-                size = 40;
+                this.size = 40;
                 break;
         } // switch
     } // getDificultad
 
     public void drawMaze(GraphicsContext gc) {
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[0].length; j++) {
-                if (maze[i][j].getType().equals("wall")) {
+        for (int i = 0; i < this.maze.length; i++) {
+            for (int j = 0; j < this.maze[0].length; j++) {
+                if (this.maze[i][j].getType().equals("wall")) {
                     gc.setFill(Color.BLACK);
-                    gc.fillRect(i * size, j * size, size, size);
+                    gc.fillRect(i * this.size, j * this.size, this.size, this.size);
                 } else {
                     gc.setFill(Color.WHITE);
-                    gc.fillRect(i * size, j * size, size, size);
+                    gc.fillRect(i * this.size, j * this.size, this.size, this.size);
                 }
             } // for j
         } // for i
@@ -155,41 +155,41 @@ public class Logic {
         if (getDifficulty() < 3) {
             xS = finish.get(0).getX();
             yS = finish.get(0).getY();
-            gc.fillRect(xS * size, yS * size, size, size);
+            gc.fillRect(xS * this.size, yS * this.size, this.size, this.size);
         } else {
             xS = finish.get(0).getX();
             yS = finish.get(0).getY();
             xA = finish.get(1).getX();
             yA = finish.get(1).getY();
-            gc.fillRect(xS * size, yS * size, size, size);
-            gc.fillRect(xA * size, yA * size, size, size);
+            gc.fillRect(xS * this.size, yS * this.size, this.size, this.size);
+            gc.fillRect(xA * this.size, yA * this.size, this.size, this.size);
         }
-        for (int i = 0; i < items.size(); i++) {
-            items.get(i).draw(gc);
+        for (int i = 0; i < this.items.size(); i++) {
+            this.items.get(i).draw(gc);
         }
     } // drawMaze
 
     private ArrayList<Block> caminos(int x, int y) {
         ArrayList<Block> next = new ArrayList<>();
-        if (x + 1 < maze.length && maze[x + 1][y].getType().equals("floor")) {
-            next.add(maze[x + 1][y]);
+        if (x + 1 < this.maze.length && this.maze[x + 1][y].getType().equals("floor")) {
+            next.add(this.maze[x + 1][y]);
         }
-        if (x - 1 >= 0 && maze[x - 1][y].getType().equals("floor")) {
-            next.add(maze[x - 1][y]);
+        if (x - 1 >= 0 && this.maze[x - 1][y].getType().equals("floor")) {
+            next.add(this.maze[x - 1][y]);
         }
-        if (y + 1 < maze[0].length && maze[x][y + 1].getType().equals("floor")) {
-            next.add(maze[x][y + 1]);
+        if (y + 1 < this.maze[0].length && this.maze[x][y + 1].getType().equals("floor")) {
+            next.add(this.maze[x][y + 1]);
         }
-        if (y - 1 >= 0 && maze[x][y - 1].getType().equals("floor")) {
-            next.add(maze[x][y - 1]);
+        if (y - 1 >= 0 && this.maze[x][y - 1].getType().equals("floor")) {
+            next.add(this.maze[x][y - 1]);
         }
         return next;
     }
 
     private void lookForNewWays() {
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[0].length; j++) {
-                maze[i][j].setNext(caminos(i, j));
+        for (int i = 0; i < this.maze.length; i++) {
+            for (int j = 0; j < this.maze[0].length; j++) {
+                this.maze[i][j].setNext(caminos(i, j));
             } // for j
         } // for i
     } // lookForNewWays

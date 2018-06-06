@@ -15,7 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class SmartCharacter extends Character {
-    
+
     private int image = 0;
 
     public SmartCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name) {
@@ -29,7 +29,7 @@ public class SmartCharacter extends Character {
     public void run() {
         while (super.getFlag()) {
             this.direction = (int) (Math.random() * (5 - 1) + 1);
-            if (next(direction)) {
+            if (next(this.direction)) {
                 this.crash = false;
                 try {
                     switch (this.direction) {
@@ -70,7 +70,6 @@ public class SmartCharacter extends Character {
                     metodoRandom(this.direction);
                     this.currentBlock = this.nextBlock;
                 } else {
-
                     try {
                         repositioning();
                     } catch (InterruptedException ex) {
@@ -102,8 +101,8 @@ public class SmartCharacter extends Character {
             imageView.setEffect(blush);
             parameters.setFill(Color.TRANSPARENT);
             super.setSprites(imageView.snapshot(parameters, null));
-        }
-    }
+        } // for i
+    } // addSprites
 
     @Override
     public void draw(GraphicsContext gc) {
@@ -120,21 +119,21 @@ public class SmartCharacter extends Character {
                     this.image = 6;
                 }
                 gc.drawImage(super.getSprites().get(this.image), this.x, this.y, this.size, this.size);
-                image++;
+                this.image++;
                 break;
             case 3:
-                if (image > 11 || image < 9) {
-                    image = 9;
+                if (this.image > 11 || this.image < 9) {
+                    this.image = 9;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y, size, size);
-                image++;
+                gc.drawImage(super.getSprites().get(this.image), this.x, this.y, this.size, this.size);
+                this.image++;
                 break;
             default:
-                if (image > 5 || image < 3) {
-                    image = 3;
+                if (this.image > 5 || this.image < 3) {
+                    this.image = 3;
                 }
-                gc.drawImage(super.getSprites().get(image), this.x, this.y, this.size, this.size);
-                image++;
+                gc.drawImage(super.getSprites().get(this.image), this.x, this.y, this.size, this.size);
+                this.image++;
                 break;
         }
     } // draw

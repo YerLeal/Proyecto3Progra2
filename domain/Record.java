@@ -1,7 +1,8 @@
 package domain;
 
 public class Record {
-    private String userName,characterType,time;
+
+    private String userName, characterType, time;
 
     public Record(String userName, String characterType) {
         this.userName = userName;
@@ -31,5 +32,5 @@ public class Record {
     public void setTime(String time) {
         this.time = time;
     } // setTime
-    
+
 } // end class

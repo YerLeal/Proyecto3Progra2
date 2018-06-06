@@ -14,44 +14,46 @@ public class Block implements Serializable {
         this.y = y;
         this.size = size;
         this.type = type;
-    }
+    } // constructor
 
     public int getX() {
-        return x;
-    }
+        return this.x;
+    } // getX
 
     public void setX(int x) {
         this.x = x;
-    }
+    } // setX
 
     public int getY() {
-        return y;
-    }
+        return this.y;
+    } // getY
 
     public void setY(int y) {
         this.y = y;
-    }
+    } // setY
 
     public String getType() {
         return type;
-    }
+    } // getType
 
     public ArrayList<Block> getNext() {
         return next;
-    }
+    } // getNext
 
     public void setNext(ArrayList<Block> next) {
         this.next = next;
-    }
+    } // setNext
 
     public int getSize() {
-        return size;
-    }
+        return this.size;
+    } // getSize
 
     public boolean isInTheBlock(int xPosition, int yPosition) {
-        return (((xPosition >= this.x * size && xPosition < this.x * size + this.size) || (xPosition + size > this.x * size && xPosition + size < this.x * size + this.size)) && 
-                ((yPosition >= this.y * size && yPosition < this.y * size + this.size) || (yPosition + size > this.y * size && yPosition + size < this.y * size + this.size)));
-    }
+        return (((xPosition >= this.x * this.size && xPosition < this.x * this.size + this.size)
+                || (xPosition + this.size > this.x * this.size && xPosition + this.size < this.x * this.size + this.size))
+                && ((yPosition >= this.y * this.size && yPosition < this.y * this.size + this.size)
+                || (yPosition + this.size > this.y * this.size && yPosition + this.size < this.y * this.size + this.size)));
+    } // isInTheBlock
 
     public boolean isClicked(int xMouse, int yMouse) {
         if ((xMouse >= this.x * this.size && xMouse <= this.x * this.size + this.size)
@@ -59,10 +61,10 @@ public class Block implements Serializable {
             return true;
         }
         return false;
-    }
+    } // isClicked
 
     public void setType(String type) {
         this.type = type;
-    }
+    } // setType
 
 } // end class

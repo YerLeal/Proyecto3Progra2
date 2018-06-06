@@ -69,9 +69,7 @@ public class FastCharacter extends Character {
     public void run() {
         new Thread(timer).start();
         while (super.getFlag()) {
-
             direction = (int) (Math.random() * (5 - 1) + 1);
-
             if (next(direction)) {
                 crash = false;
                 try {
@@ -81,7 +79,6 @@ public class FastCharacter extends Character {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 y += movement;
-
                             }
                             break;
                         case 2:
@@ -89,7 +86,6 @@ public class FastCharacter extends Character {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 x += movement;
-
                             }
                             break;
                         case 3:
@@ -97,7 +93,6 @@ public class FastCharacter extends Character {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 y -= movement;
-
                             }
                             break;
                         case 4:
@@ -105,7 +100,6 @@ public class FastCharacter extends Character {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 x -= movement;
-
                             }
                             break;
                     }
@@ -116,9 +110,7 @@ public class FastCharacter extends Character {
                 if (!crash) {
                     metodoRandom(direction);
                     currentBlock = nextBlock;
-
                 } else {
-
                     try {
                         repositioning();
                     } catch (InterruptedException ex) {
@@ -186,13 +178,10 @@ public class FastCharacter extends Character {
                 image++;
                 break;
         }
-        Color color=Color.rgb(0, 255, 0);
-                
+        Color color = Color.rgb(0, 255, 0);
+
         gc.setFill(color);
-        int yAux=y+1;
-//        if(y==0){
-//            yAux=y+size+5;
-//        }
+        int yAux = y + 1;
         switch (this.charge) {
             case 1:
                 gc.fillRect(x, yAux, size / 5, 5);
@@ -212,7 +201,6 @@ public class FastCharacter extends Character {
             default:
                 break;
         }
-
     } // draw
 
 } // end class

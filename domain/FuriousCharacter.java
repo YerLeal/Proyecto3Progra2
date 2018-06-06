@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 public class FuriousCharacter extends Character {
 
     private int image = 0;
-    
+
     public FuriousCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name) {
         super(size, buffer, finish, name);
         super.speed = 10;
@@ -94,7 +94,7 @@ public class FuriousCharacter extends Character {
             Blend blush = new Blend(
                     BlendMode.MULTIPLY,
                     monochrome,
-                    new ColorInput(0,0,
+                    new ColorInput(0, 0,
                             imageView.getImage().getWidth(),
                             imageView.getImage().getHeight(),
                             Color.RED));
@@ -103,7 +103,6 @@ public class FuriousCharacter extends Character {
             super.setSprites(imageView.snapshot(parameters, null));
         }
     } // addSprites
-    
 
     @Override
     public void draw(GraphicsContext gc) {
