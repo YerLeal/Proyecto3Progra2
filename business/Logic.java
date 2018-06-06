@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class Logica {
+public class Logic {
 
     private final int WIDTH = 1360;
     private final int HEIGHT = 720;
@@ -25,7 +25,7 @@ public class Logica {
         this.difficulty = difficulty;
     } // setDifficulty
 
-    public Logica(int dificulty) {
+    public Logic(int dificulty) {
         this.difficulty = dificulty;
         getDificultad();
         this.maze = new Block[WIDTH / size][HEIGHT / size];
@@ -81,7 +81,7 @@ public class Logica {
             } // for 
         } // for i
         drawMaze(gc);
-        buscarNuevosCaminos();
+        lookForNewWays();
     } // changeTypeBlock
 
     public void startItems() {
@@ -120,7 +120,7 @@ public class Logica {
     public void createMaze() {
         Maze m = new Maze();
         this.maze = m.getMaze(getDifficulty(), size);
-        buscarNuevosCaminos();
+        lookForNewWays();
     } // createMaze
 
     private void getDificultad() {
@@ -186,12 +186,12 @@ public class Logica {
         return next;
     }
 
-    private void buscarNuevosCaminos() {
+    private void lookForNewWays() {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
                 maze[i][j].setNext(caminos(i, j));
-            }
-        }
-    }
+            } // for j
+        } // for i
+    } // lookForNewWays
 
 } // end class

@@ -18,7 +18,7 @@ public class Item extends Character {
         bandera = true;
         cosa = true;
         addSprites();
-    }
+    } // constructor
 
     @Override
     public void run() {
@@ -46,25 +46,25 @@ public class Item extends Character {
                 try {
                     switch (dir) {
                         case 1:
-                            while (currentBlock.in(x, y) && super.getFlag()) {
+                            while (currentBlock.isInTheBlock(x, y) && super.getFlag()) {
                                 buff.itemColision(order);
                                 y += 1;
                                 Thread.sleep(speed);
                             }
                         case 2:
-                            while (currentBlock.in(x, y) && super.getFlag()) {
+                            while (currentBlock.isInTheBlock(x, y) && super.getFlag()) {
                                 buff.itemColision(order);
                                 x += 1;
                                 Thread.sleep(speed);
                             }
                         case 3:
-                            while (currentBlock.in(x, y) && super.getFlag()) {
+                            while (currentBlock.isInTheBlock(x, y) && super.getFlag()) {
                                 buff.itemColision(order);
                                 y -= 1;
                                 Thread.sleep(speed);
                             }
                         case 4:
-                            while (currentBlock.in(x, y) && super.getFlag()) {
+                            while (currentBlock.isInTheBlock(x, y) && super.getFlag()) {
                                 buff.itemColision(order);
                                 x -= 1;
                                 Thread.sleep(speed);
@@ -87,24 +87,24 @@ public class Item extends Character {
     } // run
 
     @Override
-    public boolean next(int dir) {
-        if (((dir == 1 && dirAux == 3) || (dirAux == 1 && dir == 3)) && cosa) {
+    public boolean next(int direction) {
+        if (((direction == 1 && dirAux == 3) || (dirAux == 1 && direction == 3)) && cosa) {
             return false;
-        } else if (((dir == 2 && dirAux == 4) || (dirAux == 2 && dir == 4)) && cosa) {
+        } else if (((direction == 2 && dirAux == 4) || (dirAux == 2 && direction == 4)) && cosa) {
             return false;
         }
         int aux;
-        if (dir == 1 || dir == 2) {
+        if (direction == 1 || direction == 2) {
             aux = 1;
         } else {
             aux = -1;
         }
-        if (dir == 1 || dir == 3) {
+        if (direction == 1 || direction == 3) {
             for (int i = 0; i < this.currentBlock.getNext().size(); i++) {
                 if (this.currentBlock.getNext().get(i).getY() == yPos + aux) {
                     this.nextBlock = this.currentBlock.getNext().get(i);
                     yPos += aux;
-                    this.dirAux = dir;
+                    this.dirAux = direction;
                     return true;
 
                 }
@@ -115,7 +115,7 @@ public class Item extends Character {
 
                     this.nextBlock = this.currentBlock.getNext().get(i);
                     xPos += aux;
-                    this.dirAux = dir;
+                    this.dirAux = direction;
                     return true;
 
                 }
@@ -125,15 +125,14 @@ public class Item extends Character {
     } // next
 
     public void addSprites() {
-
         for (int i = 0; i < 3; i++) {
             super.setSprites(new Image("assets/i" + i + ".png"));
         }
-    }
+    } // addSprites
 
     public void setImage(int image) {
         this.image = image;
-    }
+    } // setImage
 
     @Override
     public void draw(GraphicsContext gc) {
@@ -150,4 +149,5 @@ public class Item extends Character {
         }
 
     } // draw
+    
 } // end class

@@ -61,7 +61,7 @@ public class FastCharacter extends Character {
     public FastCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name) {
         super(size, buffer, finish, name);
         super.speed = 2;
-        super.tipo = "FA";
+        super.type = "FA";
         addSprites();
     }
 
@@ -77,7 +77,7 @@ public class FastCharacter extends Character {
                 try {
                     switch (direction) {
                         case 1:
-                            while (currentBlock.in(x, y) && !crash) {
+                            while (currentBlock.isInTheBlock(x, y) && !crash) {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 y += movement;
@@ -85,7 +85,7 @@ public class FastCharacter extends Character {
                             }
                             break;
                         case 2:
-                            while (currentBlock.in(x, y) && !crash) {
+                            while (currentBlock.isInTheBlock(x, y) && !crash) {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 x += movement;
@@ -93,7 +93,7 @@ public class FastCharacter extends Character {
                             }
                             break;
                         case 3:
-                            while (currentBlock.in(x, y) && !crash) {
+                            while (currentBlock.isInTheBlock(x, y) && !crash) {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 y -= movement;
@@ -101,7 +101,7 @@ public class FastCharacter extends Character {
                             }
                             break;
                         case 4:
-                            while (currentBlock.in(x, y) && !crash) {
+                            while (currentBlock.isInTheBlock(x, y) && !crash) {
                                 Thread.sleep(speed);
                                 buff.colisionVs(order);
                                 x -= movement;
@@ -120,7 +120,7 @@ public class FastCharacter extends Character {
                 } else {
 
                     try {
-                        rePos();
+                        repositioning();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(FastCharacter.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -59,9 +59,9 @@ public class SharedBuffer {
             dirO = characters.get(i).getDirection();
             Rectangle elOtro = new Rectangle(xC, yC, size, size);
             if (i != order && elOtro.intersects(yo) && characters.get(i).getFlag()) {
-                if (characters.get(order).oposDir(dirMe) == dirO) {
-                        characters.get(order).sum();
-                        characters.get(i).sum();
+                if (characters.get(order).oppositeDirection(dirMe) == dirO) {
+                        characters.get(order).collision();
+                        characters.get(i).collision();
                         characters.get(order).setCrash(true);
                         characters.get(i).setCrash(true);
                     return true;
@@ -103,13 +103,13 @@ public class SharedBuffer {
                 yC = characters.get(i).getY();
                 Rectangle elOtro = new Rectangle(xC, yC, size, size);
                 if (elOtro.intersects(yo)) {
-                    if (characters.get(i).getTipo().equals("S")) {
+                    if (characters.get(i).getType().equals("S")) {
                         if(characters.get(i).getSpeed()>0){
                             characters.get(i).setSpeed();
                         }
                         items.get(order).setFlag(false);
                         items.get(order).setImage(1);
-                    } else if (characters.get(i).getTipo().equals("F")) {
+                    } else if (characters.get(i).getType().equals("F")) {
                         items.get(order).setFlag(false);
                         items.get(order).setImage(2);
 

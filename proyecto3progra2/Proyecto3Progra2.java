@@ -1,6 +1,6 @@
 package proyecto3progra2;
 
-import business.Logica;
+import business.Logic;
 import business.SharedBuffer;
 import domain.Block;
 import domain.Character;
@@ -8,7 +8,6 @@ import domain.FastCharacter;
 import domain.FuriousCharacter;
 import domain.Record;
 import domain.SmartCharacter;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,21 +39,20 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     public String num = "";
     private int width = 1360;
     private final int HEIGTH = 720;
-    private int canvasWidth;
     private Canvas canvas;
     private Pane pane;
     private GraphicsContext gc;
-    private Logica logica;
+    private Logic logic;
     private boolean itemCharge = false;
     private Thread thread;
-    private Thread cronometro;
-    private HBox hbox;
-    private VBox vbox;
-    private VBox vb;
-    private javafx.scene.control.Label lblType;
-    private javafx.scene.control.Label lblQuantity;
-    private javafx.scene.control.Label lblName;
-    private Text tiempo = new Text();
+    private Thread chronometer;
+    private HBox hBox;
+    private VBox vBox;
+    private VBox vBox1;
+    private javafx.scene.control.Label lbType;
+    private javafx.scene.control.Label lbQuantity;
+    private javafx.scene.control.Label lbName;
+    private Text time = new Text();
     private ObservableList<String> listType, listDifficult;
     private Button btnSet;
     private Button btnPause;
@@ -63,7 +61,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Button btnLogin;
     private TextField tfdQuantity;
     private TextField tfdName;
-    private int cantP;
+    private int quantityCharacters;
     private SharedBuffer buffer;
     private ArrayList<Character> characters = new ArrayList<>();
     private int initCont = 0;
@@ -77,7 +75,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     private Runnable hilos = new Runnable() {
         @Override
         public void run() {
-            ArrayList<Block> aux = logica.getStart();
+            ArrayList<Block> aux = logic.getStart();
             while (initCont < characters.size()) {
 
                 if (aux.size() == 1) {
@@ -109,59 +107,43 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             }
         }
     };
-    private Runnable crono = new Runnable() {
+    
+    private Runnable chronometerThread = new Runnable() {
         @Override
         public void run() {
-            int minutos = 0, segundos = 0, milesimas = 0;
-            //min es minutos, seg es segundos y mil es milesimas de segundo
+            int minutes = 0, seconds = 0, thousandths = 0;
             while (flag) {
                 try {
                     Thread.sleep(4);
-                    //Incrementamos 4 milesimas de segundo
-                    milesimas += 4;
-
-                    //Cuando llega a 1000 osea 1 segundo aumenta 1 segundo
-                    //y las milesimas de segundo de nuevo a 0
-                    if (milesimas == 1000) {
-                        milesimas = 0;
-                        segundos += 1;
-                        //Si los segundos llegan a 60 entonces aumenta 1 los minutos
-                        //y los segundos vuelven a 0
-                        if (segundos == 60) {
-                            segundos = 0;
-                            minutos++;
+                    thousandths += 4;
+                    if (thousandths == 1000) {
+                        thousandths = 0;
+                        seconds += 1;
+                        if (seconds == 60) {
+                            seconds = 0;
+                            minutes++;
                         }
                     }
-
-                    //Esto solamente es estetica para que siempre este en formato
-                    //00:00:000
-                    if (minutos < 10) {
-                        min = "0" + minutos;
+                    if (minutes < 10) {
+                        min = "0" + minutes;
                     } else {
-                        min = String.valueOf(minutos);
+                        min = String.valueOf(minutes);
                     }
-                    if (segundos < 10) {
-                        seg = "0" + segundos;
+                    if (seconds < 10) {
+                        seg = "0" + seconds;
                     } else {
-                        seg = String.valueOf(segundos);
+                        seg = String.valueOf(seconds);
                     }
-//
-//                    if( milesimas < 10 ) mil = "00" + milesimas;
-//                    else if( milesimas < 100 ) mil = "0" + milesimas;
-//                    else mil = milesimas.toString();
-                    timer=minutos + ":" + seg;
-                    //Colocamos en la etiqueta la informacion
-                    tiempo.setText(minutos + ":" + seg);
+                    timer=minutes + ":" + seg;
+                    time.setText(minutes + ":" + seg);
                 } catch (Exception e) {
-                    //Cuando se reincie se coloca nuevamente en 00:00:000
-                    tiempo.setText("00:00:000");
+                    time.setText("00:00:000");
                 }
             }
-//tiempo.setText("");
         }
     };
 
-    private Runnable tableU = new Runnable() {
+    private Runnable tableUpdater = new Runnable() {
         @Override
         public void run() {
             while (true) {
@@ -189,12 +171,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
     } // start
 
     public void init(Stage primaryStage) {
-
-        this.hbox = new HBox(10);
-        this.vbox = new VBox(10);
-        hbox.setSpacing(10);
-        vbox.setSpacing(10);
-        cronometro = new Thread(crono);
+        this.hBox = new HBox(10);
+        this.vBox = new VBox(10);
+        hBox.setSpacing(10);
+        vBox.setSpacing(10);
+        chronometer = new Thread(chronometerThread);
         btnSet = new Button("Start Simulation");
         btnLogin = new Button("Set the name and Characters");
         btnStop = new Button("Stop Threads");
@@ -207,60 +188,58 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         tfdQuantity = new TextField();
 
         tfdName = new TextField();
-        this.lblType = new javafx.scene.control.Label();
-        this.lblQuantity = new javafx.scene.control.Label("Quantity of Characters");
-        this.lblName = new javafx.scene.control.Label("Name of Player");
+        this.lbType = new javafx.scene.control.Label();
+        this.lbQuantity = new javafx.scene.control.Label("Quantity of Characters");
+        this.lbName = new javafx.scene.control.Label("Name of Player");
         //this.tiempo.setText("jj");
 
         listType = FXCollections.observableArrayList();//para el combobox
         listType.addAll("Fast", "Furious", "Smart");//opciones del combobox
-        ComboBox<String> cbx = new ComboBox<>(listType);//
-        cbx.setPromptText("Type of Character");
+        ComboBox<String> cbxType = new ComboBox<>(listType);//
+        cbxType.setPromptText("Type of Character");
         listDifficult = FXCollections.observableArrayList();//para el combobox
         listDifficult.addAll("Easy", "Medium", "Hard");//opciones del combobox
-        ComboBox<String> cbxD = new ComboBox<>(listDifficult);//
-        cbxD.setPromptText("Choose the Difficult");
+        ComboBox<String> cbxDifficult = new ComboBox<>(listDifficult);//
+        cbxDifficult.setPromptText("Choose the Difficult");
         thread = new Thread(this);
         //thread.start();
         //tableColumn
-        TableColumn name = new TableColumn("Name");
-        name.setCellValueFactory(new PropertyValueFactory<>("userName"));
-        TableColumn type = new TableColumn("Type");
-        type.setCellValueFactory(new PropertyValueFactory<>("characterType"));
-        TableColumn position = new TableColumn("Time");
-        position.setCellValueFactory(new PropertyValueFactory<>("time"));
-        table.getColumns().addAll(name, type, position);
-
-        this.canvasWidth = 1120;
-        this.canvas = new Canvas(canvasWidth, HEIGTH);
+        TableColumn tcName = new TableColumn("Name");
+        tcName.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        TableColumn tcType = new TableColumn("Type");
+        tcType.setCellValueFactory(new PropertyValueFactory<>("characterType"));
+        TableColumn tcTime = new TableColumn("Time");
+        tcTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+        table.getColumns().addAll(tcName, tcType, tcTime);
+        this.canvas = new Canvas(1120, HEIGTH);
 
         Button btRun = new Button("Run");
         Button btItem = new Button("Item");
 
         btRun.relocate(400, 400);
         btItem.relocate(700, 400);
-        tiempo.relocate(1000, 600);
+        time.relocate(1000, 600);
 
         btRun.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ArrayList<Block> finish = logica.getFinish();
+                ArrayList<Block> finish = logic.getFinish();
                 for (int i = 0; i < 5; i++) {
 
                     if (i < 0) {
-                        characters.add(new SmartCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
+                        characters.add(new SmartCharacter(logic.getSize(), buffer, finish, tfdName.getText()));
                     } else if (i < 5) {
-                        characters.add(new FastCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
+                        characters.add(new FastCharacter(logic.getSize(), buffer, finish, tfdName.getText()));
                     } else {
-                        characters.add(new FuriousCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
+                        characters.add(new FuriousCharacter(logic.getSize(), buffer, finish, tfdName.getText()));
                     }
                 }
                 thread.start();
-                logica.startItems();
+                logic.startItems();
                 new Thread(hilos).start();
-                cronometro = new Thread(crono);
-                cronometro.start();
-                new Thread(tableU).start();
+                chronometer = new Thread(chronometerThread);
+                chronometer.start();
+                new Thread(tableUpdater).start();
             }
         });
 
@@ -272,10 +251,10 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         });
         btnSet.setOnAction((ActionEvent t) -> {
             thread.start();
-            logica.startItems();
+            logic.startItems();
             new Thread(hilos).start();
-            cronometro = new Thread(crono);
-            cronometro.start();
+            chronometer = new Thread(chronometerThread);
+            chronometer.start();
 
         });
         btnLogin.setOnAction((ActionEvent t) -> {
@@ -284,86 +263,79 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         btnStop.setOnAction((ActionEvent t) -> {
             flag = false;
         });
-        cbx.setOnAction((ActionEvent e) -> {
+        cbxType.setOnAction((ActionEvent e) -> {
             System.out.println(tfdQuantity.getText());
             for (int i = 0; i < Integer.parseInt(tfdQuantity.getText()); i++) {
-                if (cbx.getValue().equalsIgnoreCase("Fast")) {
-                    characters.add(new FastCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
+                if (cbxType.getValue().equalsIgnoreCase("Fast")) {
+                    characters.add(new FastCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText()));
 
-                    this.lblType.setText(tfdName.getText() + " Fast");
-                } else if (cbx.getValue().equalsIgnoreCase("Furious")) {
-                    characters.add(new FuriousCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
+                    this.lbType.setText(tfdName.getText() + " Fast");
+                } else if (cbxType.getValue().equalsIgnoreCase("Furious")) {
+                    characters.add(new FuriousCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText()));
 
-                    this.lblType.setText(tfdName.getText() + " Furious");
+                    this.lbType.setText(tfdName.getText() + " Furious");
                 } else {
-                    characters.add(new SmartCharacter(logica.getSize(), buffer, logica.getFinish(), tfdName.getText()));
-                    this.lblType.setText(tfdName.getText() + " Smart");
+                    characters.add(new SmartCharacter(logic.getSize(), buffer, logic.getFinish(), tfdName.getText()));
+                    this.lbType.setText(tfdName.getText() + " Smart");
                 }
                 System.out.println("num");
             }
-            if (cantP == Integer.parseInt(tfdQuantity.getText())) {
-                //btnSet.setVisible(true);
-//                        btnSet.setDisable(true);
-            }
-            cantP++;
+            quantityCharacters++;
             tfdQuantity.setText("");
             btnSet.setDisable(false);
             btnPause.setDisable(false);
             btnStop.setDisable(false);
         });
-        cbxD.setOnAction((ActionEvent e) -> {
+        cbxDifficult.setOnAction((ActionEvent e) -> {
 
-            if (cbxD.getValue().equalsIgnoreCase("Easy")) {
-                logica = new Logica(1);
-                this.logica.setDifficulty(1);
-                //setNum(1);
-
-            } else if (cbxD.getValue().equalsIgnoreCase("Medium")) {
-                logica = new Logica(2);
-                this.logica.setDifficulty(2);
+            if (cbxDifficult.getValue().equalsIgnoreCase("Easy")) {
+                logic = new Logic(1);
+                this.logic.setDifficulty(1);
+            } else if (cbxDifficult.getValue().equalsIgnoreCase("Medium")) {
+                logic = new Logic(2);
+                this.logic.setDifficulty(2);
             } else {
-                logica = new Logica(3);
-                this.logica.setDifficulty(3);
+                logic = new Logic(3);
+                this.logic.setDifficulty(3);
             }
 
-            logica.createMaze();
-            logica.drawMaze(gc);
-            cbxD.setVisible(false);
+            logic.createMaze();
+            logic.drawMaze(gc);
+            cbxDifficult.setVisible(false);
         });
 
         gc = canvas.getGraphicsContext2D();
         pane = new Pane(canvas);
         pane.getChildren().add(btRun);
         pane.getChildren().add(btItem);
-        pane.getChildren().add(tiempo);
+        pane.getChildren().add(time);
 
-        this.vbox.getChildren().addAll(cbxD, this.lblName, this.btnLogin, this.btnSet, this.btnPause, this.btnStop, tiempo, table);
-        this.hbox.getChildren().add(pane);
-        this.hbox.getChildren().add(vbox);
+        this.vBox.getChildren().addAll(cbxDifficult, this.lbName, this.btnLogin, this.btnSet, this.btnPause, this.btnStop, time, table);
+        this.hBox.getChildren().add(pane);
+        this.hBox.getChildren().add(vBox);
 
         this.canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getSource() == canvas && !itemCharge) {
-                    logica.changeTypeBlock((int) event.getX(), (int) event.getY(), gc);
+                    logic.changeTypeBlock((int) event.getX(), (int) event.getY(), gc);
 //                    logica.imprimirTipo((int) event.getX(), (int) event.getY());
                 } else {
                     if (thread.isAlive()) {
-                        logica.addItem((int) event.getX(), (int) event.getY(), buffer, true, gc);
+                        logic.addItem((int) event.getX(), (int) event.getY(), buffer, true, gc);
                     } else {
-                        logica.addItem((int) event.getX(), (int) event.getY(), buffer, false, gc);
+                        logic.addItem((int) event.getX(), (int) event.getY(), buffer, false, gc);
                     }
                 }
             }
         });
 
-        Scene scene = new Scene(hbox, width, HEIGTH);
+        Scene scene = new Scene(hBox, width, HEIGTH);
         primaryStage.setScene(scene);
-        vb = new VBox(10);
-        vb.getChildren().addAll(lblQuantity, tfdQuantity, lblType, cbx, lblName, tfdName, btnName);
-        //popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
+        vBox1 = new VBox(10);
+        vBox1.getChildren().addAll(lbQuantity, tfdQuantity, lbType, cbxType, lbName, tfdName, btnName);
 
-        scene = new Scene(vb, 400, 400);
+        scene = new Scene(vBox1, 400, 400);
         stage.setTitle("Login Player");
         stage.setScene(scene);
     } // init
@@ -378,32 +350,26 @@ public class Proyecto3Progra2 extends Application implements Runnable {
 
         try {
             while (flag) {
-
                 start = System.nanoTime();
                 elapsed = System.nanoTime() - start;
                 wait = time - elapsed / 1000000;
-
                 draw(gc);
                 Thread.sleep(wait);
-
             }
-
         } catch (InterruptedException ex) {
             Logger.getLogger(Proyecto3Progra2.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-    }
+    } // run
 
     public void draw(GraphicsContext gc) throws InterruptedException {
-        gc.clearRect(0, 0, canvasWidth, HEIGTH);
-        logica.drawMaze(gc);
+        gc.clearRect(0, 0, 1120, HEIGTH);
+        logic.drawMaze(gc);
         for (int i = 0; i < characters.size(); i++) {
             if (characters.get(i).isAlive()) {
                 characters.get(i).draw(gc);
             }
         }
-
-    }
+    } // draw
 
     public ObservableList<Character> getTableData() {
         ArrayList array = new ArrayList();
@@ -413,10 +379,7 @@ public class Proyecto3Progra2 extends Application implements Runnable {
         }
         ObservableList<Character> listData = FXCollections.observableArrayList(array);
         return listData;
-    }
-//    public int setNum(int num){
-//        return num;
-//    }
+    } // getTableData
 
     public static void main(String[] args) {
         launch(args);

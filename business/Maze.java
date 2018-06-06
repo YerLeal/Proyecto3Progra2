@@ -4,10 +4,10 @@ import domain.Block;
 
 public class Maze {
 
-    private Logica logica;
+    private Logic logica;
 
     public Maze() {
-        this.logica = new Logica(1);
+        this.logica = new Logic(1);
     } // constructor
 
     public Block[][] getMaze(int difficulty, int size) {

@@ -13,7 +13,7 @@ public abstract class Character extends Thread {
     protected ArrayList<Block> finish;
     protected int direction, dirAux;
     protected boolean crash = false, ini = false;
-    protected String tipo, nombre;
+    protected String type ,name;
     private Boolean flag = true;
     private ArrayList<Image> spritesArray;
 
@@ -22,7 +22,7 @@ public abstract class Character extends Thread {
         this.buff = buffer;
         this.spritesArray = new ArrayList<>();
         this.finish=finish;
-        this.nombre=nombre;
+        this.name=nombre;
     }
 
     public void setStarto(Block starto) {
@@ -85,19 +85,19 @@ public abstract class Character extends Thread {
         return buff;
     }
 
-    public int getxPos() {
+    public int getXPos() {
         return xPos;
     }
 
-    public void setxPos(int xPos) {
+    public void setXPos(int xPos) {
         this.xPos = xPos;
     }
 
-    public int getyPos() {
+    public int getYPos() {
         return yPos;
     }
 
-    public void setyPos(int yPos) {
+    public void setYPos(int yPos) {
         this.yPos = yPos;
     }
 
@@ -139,9 +139,9 @@ public abstract class Character extends Thread {
 
     public boolean next(int dir) {
 //        System.err.println(dir+ " "+ dirAux);
-        if (((dir == 1 && dirAux == 3) || (dirAux == 1 && dir == 3)) && !encerrado() && !crash) {
+        if (((dir == 1 && dirAux == 3) || (dirAux == 1 && dir == 3)) && !isCaught() && !crash) {
             return false;
-        } else if (((dir == 2 && dirAux == 4) || (dirAux == 2 && dir == 4)) && !encerrado() && !crash) {
+        } else if (((dir == 2 && dirAux == 4) || (dirAux == 2 && dir == 4)) && !isCaught() && !crash) {
             return false;
         }
         
@@ -190,8 +190,8 @@ public abstract class Character extends Thread {
         this.dirAux = dir;
     }
 
-    public boolean encerrado() {
-        int dir = oposDir(dirAux);
+    public boolean isCaught() {
+        int dir = oppositeDirection(dirAux);
         int aux;
         if (dir == 1 || dir == 2) {
             aux = 1;
@@ -209,7 +209,7 @@ public abstract class Character extends Thread {
         return false;
     }
 
-    public int oposDir(int dir) {
+    public int oppositeDirection(int dir) {
         switch (dir) {
             case 1:
                 return 3;
@@ -225,11 +225,11 @@ public abstract class Character extends Thread {
         }
     }
 
-    public void sum(){
+    public void collision(){
         this.action++;
     }
     
-    public void rePos() throws InterruptedException {
+    public void repositioning() throws InterruptedException {
         while (crash) {
         int aux=action;
         if(action>1){
@@ -239,7 +239,7 @@ public abstract class Character extends Thread {
         }
         int xB = currentBlock.getX() * size;
         int yB = currentBlock.getY() * size;
-        direction = oposDir(direction);
+        direction = oppositeDirection(direction);
         
         switch (direction) {
             case 1:
@@ -306,16 +306,16 @@ public abstract class Character extends Thread {
     public void isFinish(){
         for(int i=0;i<finish.size();i++){
             if(currentBlock.getX()==finish.get(i).getX() && currentBlock.getY()==finish.get(i).getY()){
-                buff.addFinisher(new Record(nombre, tipo));
+                buff.addFinisher(new Record(name, type));
                 this.flag=false;
             }
         }
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getType() {
+        return type;
     }
 
     public abstract void draw(GraphicsContext gc);
 
-} // 
+} // end class

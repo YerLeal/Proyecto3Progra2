@@ -15,53 +15,50 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class SmartCharacter extends Character {
+    
+    private int image = 0;
 
     public SmartCharacter(int size, SharedBuffer buffer, ArrayList<Block> finish, String name) {
         super(size, buffer, finish, name);
         super.speed = 6;
-        super.tipo = "S";
+        super.type = "S";
         addSprites();
     } // constructor
 
     @Override
     public void run() {
         while (super.getFlag()) {
-            
-                direction = (int) (Math.random() * (5 - 1) + 1);
-
-            
+            this.direction = (int) (Math.random() * (5 - 1) + 1);
             if (next(direction)) {
-//                System.err.println("Por algun motivo entra");
-                crash = false;
+                this.crash = false;
                 try {
-                    switch (direction) {
+                    switch (this.direction) {
                         case 1:
-                            while (currentBlock.in(x, y) && !crash) {
-
-                                Thread.sleep(speed);
-                                buff.colisionVs(order);
-                                y += movement;
+                            while (this.currentBlock.isInTheBlock(this.x, this.y) && !this.crash) {
+                                Thread.sleep(this.speed);
+                                this.buff.colisionVs(this.order);
+                                this.y += this.movement;
                             }
                             break;
                         case 2:
-                            while (currentBlock.in(x, y) && !crash) {
-                                Thread.sleep(speed);
-                                buff.colisionVs(order);
-                                x += movement;
+                            while (this.currentBlock.isInTheBlock(this.x, this.y) && !this.crash) {
+                                Thread.sleep(this.speed);
+                                this.buff.colisionVs(this.order);
+                                this.x += this.movement;
                             }
                             break;
                         case 3:
-                            while (currentBlock.in(x, y) && !crash) {
-                                Thread.sleep(speed);
-                                buff.colisionVs(order);
-                                y -= movement;
+                            while (this.currentBlock.isInTheBlock(this.x, this.y) && !this.crash) {
+                                Thread.sleep(this.speed);
+                                this.buff.colisionVs(this.order);
+                                this.y -= this.movement;
                             }
                             break;
                         case 4:
-                            while (currentBlock.in(x, y) && !crash) {
-                                Thread.sleep(speed);
-                                buff.colisionVs(order);
-                                x -= movement;
+                            while (this.currentBlock.isInTheBlock(this.x, this.y) && !this.crash) {
+                                Thread.sleep(this.speed);
+                                this.buff.colisionVs(this.order);
+                                this.x -= this.movement;
                             }
                             break;
                     } // switch (direction)
@@ -69,13 +66,13 @@ public class SmartCharacter extends Character {
                     Logger.getLogger(Character.class
                             .getName()).log(Level.SEVERE, null, ex);
                 }
-                if (!crash) {
-                    metodoRandom(direction);
-                    currentBlock = nextBlock;
+                if (!this.crash) {
+                    metodoRandom(this.direction);
+                    this.currentBlock = this.nextBlock;
                 } else {
 
                     try {
-                        rePos();
+                        repositioning();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(SmartCharacter.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -98,7 +95,7 @@ public class SmartCharacter extends Character {
             Blend blush = new Blend(
                     BlendMode.MULTIPLY,
                     monochrome,
-                    new ColorInput(0,0,
+                    new ColorInput(0, 0,
                             imageView.getImage().getWidth(),
                             imageView.getImage().getHeight(),
                             Color.YELLOWGREEN));
@@ -108,23 +105,21 @@ public class SmartCharacter extends Character {
         }
     }
 
-    private int image = 0;
-
     @Override
     public void draw(GraphicsContext gc) {
-        switch (direction) {
+        switch (this.direction) {
             case 1:
-                if (image > 2) {
-                    image = 0;
+                if (this.image > 2) {
+                    this.image = 0;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y, size, size);
-                image++;
+                gc.drawImage(super.getSprites().get(this.image), this.x, this.y, this.size, this.size);
+                this.image++;
                 break;
             case 2:
-                if (image > 8 || image < 6) {
-                    image = 6;
+                if (this.image > 8 || this.image < 6) {
+                    this.image = 6;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y, size, size);
+                gc.drawImage(super.getSprites().get(this.image), this.x, this.y, this.size, this.size);
                 image++;
                 break;
             case 3:
@@ -138,11 +133,10 @@ public class SmartCharacter extends Character {
                 if (image > 5 || image < 3) {
                     image = 3;
                 }
-                gc.drawImage(super.getSprites().get(image), x, y, size, size);
+                gc.drawImage(super.getSprites().get(image), this.x, this.y, this.size, this.size);
                 image++;
                 break;
         }
-
     } // draw
 
 } // end class

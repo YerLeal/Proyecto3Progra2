@@ -48,11 +48,10 @@ public class Block implements Serializable {
         return size;
     }
 
-    public boolean in(int xMouse, int yMouse) {
-
-        return (((xMouse >= this.x * size && xMouse < this.x * size + this.size) || (xMouse + size > this.x * size && xMouse + size < this.x * size + this.size)) && 
-                ((yMouse >= this.y * size && yMouse < this.y * size + this.size) || (yMouse + size > this.y * size && yMouse + size < this.y * size + this.size)));
-    } // isClicked: retorna true si el botón fue clickeado y false si no
+    public boolean isInTheBlock(int xPosition, int yPosition) {
+        return (((xPosition >= this.x * size && xPosition < this.x * size + this.size) || (xPosition + size > this.x * size && xPosition + size < this.x * size + this.size)) && 
+                ((yPosition >= this.y * size && yPosition < this.y * size + this.size) || (yPosition + size > this.y * size && yPosition + size < this.y * size + this.size)));
+    }
 
     public boolean isClicked(int xMouse, int yMouse) {
         if ((xMouse >= this.x * this.size && xMouse <= this.x * this.size + this.size)
