@@ -6,12 +6,10 @@ import domain.Block;
 import domain.Character;
 import domain.FastCharacter;
 import domain.FuriousCharacter;
-import domain.Item;
 import domain.Record;
 import domain.SmartCharacter;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -25,7 +23,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -37,11 +34,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.omg.PortableServer.THREAD_POLICY_ID;
 
 public class Proyecto3Progra2 extends Application implements Runnable {
 
-    public static String chronometer = "00-00-000";
     public String num = "";
     private int width = 1360;
     private final int HEIGTH = 720;
@@ -250,11 +245,11 @@ public class Proyecto3Progra2 extends Application implements Runnable {
             @Override
             public void handle(ActionEvent event) {
                 ArrayList<Block> finish = logica.getFinish();
-                for (int i = 0; i < 30; i++) {
+                for (int i = 0; i < 5; i++) {
 
-                    if (i < 10) {
+                    if (i < 0) {
                         characters.add(new SmartCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
-                    } else if (i < 20) {
+                    } else if (i < 5) {
                         characters.add(new FastCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
                     } else {
                         characters.add(new FuriousCharacter(logica.getSize(), buffer, finish, tfdName.getText()));
